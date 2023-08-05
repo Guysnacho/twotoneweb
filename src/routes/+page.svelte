@@ -14,54 +14,6 @@
 		<h2>TwoTone</h2>
 	</div>
 </div>
-<div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-10 text-center flex flex-col items-center">
-		<h2 class="h2">Find music your way</h2>
-		<!-- Animated Logo -->
-		<figure>
-			<section class="img-bg" />
-			<img class="h-15 w-15" src={Logo} alt="TwoTone Logo" />
-		</figure>
-		<!-- / -->
-		<h2>TwoTone</h2>
-	</div>
-</div>
-<div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-10 text-center flex flex-col items-center">
-		<h2 class="h2">Find music your way</h2>
-		<!-- Animated Logo -->
-		<figure>
-			<section class="img-bg" />
-			<img class="h-15 w-15" src={Logo} alt="TwoTone Logo" />
-		</figure>
-		<!-- / -->
-		<h2>TwoTone</h2>
-	</div>
-</div>
-<div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-10 text-center flex flex-col items-center">
-		<h2 class="h2">Find music your way</h2>
-		<!-- Animated Logo -->
-		<figure>
-			<section class="img-bg" />
-			<img class="h-15 w-15" src={Logo} alt="TwoTone Logo" />
-		</figure>
-		<!-- / -->
-		<h2>TwoTone</h2>
-	</div>
-</div>
-<div class="container h-full mx-auto flex justify-center items-center">
-	<div class="space-y-10 text-center flex flex-col items-center">
-		<h2 class="h2">Find music your way</h2>
-		<!-- Animated Logo -->
-		<figure>
-			<section class="img-bg" />
-			<img class="h-15 w-15" src={Logo} alt="TwoTone Logo" />
-		</figure>
-		<!-- / -->
-		<h2>TwoTone</h2>
-	</div>
-</div>
 
 <style lang="postcss">
 	figure {
