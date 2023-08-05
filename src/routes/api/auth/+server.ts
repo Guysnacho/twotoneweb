@@ -42,7 +42,14 @@ export const POST = (async ({ request }) => {
 					message: res.error.message
 				});
 			} else if (res.data?.user) {
-				return json(res.data.user);
+				return json(
+					{
+						username: res.data.user.user_metadata.username,
+						created_at: res.data.user.created_at,
+						email_confirm: res.data.user.email_confirmed_at != null
+					},
+					{ status: 201, statusText: 'Account Created' }
+				);
 			} else {
 				throw error(HttpCodes.INTERNALERROR, {
 					code: HttpCodes.INTERNALERROR,
