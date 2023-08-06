@@ -5,6 +5,11 @@
 	const isValid = $page.url.searchParams.has('token') && $page.url.searchParams.has('email');
 </script>
 
+<svelte:head>
+	<title>Join TwoTone</title>
+	<meta name="description" content="TwoTone signup" />
+</svelte:head>
+
 <div class="container h-full mx-auto flex justify-center items-center">
 	<div class="space-y-10 text-center flex flex-col items-center">
 		<h2 class="h2">Find music your way</h2>
