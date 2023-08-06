@@ -1,8 +1,15 @@
 <script lang="ts">
 	import Logo from '$lib/logo.png';
 	import { page } from '$app/stores';
+	import { supabase } from '$lib/supabaseClient';
 
 	const isValid = $page.url.searchParams.has('token') && $page.url.searchParams.has('email');
+	// if (isValid) {
+	// 	supabase.auth.verifyOtp({
+	// 		token_hash: $page.url.searchParams.get('token') || '',
+	// 		type: 'email'
+	// 	});
+	// }
 </script>
 
 <svelte:head>
