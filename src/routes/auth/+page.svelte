@@ -18,13 +18,19 @@
 			<section class="img-bg" />
 			<img class="h-15 w-15" src={Logo} alt="TwoTone Logo" />
 		</figure>
-		<!-- / -->{#if isValid}
+		{#if isValid}
 			<h2 class="mx-9">
 				Welcome to TwoTone! Thank you for confirming your account. <br /> You can head back to the app
 				and sign in.
-			</h2>{:else}<h3 class="mx-9">
-				Unauthorized - Either something went wrong or you probably shouldn't be on this page
-			</h3>{/if}
+			</h2>
+		{:else}
+			<h3 class="mx-9">
+				Unauthorized - Either something went wrong on our side (my baaaaaaaaad) or you you're diggin
+				around where you shouldn't be.
+			</h3>
+			<h6>Imma give you the benefit of the doubt though 😶‍🌫️</h6>
+			<a href="/"> [ Go Home! ] </a>
+		{/if}
 	</div>
 </div>
 
