@@ -1,6 +1,11 @@
 <script lang="ts">
-	import Logo from "$lib/logo.png";
+	import Logo from '$lib/logo.png';
 </script>
+
+<svelte:head>
+	<title>TwoTone</title>
+	<meta name="description" content="Home of organic music descovery. TwoTone music store" />
+</svelte:head>
 
 <div class="container h-full mx-auto flex justify-center items-center">
 	<div class="space-y-10 text-center flex flex-col items-center">
@@ -25,8 +30,7 @@
 	}
 	.img-bg {
 		@apply absolute z-[-1] rounded-full blur-[50px] transition-all;
-		animation: pulse 5s cubic-bezier(0, 0, 0, 0.5) infinite,
-			glow 5s linear infinite;
+		animation: pulse 5s cubic-bezier(0, 0, 0, 0.5) infinite, glow 5s linear infinite;
 	}
 	@keyframes glow {
 		0% {
