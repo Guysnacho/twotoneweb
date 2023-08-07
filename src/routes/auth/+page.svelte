@@ -1,9 +1,11 @@
 <script lang="ts">
-	import Logo from '$lib/logo.png';
 	import { page } from '$app/stores';
-	import { supabase } from '$lib/supabaseClient';
+	import Logo from '$lib/logo.png';
 
-	const isValid = $page.url.searchParams.has('token') && $page.url.searchParams.has('email');
+	const isValid =
+		$page.url.searchParams.has('access_token') &&
+		$page.url.searchParams.has('refresh_token') &&
+		$page.url.searchParams.has('type');
 	// if (isValid) {
 	// 	supabase.auth.verifyOtp({
 	// 		token_hash: $page.url.searchParams.get('token') || '',
