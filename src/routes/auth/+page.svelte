@@ -3,9 +3,9 @@
 	import Logo from '$lib/logo.png';
 
 	const isValid =
-		$page.url.searchParams.has('access_token') &&
-		$page.url.searchParams.has('refresh_token') &&
-		$page.url.searchParams.has('type');
+		$page.url.toString().includes('access_token') &&
+		$page.url.toString().includes('refresh_token') &&
+		$page.url.toString().includes('type');
 	// if (isValid) {
 	// 	supabase.auth.verifyOtp({
 	// 		token_hash: $page.url.searchParams.get('token') || '',
