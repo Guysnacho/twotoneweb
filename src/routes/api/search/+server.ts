@@ -6,7 +6,7 @@ import { error, json, type RequestHandler } from '@sveltejs/kit';
 /**
  * @description Search Discogs for a song
  */
-export const GET = (async ({ url }) => {
+export const GET = (({ url }) => {
 	if (!isValidSearchRequest(url)) {
 		throw error(HttpCodes.BADREQUEST, {
 			code: HttpCodes.BADREQUEST,
@@ -21,7 +21,7 @@ export const GET = (async ({ url }) => {
 	return fetch(
 		`${MUSIC_API_HOST}/database/search?query=${url.searchParams.get(
 			'song'
-		)}&type=release&key=${MUSIC_KEY}&secret=${MUSIC_SECRET}&per_page=20`
+		)}&type=release&key=${MUSIC_KEY}&secret=${MUSIC_SECRET}&per_page=10`
 	)
 		.then(async (res) => {
 			const data = await res.json();
@@ -38,6 +38,6 @@ export const GET = (async ({ url }) => {
  * @returns result of auth validation
  */
 const isValidSearchRequest = (url: URL) => {
-	if (!url.searchParams.has('song')) return false;
+	if (!url.searchParams.has('song') || url.searchParams.get('song')?.length == 0) return false;
 	return true;
 };

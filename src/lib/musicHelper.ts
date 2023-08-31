@@ -4,9 +4,6 @@
  * @returns formattedList
  */
 export const formatSongResults = (songList: [any]) => {
-	console.log('Pre formatting');
-	console.log(songList);
-
 	const formattedList = songList.map((song) => {
 		return {
 			id: song.id,
