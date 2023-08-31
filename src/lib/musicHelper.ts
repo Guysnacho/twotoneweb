@@ -1,3 +1,8 @@
+/**
+ * @description Trims song api response
+ * @param songList
+ * @returns formattedList
+ */
 export const formatSongResults = (songList: [any]) => {
 	console.log('Pre formatting');
 	console.log(songList);
