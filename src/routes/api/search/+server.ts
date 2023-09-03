@@ -21,7 +21,7 @@ export const GET = (({ url }) => {
 	return fetch(
 		`${MUSIC_API_HOST}/database/search?query=${url.searchParams.get(
 			'song'
-		)}&type=release&key=${MUSIC_KEY}&secret=${MUSIC_SECRET}&per_page=10`
+		)}&type=master&key=${MUSIC_KEY}&secret=${MUSIC_SECRET}&per_page=10`
 	)
 		.then(async (res) => {
 			const data = await res.json();
