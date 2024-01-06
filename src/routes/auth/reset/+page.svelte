@@ -28,7 +28,7 @@
 						alert(
 							'Your password was successfully reset, confirm your email and try logging in again'
 						);
-						// goto('/');
+						goto('/');
 					} else {
 						alert('Ooof, looks like something went wrong. Try again another time okay?');
 					}
