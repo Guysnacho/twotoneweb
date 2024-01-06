@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import { SECRET } from '$env/static/private';
 import { HttpCodes } from '$lib/constants';
-import { supabase } from '$lib/supabaseClient';
+import { supabase } from '$lib/server/supabaseClient';
 
 /**
  * @alias Get api secret
