@@ -1,5 +1,5 @@
 import { HttpCodes } from '$lib/constants';
-import { supabase } from '$lib/server/supabaseClient';
+import { supabase } from '$lib/supabaseClient';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 /**

@@ -39,6 +39,12 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@supabase/supabase-js": "^2.31.0"
+		"@supabase/auth-helpers-sveltekit": "^0.11.0",
+		"@supabase/supabase-js": "^2.31.0",
+		"@trpc/client": "^10.45.0",
+		"@trpc/server": "^10.45.0",
+		"superjson": "^2.2.1",
+		"trpc-sveltekit": "^3.5.22",
+		"zod": "^3.22.4"
 	}
 }
