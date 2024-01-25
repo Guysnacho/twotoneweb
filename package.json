@@ -41,10 +41,11 @@
 	"dependencies": {
 		"@supabase/auth-helpers-sveltekit": "^0.11.0",
 		"@supabase/supabase-js": "^2.31.0",
+		"@tanstack/svelte-query": "^5.17.19",
 		"@trpc/client": "^10.45.0",
 		"@trpc/server": "^10.45.0",
 		"superjson": "^2.2.1",
-		"trpc-sveltekit": "^3.5.22",
+		"trpc-svelte-query": "^2.0.5",
 		"zod": "^3.22.4"
 	}
 }

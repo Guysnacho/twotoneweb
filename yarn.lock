@@ -370,6 +370,18 @@
     svelte-hmr "^0.15.1"
     vitefu "^0.2.4"
 
+"@tanstack/query-core@5.17.19":
+  version "5.17.19"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.17.19.tgz#212515ccc7a6b913afee6b71ce3e7df2c4d85f7d"
+  integrity sha512-Lzw8FUtnLCc9Jwz0sw9xOjZB+/mCCmJev38v2wHMUl/ioXNIhnNWeMxu0NKUjIhAd62IRB3eAtvxAGDJ55UkyA==
+
+"@tanstack/svelte-query@^5.17.19":
+  version "5.17.19"
+  resolved "https://registry.yarnpkg.com/@tanstack/svelte-query/-/svelte-query-5.17.19.tgz#393eb55039e70045f81f25946820ffc91367aba1"
+  integrity sha512-NVzko4m7i7kUO0DwJhru5MJFRhibNHODOyOi/k9sIpQw9jRfAuOK533shtkI5nmof3dD9kfpjfc08urLXh06eg==
+  dependencies:
+    "@tanstack/query-core" "5.17.19"
+
 "@trpc/client@^10.45.0":
   version "10.45.0"
   resolved "https://registry.yarnpkg.com/@trpc/client/-/client-10.45.0.tgz#67cf34857cfa7e77bc498cb837c2226a42d24bf4"
@@ -2067,10 +2079,12 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
-trpc-sveltekit@^3.5.22:
-  version "3.5.22"
-  resolved "https://registry.yarnpkg.com/trpc-sveltekit/-/trpc-sveltekit-3.5.22.tgz#2de0b5a383562fd454c0110694ab32389aff60c5"
-  integrity sha512-qFgtor6rGt+dOvLIvrk2325F/AVQ6tv/ZUzZ4PNuyUSFFYbendt/WlunrFgDDdR4vq6RWzLsh6mowcGyi++i4A==
+trpc-svelte-query@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/trpc-svelte-query/-/trpc-svelte-query-2.0.5.tgz#00c267b06aea5c63606715ed979e9d61d07f5398"
+  integrity sha512-Cli9UaKjeIZMEqUY4xarEiALr0CQD9RzMwuTxyzlkEcU2bkLgphT0CT3ngjRUIlgk3mpouKt6PhYP9A29URALw==
+  dependencies:
+    esm-env "^1.0.0"
 
 ts-interface-checker@^0.1.9:
   version "0.1.13"

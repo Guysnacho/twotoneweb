@@ -1,15 +1,17 @@
-import type { RequestEvent } from '@sveltejs/kit';
-import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
-import type { inferAsyncReturnType } from '@trpc/server';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '$env/static/private';
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from '$env/static/private';
 import type { Database } from '$lib/schema';
+import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
+import type { RequestEvent } from '@sveltejs/kit';
+import type { inferAsyncReturnType } from '@trpc/server';
 
 export async function createContext(event: RequestEvent) {
+	console.log('Creating context');
+
 	// if there's auth cookie it'll be authenticated by this helper
 	const supabase = createSupabaseServerClient<Database>({
 		event: event,
-		supabaseKey: SUPABASE_ANON_KEY,
-		supabaseUrl: SUPABASE_URL
+		supabaseUrl: SUPABASE_URL,
+		supabaseKey: SUPABASE_ANON_KEY
 	});
 
 	// native sends these instead of cookie auth
@@ -28,12 +30,10 @@ export async function createContext(event: RequestEvent) {
 		data: { session }
 	} = await supabase.auth.getSession();
 
+	console.log('Created context');
 	return {
 		requestOrigin: event.request.headers.get('origin'),
-
-		/**
-		 * The Supabase user session
-		 */
+		event,
 		session,
 
 		/**

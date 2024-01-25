@@ -1,8 +1,8 @@
-import { superSecretProc, t } from '$lib/trpc/router';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { router, superSecretProc } from '../trpc/t';
 
-export const sotdRouter = t.router({
+export const sotdRouter = router({
 	getById: superSecretProc
 		.input(
 			z.object({
@@ -23,18 +23,4 @@ export const sotdRouter = t.router({
 
 			return supabaseQuery.data;
 		})
-	// update: protectedProcedure
-	//   .input(
-	//     z.object({
-	//       name: z.string(),
-	//     })
-	//   )
-	//   .mutation(({ ctx: { supabase }, input }) => {
-	// const supabaseQuery = { error: new Error('errored'), data: null }
-	// if (supabaseQuery.error) {
-	//   throw new TRPCError({ code: 'FORBIDDEN' })
-	// }
-	// const updatedResults = {}
-	// return updatedResults
-	//   }),
 });
