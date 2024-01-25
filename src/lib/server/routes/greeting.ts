@@ -1,4 +1,3 @@
-import { TRPCError } from '@trpc/server';
 import { publicProc, router } from '../trpc/t';
 
 function getTimeOfDay() {
@@ -17,18 +16,9 @@ function getTimeOfDay() {
 }
 
 export const greetingRouter = router({
-	greet: publicProc.query(async ({ ctx: { supabase, session } }) => {
+	greet: publicProc.query(async () => {
 		console.log('attempting greet');
 
-		const profile = await supabase
-			.from('users')
-			.select('*')
-			.eq('user_id', '0101d7f5-07f2-46a4-a19e-5b7a6a31e823')
-			.single();
-		if (profile.error) {
-			throw new TRPCError({ code: 'BAD_REQUEST' });
-		}
-		const name = profile.data.username;
-		return `Good ${getTimeOfDay()}${name ? `, ${name}!` : '!'}`;
+		return `Good ${getTimeOfDay()}!`;
 	})
 });
