@@ -5,8 +5,6 @@ import type { RequestEvent } from '@sveltejs/kit';
 import type { inferAsyncReturnType } from '@trpc/server';
 
 export async function createContext(event: RequestEvent) {
-	console.log('Creating context');
-
 	// if there's auth cookie it'll be authenticated by this helper
 	const supabase = createSupabaseServerClient<Database>({
 		event: event,
@@ -30,7 +28,6 @@ export async function createContext(event: RequestEvent) {
 		data: { session }
 	} = await supabase.auth.getSession();
 
-	console.log('Created context');
 	return {
 		requestOrigin: event.request.headers.get('origin'),
 		event,
