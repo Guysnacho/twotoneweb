@@ -16,9 +16,9 @@ function getTimeOfDay() {
 }
 
 export const greetingRouter = router({
-	greet: publicProc.query(async () => {
-		console.log('attempting greet');
-
-		return `Good ${getTimeOfDay()}!`;
+	greet: publicProc.query(async ({ ctx: { session, supabase } }) => {
+		return `Good ${getTimeOfDay()}${
+			session?.user.user_metadata.username ? ' ' + session?.user.user_metadata.username : ''
+		}!`;
 	})
 });
