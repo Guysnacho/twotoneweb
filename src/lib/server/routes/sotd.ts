@@ -12,10 +12,10 @@ export const sotdRouter = router({
 		.query(async ({ ctx: { supabase }, input: { id } }) => {
 			const supabaseQuery = await supabase
 				.from('sotd')
-				.select('*')
+				.select('content, created_at, song_id, song(id, title, album, artists)')
 				.eq('user_id', id)
 				.order('created_at')
-				.limit(12);
+				.limit(10);
 			if (supabaseQuery.error) {
 				throw new TRPCError({ code: 'FORBIDDEN' });
 			}
