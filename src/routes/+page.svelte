@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Logo from '$lib/logo.png';
+	export let data;
 </script>
 
 <svelte:head>

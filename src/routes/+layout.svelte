@@ -4,24 +4,30 @@
 	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
 	// Most of your app wide CSS should be put in this file
+	import { AppBar, AppShell } from '@skeletonlabs/skeleton';
 	import '../app.postcss';
-	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
-	import { page } from '$app/stores';
+	import { trpc } from './api/trpc/trpc.client';
+	import { QueryClientProvider } from '@tanstack/svelte-query';
+
+	//@ts-ignore
+	$: queryClient = trpc.queryClient;
 </script>
 
-<!-- App Shell -->
-<AppShell>
-	<svelte:fragment slot="header">
-		<!-- App Bar -->
-		<AppBar>
-			<svelte:fragment slot="lead">
-				<strong class="text-xl uppercase">TwoTone</strong>
-			</svelte:fragment>
-			<!-- <svelte:fragment slot="trail"> -->
+<QueryClientProvider client={queryClient}>
+	<!-- App Shell -->
+	<AppShell>
+		<svelte:fragment slot="header">
+			<!-- App Bar -->
+			<AppBar>
+				<svelte:fragment slot="lead">
+					<strong class="text-xl uppercase">TwoTone</strong>
+				</svelte:fragment>
+				<!-- <svelte:fragment slot="trail"> -->
 				<!-- <a class="btn btn-sm variant-ghost-surface" href="/login"> Login </a> -->
-			<!-- </svelte:fragment> -->
-		</AppBar>
-	</svelte:fragment>
-	<!-- Page Route Content -->
-	<slot />
-</AppShell>
+				<!-- </svelte:fragment> -->
+			</AppBar>
+		</svelte:fragment>
+		<!-- Page Route Content -->
+		<slot />
+	</AppShell>
+</QueryClientProvider>
