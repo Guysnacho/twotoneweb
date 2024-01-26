@@ -1,4 +1,4 @@
-import { greetingRouter, sotdRouter } from '../routes';
+import { greetingRouter, sotdRouter } from '../routers';
 import { router } from './t';
 
 export const trpcRouter = router({

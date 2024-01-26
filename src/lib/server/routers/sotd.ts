@@ -12,7 +12,7 @@ export const sotdRouter = router({
 		.query(async ({ ctx: { supabase }, input: { id } }) => {
 			const supabaseQuery = await supabase
 				.from('sotd')
-				.select('content, created_at, song_id, song(id, title, album, artists)')
+				.select('content, created_at, song_id, song(id, title, album, artists, album_art)')
 				.eq('user_id', id)
 				.order('created_at')
 				.limit(10);
