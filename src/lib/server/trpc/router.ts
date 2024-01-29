@@ -1,9 +1,10 @@
-import { greetingRouter, sotdRouter } from '../routers';
+import { greetingRouter, searchRouter, sotdRouter } from '../routers';
 import { router } from './t';
 
 export const trpcRouter = router({
 	sotd: sotdRouter,
-	greeting: greetingRouter
+	greeting: greetingRouter,
+	search: searchRouter
 });
 
-export type TrpcRouter = typeof router
+export type TrpcRouter = typeof router;
