@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 /**
  * @description Trims song api response
  * @param songList
@@ -14,6 +16,50 @@ export const formatSongResults = (songList: [any]) => {
 			label: song.label,
 			thumbnail: song.thumb,
 			cover: song.cover_image
+		};
+	});
+
+	console.log('formattedList');
+	console.log(formattedList);
+	return formattedList;
+};
+
+export const formatLastFmResults = (
+	songList: [
+		{
+			name: string;
+			artist: string;
+			url: string;
+			streamable: string;
+			listeners: number;
+			image: [
+				{
+					'#text': string;
+					size: 'small';
+				},
+				{
+					'#text': string;
+					size: 'medium';
+				},
+				{
+					'#text': string;
+					size: 'large';
+				},
+				{
+					'#text': string;
+					size: 'extralarge';
+				}
+			];
+			mbid: string;
+		}
+	]
+) => {
+	const formattedList = songList.map((song) => {
+		return {
+			id: randomUUID(),
+			title: song.name,
+			artists: song.artist,
+			album_art: song.image[2]['#text'] || ''
 		};
 	});
 
