@@ -1,6 +1,6 @@
 import { LASTFM_API_HOST, LASTFM_KEY } from '$env/static/private';
 import { HttpCodes } from '$lib/constants';
-import { formatLastFmResults } from '$lib/musicHelper';
+import { formatLastFmResults, isValidSearchRequest } from '$lib/musicHelper';
 import { supabase } from '$lib/supabaseClient';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
@@ -34,13 +34,3 @@ export const GET = (async ({ url }) => {
 	return json(formatLastFmResults(lastFmResults));
 }) satisfies RequestHandler;
 
-/**
- * Validates search request
- * @param
- * @returns result of auth validation
- */
-const isValidSearchRequest = (url: URL) => {
-	if (!url.searchParams.has('track') || url.searchParams.get('track')?.length == 0)
-		return undefined;
-	return url.searchParams.get('track') as string;
-};

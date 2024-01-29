@@ -65,4 +65,13 @@ export const formatLastFmResults = (
 	return formattedList;
 };
 
-// export default { formatSongResults };
+/**
+ * Validates search request
+ * @param
+ * @returns result of auth validation
+ */
+export const isValidSearchRequest = (url: URL) => {
+	if (!url.searchParams.has('track') || url.searchParams.get('track')?.length == 0)
+		return undefined;
+	return url.searchParams.get('track') as string;
+};
