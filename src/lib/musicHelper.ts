@@ -56,15 +56,12 @@ export const formatLastFmResults = (
 ) => {
 	const formattedList = songList.map((song) => {
 		return {
-			id: randomUUID(),
+			id: randomUUID() as string,
 			title: song.name,
 			artists: song.artist,
 			album_art: song.image[2]['#text'] || ''
 		};
 	});
-
-	console.log('formattedList');
-	console.log(formattedList);
 	return formattedList;
 };
 

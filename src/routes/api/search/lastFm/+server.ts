@@ -1,10 +1,4 @@
-import {
-	LASTFM_API_HOST,
-	LASTFM_KEY,
-	MUSIC_API_HOST,
-	MUSIC_KEY,
-	MUSIC_SECRET
-} from '$env/static/private';
+import { LASTFM_API_HOST, LASTFM_KEY } from '$env/static/private';
 import { HttpCodes } from '$lib/constants';
 import { formatLastFmResults } from '$lib/musicHelper';
 import { supabase } from '$lib/supabaseClient';
@@ -25,15 +19,18 @@ export const GET = (async ({ url }) => {
 	const supabaseQuery = await supabase
 		.from('song')
 		.select('*')
-		.textSearch('full_title', query)
+		.textSearch('full_title', query, {
+			type: 'phrase'
+		})
 		.limit(3);
 	const serviceFetch = await fetch(
 		`${LASTFM_API_HOST}/?method=track.search&track=${query}&limit=10&api_key=${LASTFM_KEY}&format=json`
 	);
 	const lastFmResults = (await serviceFetch.json()).results.trackmatches.track;
-	console.log(supabaseQuery);
-	console.log(lastFmResults);
 
+	if (supabaseQuery.data?.length) {
+		return json([...supabaseQuery.data, ...formatLastFmResults(lastFmResults)]);
+	}
 	return json(formatLastFmResults(lastFmResults));
 }) satisfies RequestHandler;
 
