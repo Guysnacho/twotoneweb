@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 /**
  * @description Trims song api response
  * @param songList
@@ -22,4 +24,54 @@ export const formatSongResults = (songList: [any]) => {
 	return formattedList;
 };
 
-// export default { formatSongResults };
+export const formatLastFmResults = (
+	songList: [
+		{
+			name: string;
+			artist: string;
+			url: string;
+			streamable: string;
+			listeners: number;
+			image: [
+				{
+					'#text': string;
+					size: 'small';
+				},
+				{
+					'#text': string;
+					size: 'medium';
+				},
+				{
+					'#text': string;
+					size: 'large';
+				},
+				{
+					'#text': string;
+					size: 'extralarge';
+				}
+			];
+			mbid: string;
+		}
+	]
+) => {
+	const formattedList = songList.map((song) => {
+		return {
+			id: randomUUID() as string,
+			title: song.name,
+			artists: song.artist,
+			album_art: song.image[2]['#text'] || ''
+		};
+	});
+	return formattedList;
+};
+
+/**
+ * Validates search request
+ * @param
+ * @returns result of auth validation
+ */
+export const isValidSearchRequest = (url: URL) => {
+	if (!url.searchParams.has('track') || url.searchParams.get('track')?.length == 0)
+		return undefined;
+	return url.searchParams.get('track') as string;
+};

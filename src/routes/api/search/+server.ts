@@ -1,13 +1,14 @@
 import { MUSIC_API_HOST, MUSIC_KEY, MUSIC_SECRET } from '$env/static/private';
 import { HttpCodes } from '$lib/constants';
-import { formatSongResults } from '$lib/musicHelper';
+import { formatSongResults, isValidSearchRequest } from '$lib/musicHelper';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 /**
  * @description Search Discogs for a song
  */
 export const GET = (({ url }) => {
-	if (!isValidSearchRequest(url)) {
+	const query = isValidSearchRequest(url);
+	if (!query) {
 		throw error(HttpCodes.BADREQUEST, {
 			code: HttpCodes.BADREQUEST,
 			message: 'Invalid search request'
@@ -19,9 +20,7 @@ export const GET = (({ url }) => {
 	// supabase.auth.admin.getUserById()
 
 	return fetch(
-		`${MUSIC_API_HOST}/database/search?query=${url.searchParams.get(
-			'song'
-		)}&type=master&key=${MUSIC_KEY}&secret=${MUSIC_SECRET}&per_page=10`
+		`${MUSIC_API_HOST}/database/search?query=${query}&type=master&key=${MUSIC_KEY}&secret=${MUSIC_SECRET}&per_page=10`
 	)
 		.then(async (res) => {
 			const data = await res.json();
@@ -31,13 +30,3 @@ export const GET = (({ url }) => {
 			throw error(HttpCodes.INTERNALERROR, { code: HttpCodes.INTERNALERROR, message: err.message });
 		});
 }) satisfies RequestHandler;
-
-/**
- * Validates search request
- * @param
- * @returns result of auth validation
- */
-const isValidSearchRequest = (url: URL) => {
-	if (!url.searchParams.has('song') || url.searchParams.get('song')?.length == 0) return false;
-	return true;
-};
