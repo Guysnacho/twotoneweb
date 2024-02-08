@@ -14,7 +14,7 @@ export const sotdRouter = router({
 				.from('sotd')
 				.select('content, created_at, song_id, song(id, title, album, artists, album_art)')
 				.eq('user_id', id)
-				.order('created_at')
+				.order('created_at', { ascending: false })
 				.limit(10);
 			if (supabaseQuery.error) {
 				throw new TRPCError({ code: 'FORBIDDEN' });
