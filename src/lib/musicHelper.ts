@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+import type { IReleaseMatch } from 'musicbrainz-api';
 
 /**
  * @description Trims song api response
@@ -21,6 +22,17 @@ export const formatSongResults = (songList: [any]) => {
 
 	console.log('formattedList');
 	console.log(formattedList);
+	return formattedList;
+};
+
+export const formatMusicBrainzResults = (songList: IReleaseMatch[]) => {
+	const formattedList = songList.map((song) => {
+		return {
+			id: song.id,
+			title: song.title,
+			artists: song['artist-credit']?.map((artist) => artist.name).toString
+		};
+	});
 	return formattedList;
 };
 
