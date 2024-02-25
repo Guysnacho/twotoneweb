@@ -1,6 +1,51 @@
 import { randomUUID } from 'crypto';
 import type { IReleaseMatch } from 'musicbrainz-api';
 
+export interface ServiceResult {
+	id: number;
+	readable: boolean;
+	title: string;
+	title_short: string;
+	title_version: string;
+	link: string;
+	duration: number;
+	rank: number;
+	explicit_lyrics: boolean;
+	explicit_content_lyrics: number;
+	explicit_content_cover: number;
+	preview: string;
+	md5_image: string;
+	artist: Artist;
+	album: Album;
+	type: string;
+}
+
+export interface Album {
+	id: number;
+	title: string;
+	cover: string;
+	cover_small: string;
+	cover_medium: string;
+	cover_big: string;
+	cover_xl: string;
+	md5_image: string;
+	tracklist: string;
+	type: string;
+}
+
+export interface Artist {
+	id: number;
+	name: string;
+	link: string;
+	picture: string;
+	picture_small: string;
+	picture_medium: string;
+	picture_big: string;
+	picture_xl: string;
+	tracklist: string;
+	type: string;
+}
+
 /**
  * @description Trims song api response
  * @param songList
@@ -72,6 +117,20 @@ export const formatLastFmResults = (
 			title: song.name,
 			artists: song.artist,
 			album_art: song.image[2]['#text'] || ''
+		};
+	});
+	return formattedList;
+};
+
+export const formatDeezerResults = (songList: ServiceResult[]) => {
+	const formattedList = songList.map((song) => {
+		return {
+			service_id: song.id,
+			title: song.title,
+			album: song.album.title,
+			artists: song.artist.name,
+			album_art: song.album.cover_medium,
+			preview_url: song.preview
 		};
 	});
 	return formattedList;
