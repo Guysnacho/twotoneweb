@@ -5,7 +5,7 @@ import { supabase } from '$lib/supabaseClient';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 /**
- * @description Search Discogs for a song
+ * @description Search musicbrainz for a song
  */
 export const GET = (async ({ url }) => {
 	const track = isValidSearchRequest(url);

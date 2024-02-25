@@ -1,32 +1,37 @@
-import { MUSIC_API_HOST, MUSIC_KEY, MUSIC_SECRET } from '$env/static/private';
+import { MUSIC_API_HOST } from '$env/static/private';
 import { HttpCodes } from '$lib/constants';
-import { formatSongResults, isValidSearchRequest } from '$lib/musicHelper';
+import { formatDeezerResults, isValidSearchRequest } from '$lib/musicHelper';
+import { supabase } from '$lib/supabaseClient';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
+import querystring from 'querystring';
 
 /**
- * @description Search Discogs for a song
+ * @description Search deezer for a song
  */
-export const GET = (({ url }) => {
-	const query = isValidSearchRequest(url);
-	if (!query) {
+export const GET = (async ({ url }) => {
+	const track = isValidSearchRequest(url);
+
+	if (track === undefined) {
 		throw error(HttpCodes.BADREQUEST, {
 			code: HttpCodes.BADREQUEST,
 			message: 'Invalid search request'
 		});
 	}
 
-	// const session = await supabase.auth.getSession();
-	// session.data.session.
-	// supabase.auth.admin.getUserById()
-
-	return fetch(
-		`${MUSIC_API_HOST}/database/search?query=${query}&type=master&key=${MUSIC_KEY}&secret=${MUSIC_SECRET}&per_page=10`
-	)
-		.then(async (res) => {
-			const data = await res.json();
-			return json({ items: data.pagination.items, results: formatSongResults(data.results) });
+	const supabaseQuery = supabase
+		.from('song')
+		.select('*')
+		.textSearch('full_title', track, {
+			type: 'phrase'
 		})
-		.catch((err) => {
-			throw error(HttpCodes.INTERNALERROR, { code: HttpCodes.INTERNALERROR, message: err.message });
-		});
+		.limit(3);
+	const serviceFetch = fetch(`${MUSIC_API_HOST}/search?${querystring.stringify({ q: track })}`);
+
+	const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
+
+	if (supaResults.data?.length) {
+		return json([...supaResults.data, ...formatDeezerResults((await serviceResults.json()).data)]);
+	}
+
+	return json(formatDeezerResults((await serviceResults.json()).data));
 }) satisfies RequestHandler;
