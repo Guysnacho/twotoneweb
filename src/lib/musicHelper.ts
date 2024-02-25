@@ -130,7 +130,8 @@ export const formatDeezerResults = (songList: ServiceResult[]) => {
 			album: song.album.title,
 			artists: song.artist.name,
 			album_art: song.album.cover_medium,
-			preview_url: song.preview
+			preview_url: song.preview,
+			explicit: song.explicit_lyrics
 		};
 	});
 	return formattedList;
