@@ -27,7 +27,9 @@ export const searchRouter = router({
 					type: 'phrase'
 				})
 				.limit(3);
-			const serviceFetch = fetch(`${MUSIC_API_HOST}/search?${querystring.stringify({ q: query })}`);
+			const serviceFetch = fetch(
+				`${MUSIC_API_HOST}/search?${querystring.stringify({ q: query, limit: 7 })}`
+			);
 
 			const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
 
