@@ -44,6 +44,7 @@
 		"@tanstack/svelte-query": "^5.17.19",
 		"@trpc/client": "^10.45.0",
 		"@trpc/server": "^10.45.0",
+		"musicbrainz-api": "^0.14.0",
 		"superjson": "^2.2.1",
 		"trpc-svelte-query": "^2.0.5",
 		"zod": "^3.22.4"

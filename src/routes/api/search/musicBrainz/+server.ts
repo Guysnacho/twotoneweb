@@ -1,15 +1,15 @@
-// import { MUSIC_API_HOST } from '$env/static/private';
 // import { HttpCodes } from '$lib/constants';
-// import { formatDeezerResults, isValidSearchRequest } from '$lib/musicHelper';
+// import { mbApi } from '$lib/musicBrainzClient';
+// import { formatMusicBrainzResults, isValidSearchRequest } from '$lib/musicHelper';
 // import { supabase } from '$lib/supabaseClient';
 // import { error, json, type RequestHandler } from '@sveltejs/kit';
-// import querystring from 'querystring';
 
-// /**
-//  * @description Search deezer for a song
-//  */
+/**
+ * @description Search musicbrainz for a song
+ */
 // export const GET = (async ({ url }) => {
 // 	const track = isValidSearchRequest(url);
+// 	const artist = url.searchParams.get('artist');
 
 // 	if (track === undefined) {
 // 		throw error(HttpCodes.BADREQUEST, {
@@ -25,13 +25,22 @@
 // 			type: 'phrase'
 // 		})
 // 		.limit(3);
-// 	const serviceFetch = fetch(`${MUSIC_API_HOST}/search?${querystring.stringify({ q: track })}`);
+// 	const serviceFetch = mbApi.search('release', {
+// 		query: `query=${track}`,
+// 		artist: artist || undefined,
+// 		inc: ['genres', 'tags'],
+// 		limit: 15
+// 	});
 
 // 	const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
 
 // 	if (supaResults.data?.length) {
-// 		return json([...supaResults.data, ...formatDeezerResults((await serviceResults.json()).data)]);
+// 		return json([...supaResults.data, ...formatMusicBrainzResults(serviceResults.releases)]);
 // 	}
 
-// 	return json(formatDeezerResults((await serviceResults.json()).data));
+// 	// const coverApi = new CoverArtArchiveApi()
+// 	// const cover = await coverApi.getReleaseCovers("0c03fac2-05b9-4d20-bac4-dcecb4cc9560")
+// 	// console.log(cover);
+
+// 	return json(serviceResults.releases);
 // }) satisfies RequestHandler;

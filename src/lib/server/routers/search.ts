@@ -1,7 +1,8 @@
-import { LASTFM_API_HOST, LASTFM_KEY } from '$env/static/private';
-import { formatLastFmResults } from '$lib/musicHelper';
+import { MUSIC_API_HOST } from '$env/static/private';
+import { formatDeezerResults } from '$lib/musicHelper';
 import { supabase } from '$lib/supabaseClient';
 import { TRPCError } from '@trpc/server';
+import querystring from 'querystring';
 import { z } from 'zod';
 import { router, superSecretProc } from '../trpc/t';
 
@@ -19,24 +20,27 @@ export const searchRouter = router({
 
 			console.log('Query Attempt');
 
-			const supabaseQuery = await supabase
+			const supabaseQuery = supabase
 				.from('song')
 				.select('*')
 				.textSearch('full_title', query, {
 					type: 'phrase'
 				})
 				.limit(3);
-			const serviceFetch = await fetch(
-				`${LASTFM_API_HOST}/?method=track.search&track=${query}&limit=10&api_key=${LASTFM_KEY}&format=json`
+			const serviceFetch = fetch(
+				`${MUSIC_API_HOST}/search?${querystring.stringify({ q: query, limit: 7 })}`
 			);
-			const lastFmResults = (await serviceFetch.json()).results.trackmatches.track;
-			if (supabaseQuery.error) {
+
+			const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
+
+			if (supaResults.error) {
 				throw new TRPCError({ code: 'FORBIDDEN' });
 			}
 
-			if (supabaseQuery.data?.length) {
-				return [...supabaseQuery.data, ...formatLastFmResults(lastFmResults)];
+			if (supaResults.data?.length) {
+				return [...supaResults.data, ...formatDeezerResults((await serviceResults.json()).data)];
 			}
-			return formatLastFmResults(lastFmResults);
+
+			return formatDeezerResults((await serviceResults.json()).data);
 		})
 });
