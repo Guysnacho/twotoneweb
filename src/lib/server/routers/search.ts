@@ -37,8 +37,16 @@ export const searchRouter = router({
 				throw new TRPCError({ code: 'FORBIDDEN' });
 			}
 
+			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {
-				return [...supaResults.data, ...formatDeezerResults((await serviceResults.json()).data)];
+				const deezResults = formatDeezerResults((await serviceResults.json()).data);
+				const savedServiceIds = supaResults.data
+					.map((supaResult) => supaResult.service_id)
+					.toString();
+				const filteredDeez = deezResults.filter(
+					(result) => !savedServiceIds.includes(result.service_id)
+				);
+				return [...supaResults.data, ...filteredDeez];
 			}
 
 			return formatDeezerResults((await serviceResults.json()).data);

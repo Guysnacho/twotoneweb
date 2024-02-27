@@ -1,7 +1,7 @@
 import type { IReleaseMatch } from 'musicbrainz-api';
 
 export interface ServiceResult {
-	id: number;
+	id: string;
 	readable: boolean;
 	title: string;
 	title_short: string;
@@ -20,7 +20,7 @@ export interface ServiceResult {
 }
 
 export interface Album {
-	id: number;
+	id: string;
 	title: string;
 	cover: string;
 	cover_small: string;
@@ -33,7 +33,7 @@ export interface Album {
 }
 
 export interface Artist {
-	id: number;
+	id: string;
 	name: string;
 	link: string;
 	picture: string;
