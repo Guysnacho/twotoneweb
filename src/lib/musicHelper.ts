@@ -68,7 +68,7 @@ export const formatDeezerResults = (songList: ServiceResult[]) => {
 			title: song.title,
 			album: song.album.title,
 			artists: song.artist.name,
-			album_art: song.album.cover_medium,
+			album_art: song.album.cover_big,
 			preview_url: song.preview,
 			explicit: song.explicit_lyrics
 		};
