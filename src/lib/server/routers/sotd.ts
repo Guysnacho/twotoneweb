@@ -6,7 +6,7 @@ export const sotdRouter = router({
 	getById: superSecretProc
 		.input(
 			z.object({
-				id: z.string().min(1).describe('User id for sotd results')
+				id: z.string().min(1).describe('User id for sotd results // Must be TwoTone ID')
 			})
 		)
 		.query(async ({ ctx: { supabase }, input: { id } }) => {
