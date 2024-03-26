@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import Logo from '$lib/logo.png';
 </script>
 
 <svelte:head>
 	<title>Privacy Policy</title>
-	<meta name="description" content="TwoTone password reset" />
+	<meta name="description" content="TwoTone Privacy Policy" />
 </svelte:head>
 
 <div class="h-full mx-auto my-9 w-4/6 flex justify-center items-center">

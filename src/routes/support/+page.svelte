@@ -5,13 +5,13 @@
 </script>
 
 <svelte:head>
-	<title>Privacy Policy</title>
-	<meta name="description" content="TwoTone password reset" />
+	<title>Support</title>
+	<meta name="description" content="TwoTone Support Form" />
 </svelte:head>
 
 <div class="h-full mx-auto my-9 w-4/6 flex justify-center items-center">
 	<div class="space-y-10 flex flex-col items-center">
-		<h2 class="h2 text-center font-semibold">Privacy Policy</h2>
+		<h2 class="h2 text-center font-semibold">Support</h2>
 		<!-- Animated Logo -->
 		<figure>
 			<section class="img-bg" />
