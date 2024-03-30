@@ -1,7 +1,8 @@
-import { greetingRouter, searchRouter, sotdRouter } from '../routers';
+import { greetingRouter, searchRouter, sotdRouter, authRouter } from '../routers';
 import { router } from './t';
 
 export const trpcRouter = router({
+	auth: authRouter,
 	sotd: sotdRouter,
 	greeting: greetingRouter,
 	search: searchRouter
