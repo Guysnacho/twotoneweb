@@ -2,7 +2,6 @@ import { SECRET } from '$env/static/private';
 import { HttpCodes } from '$lib/constants';
 import { supabase } from '$lib/supabaseClient';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-import querystring from 'querystring';
 
 /**
  * @alias Get api secret
@@ -33,7 +32,8 @@ export const POST = (async ({ request }) => {
 			password: payload.password,
 			user_metadata: {
 				username: payload.username
-			}
+			},
+			email_confirm: true
 		})
 		.then((res) => {
 			if (res.error?.status) {
@@ -75,11 +75,11 @@ export const POST = (async ({ request }) => {
 const isValidAuthRequest = async (request: Request) => {
 	const payload = await request.json();
 	if (
-		payload.secret !== SECRET ||
-		payload.secret == null ||
 		payload.email == null ||
 		payload.username == null ||
 		payload.password == null ||
+		payload.secret !== SECRET ||
+		payload.secret == null ||
 		request.headers.get('x-trpc-source') !== 'expo-react'
 	) {
 		return null;
