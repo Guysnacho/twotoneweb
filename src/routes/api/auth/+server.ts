@@ -17,7 +17,6 @@ export const GET = (() => {
  * @description Handle supabase user creation
  */
 export const POST = (async ({ request }) => {
-	console.log('Entered new user shit');
 	const payload = await isValidAuthRequest(request);
 	if (!payload) {
 		throw error(HttpCodes.BADREQUEST, {
@@ -30,18 +29,22 @@ export const POST = (async ({ request }) => {
 		.createUser({
 			email: payload.email,
 			password: payload.password,
-			user_metadata: {
-				username: payload.username
-			},
-			email_confirm: true
+			user_metadata: { username: payload.username }
 		})
-		.then((res) => {
+		.then(async (res) => {
 			if (res.error?.status) {
 				throw error(res.error.status || HttpCodes.BADREQUEST, {
 					code: res.error.status || HttpCodes.BADREQUEST,
 					message: res.error.message
 				});
 			} else if (res.data?.user) {
+				await supabase.auth.admin.generateLink({
+					type: 'magiclink',
+					email: payload.email,
+					options: {
+						data: { username: payload.username }
+					}
+				});
 				return json(
 					{
 						username: res.data.user.user_metadata.username,
