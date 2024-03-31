@@ -1,7 +1,8 @@
-import { error, json, type RequestHandler } from '@sveltejs/kit';
 import { SECRET } from '$env/static/private';
 import { HttpCodes } from '$lib/constants';
 import { supabase } from '$lib/supabaseClient';
+import { error, json, type RequestHandler } from '@sveltejs/kit';
+import querystring from 'querystring';
 
 /**
  * @alias Get api secret
@@ -17,6 +18,7 @@ export const GET = (() => {
  * @description Handle supabase user creation
  */
 export const POST = (async ({ request }) => {
+	console.log('Entered new user shit');
 	const payload = await isValidAuthRequest(request);
 	if (!payload) {
 		throw error(HttpCodes.BADREQUEST, {
@@ -77,7 +79,8 @@ const isValidAuthRequest = async (request: Request) => {
 		payload.secret == null ||
 		payload.email == null ||
 		payload.username == null ||
-		payload.password == null
+		payload.password == null ||
+		request.headers.get('x-trpc-source') !== 'expo-react'
 	) {
 		return null;
 	} else return payload;
