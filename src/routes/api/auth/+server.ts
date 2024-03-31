@@ -18,7 +18,6 @@ export const GET = (() => {
  */
 export const POST = (async ({ request }) => {
 	const payload = await isValidAuthRequest(request);
-
 	if (!payload) {
 		throw error(HttpCodes.BADREQUEST, {
 			code: HttpCodes.BADREQUEST,
@@ -30,7 +29,6 @@ export const POST = (async ({ request }) => {
 		.createUser({
 			email: payload.email,
 			password: payload.password,
-			phone: payload.phone,
 			user_metadata: {
 				username: payload.username
 			}
@@ -79,8 +77,7 @@ const isValidAuthRequest = async (request: Request) => {
 		payload.secret == null ||
 		payload.email == null ||
 		payload.username == null ||
-		payload.password == null ||
-		payload.phone == null
+		payload.password == null
 	) {
 		return null;
 	} else return payload;
