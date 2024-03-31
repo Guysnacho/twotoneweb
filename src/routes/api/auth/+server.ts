@@ -26,10 +26,13 @@ export const POST = (async ({ request }) => {
 	}
 
 	return supabase.auth.admin
-		.createUser({
+		.generateLink({
+			type: 'signup',
 			email: payload.email,
 			password: payload.password,
-			user_metadata: { username: payload.username }
+			options: {
+				data: { username: payload.username }
+			}
 		})
 		.then(async (res) => {
 			if (res.error?.status) {
@@ -38,13 +41,6 @@ export const POST = (async ({ request }) => {
 					message: res.error.message
 				});
 			} else if (res.data?.user) {
-				await supabase.auth.admin.generateLink({
-					type: 'magiclink',
-					email: payload.email,
-					options: {
-						data: { username: payload.username }
-					}
-				});
 				return json(
 					{
 						username: res.data.user.user_metadata.username,
