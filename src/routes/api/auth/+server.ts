@@ -67,6 +67,51 @@ export const POST = (async ({ request }) => {
 }) satisfies RequestHandler;
 
 /**
+ * @description Handle supabase user deletion
+ */
+export const DELETE = (async ({ request }) => {
+	const payload = await isValidDeleteRequest(request);
+	if (!payload) {
+		throw error(HttpCodes.BADREQUEST, {
+			code: HttpCodes.BADREQUEST,
+			message: 'Invalid delete request'
+		});
+	}
+
+	return supabase.auth.admin
+		.deleteUser(payload.id)
+		.then(async (res) => {
+			if (res.error?.status) {
+				throw error(res.error.status || HttpCodes.BADREQUEST, {
+					code: res.error.status || HttpCodes.BADREQUEST,
+					message: res.error.message
+				});
+			} else if (res.data.user) {
+				return json(
+					{
+						username: res.data.user.user_metadata.username,
+						deleted_at: new Date(),
+					},
+					{ status: 204, statusText: 'Account Deleted' }
+				);
+			} else {
+				throw error(HttpCodes.INTERNALERROR, {
+					code: HttpCodes.INTERNALERROR,
+					message: 'Error during account deletion, try again later'
+				});
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+
+			throw error(HttpCodes.INTERNALERROR, {
+				code: HttpCodes.INTERNALERROR,
+				message: 'Error during account creation, try again later'
+			});
+		});
+}) satisfies RequestHandler;
+
+/**
  * Validates sign up request
  * @param request
  * @returns result of auth validation
@@ -79,6 +124,21 @@ const isValidAuthRequest = async (request: Request) => {
 		payload.password == null ||
 		payload.secret !== SECRET ||
 		payload.secret == null ||
+		request.headers.get('x-trpc-source') !== 'expo-react'
+	) {
+		return null;
+	} else return payload;
+};
+
+/**
+ * Validates delete request
+ * @param request
+ * @returns result of auth validation
+ */
+const isValidDeleteRequest = async (request: Request) => {
+	const payload = await request.json();
+	if (
+		payload.id == null ||
 		request.headers.get('x-trpc-source') !== 'expo-react'
 	) {
 		return null;
