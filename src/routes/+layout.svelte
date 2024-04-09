@@ -20,7 +20,7 @@
 			<!-- App Bar -->
 			<AppBar>
 				<svelte:fragment slot="lead">
-					<strong class="text-xl uppercase">TwoTone</strong>
+					<a class="text-xl uppercase font-bold" href="/">TwoTone</a>
 				</svelte:fragment>
 				<svelte:fragment slot="trail">
 					<a class="btn btn-sm variant-ghost-surface" href="/privacy"> Privacy </a>
