@@ -71,6 +71,8 @@ export const POST = (async ({ request }) => {
  */
 export const DELETE = (async ({ request }) => {
 	const payload = await isValidDeleteRequest(request);
+	console.log(`Delete request recieved for ${payload.id}`);
+	
 	if (!payload) {
 		throw error(HttpCodes.BADREQUEST, {
 			code: HttpCodes.BADREQUEST,
@@ -90,7 +92,7 @@ export const DELETE = (async ({ request }) => {
 				return json(
 					{
 						username: res.data.user.user_metadata.username,
-						deleted_at: new Date(),
+						deleted_at: new Date()
 					},
 					{ status: 204, statusText: 'Account Deleted' }
 				);
@@ -137,10 +139,7 @@ const isValidAuthRequest = async (request: Request) => {
  */
 const isValidDeleteRequest = async (request: Request) => {
 	const payload = await request.json();
-	if (
-		payload.id == null ||
-		request.headers.get('x-trpc-source') !== 'expo-react'
-	) {
+	if (payload.id == null || request.headers.get('x-trpc-source') !== 'expo-react') {
 		return null;
 	} else return payload;
 };
