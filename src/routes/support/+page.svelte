@@ -54,6 +54,7 @@
 					<select class="select my-4" name="type" required>
 						<option value="Login">Login</option>
 						<option value="Sign Up">Sign Up</option>
+						<option value="Account Delete">Account Delete</option>
 						<option value="Song Search">Song Search</option>
 						<option value="Profile Search">Profile Search</option>
 						<option value="Its UGLY">Its UGLY</option>
