@@ -69,11 +69,12 @@ export const POST = (async ({ request }) => {
 /**
  * @description Handle supabase user deletion
  */
-export const DELETE = (async ({ request }) => {
-	const payload = await isValidDeleteRequest(request);
-	console.log(`Delete request recieved for ${payload.id}`);
-	
-	if (!payload) {
+export const DELETE = (async ({ request, url }) => {
+	console.debug('Delete request recieved');
+
+	const id = isValidDeleteRequest(request, url);
+
+	if (!id) {
 		throw error(HttpCodes.BADREQUEST, {
 			code: HttpCodes.BADREQUEST,
 			message: 'Invalid delete request'
@@ -81,7 +82,7 @@ export const DELETE = (async ({ request }) => {
 	}
 
 	return supabase.auth.admin
-		.deleteUser(payload.id)
+		.deleteUser(id)
 		.then(async (res) => {
 			if (res.error?.status) {
 				throw error(res.error.status || HttpCodes.BADREQUEST, {
@@ -91,7 +92,7 @@ export const DELETE = (async ({ request }) => {
 			} else if (res.data.user) {
 				return json(
 					{
-						username: res.data.user.user_metadata.username,
+						id,
 						deleted_at: new Date()
 					},
 					{ status: 204, statusText: 'Account Deleted' }
@@ -137,9 +138,8 @@ const isValidAuthRequest = async (request: Request) => {
  * @param request
  * @returns result of auth validation
  */
-const isValidDeleteRequest = async (request: Request) => {
-	const payload = await request.json();
-	if (payload.id == null || request.headers.get('x-trpc-source') !== 'expo-react') {
-		return null;
-	} else return payload;
+const isValidDeleteRequest = (request: Request, url: URL) => {
+	if (request.headers.get('x-trpc-source') !== 'expo-react' || !url.searchParams.has('id'))
+		return undefined;
+	return url.searchParams.get('id') as string;
 };
