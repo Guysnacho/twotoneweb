@@ -95,7 +95,7 @@ export const DELETE = (async ({ request, url }) => {
 						id,
 						deleted_at: new Date()
 					},
-					{ status: 204, statusText: 'Account Deleted' }
+					{ status: 200, statusText: 'Account Deleted' }
 				);
 			} else {
 				throw error(HttpCodes.INTERNALERROR, {
@@ -109,7 +109,7 @@ export const DELETE = (async ({ request, url }) => {
 
 			throw error(HttpCodes.INTERNALERROR, {
 				code: HttpCodes.INTERNALERROR,
-				message: 'Error during account creation, try again later'
+				message: 'Error during account deletion, try again later'
 			});
 		});
 }) satisfies RequestHandler;
