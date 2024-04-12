@@ -67,7 +67,7 @@
 					<dd>
 						Tunji Productions respects the intellectual property rights of others, and requires its
 						users to do the same. If you believe that your copyrighted work has been reproduced in a
-						manner which constitutes copyright infringement, you may notify Sonemic's copyright
+						manner which constitutes copyright infringement, you may notify Tunji Production's copyright
 						agent in accordance with Title 17, United States Code, Section 512(c)(2), by providing
 						the following:
 						<ul class="space-y-4 list-disc list-inside my-5">
