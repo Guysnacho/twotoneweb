@@ -1,9 +1,45 @@
+import { MY_EMAIL, RESEND_API_KEY } from '$env/static/private';
 import { supabase } from '$lib/supabaseClient';
 import { Actions } from '@sveltejs/kit';
+import { Resend } from 'resend';
+
+const resend = new Resend(RESEND_API_KEY);
 
 export const actions = {
 	default: async ({ request }) => {
 		const input = await request.formData();
+
+		const { error } = await resend.emails.send({
+			from: 'TwoTone <team@messages.twotone.app>',
+			to: MY_EMAIL,
+			subject: 'TwoTone Support',
+			html: `<div>
+			<img
+			  src="https://twotone.app/_app/immutable/assets/logo.d02cbc58.png"
+			  alt="TwoTone Logo"
+			  style="margin-inline: auto"
+			  height="320px"
+			  width="320px"
+			/>
+			<h3 style="text-align: center">TwoTone Support</h3>
+			<br />
+			<div>
+			  <p>
+				You've recieved a new support ticket, go help ${input.get('username')}
+				out.
+			  </p>
+			  <ul>
+				<li>Email - ${input.get('email')}</li>
+				<li>Username - ${input.get('username')}</li>
+				<li>Type - ${input.get('type')}</li>
+				<li>Platform - ${input.get('platform')}</li>
+				<br />
+				<li>Description - ${input.get('description')}</li>
+			  </ul>
+			</div>
+		  </div>
+		  `
+		});
 
 		return await supabase
 			.from('support_tickets')
@@ -12,7 +48,8 @@ export const actions = {
 				username: input.get('username') as string,
 				type: (input.get('type') as string) || 'TBD',
 				description: input.get('description') as string,
-				platform: input.get('platform') as string
+				platform: input.get('platform') as string,
+				email_error: error?.message
 			})
 			.then(({ status, statusText, error }) => {
 				if (error) {

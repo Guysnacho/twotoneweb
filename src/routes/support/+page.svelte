@@ -1,7 +1,16 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Logo from '$lib/logo.png';
+	import { ConicGradient, type ConicStop } from '@skeletonlabs/skeleton';
 	import type { ActionData } from './$types';
 	export let form: ActionData;
+
+	const conicStops: ConicStop[] = [
+		{ color: 'transparent', start: 0, end: 25 },
+		{ color: 'rgb(var(--color-secondary-500))', start: 75, end: 100 }
+	];
+
+	$: loading = false;
 </script>
 
 <svelte:head>
@@ -36,8 +45,21 @@
 						class="underline">team@twotone.app</a
 					>. We'll get this sorted one way or another.
 				</h4>
+			{:else if loading}
+				<ConicGradient stops={conicStops} spin>Launching carrier pigeon</ConicGradient>
 			{:else}
-				<form method="POST">
+				<form
+					method="POST"
+					use:enhance={() => {
+						loading = true;
+						return ({ update }) => {
+							// Set invalidateAll to false if you don't want to reload page data when submitting
+							update({ invalidateAll: false }).finally(async () => {
+								loading = false;
+							});
+						};
+					}}
+				>
 					<label class="label" aria-required>
 						<span>Email</span>
 						<input
