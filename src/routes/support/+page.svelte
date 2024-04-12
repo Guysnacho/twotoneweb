@@ -1,7 +1,16 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Logo from '$lib/logo.png';
+	import { ConicGradient, type ConicStop } from '@skeletonlabs/skeleton';
 	import type { ActionData } from './$types';
 	export let form: ActionData;
+
+	const conicStops: ConicStop[] = [
+		{ color: 'transparent', start: 0, end: 25 },
+		{ color: 'rgb(var(--color-secondary-500))', start: 75, end: 100 }
+	];
+
+	$: loading = false;
 </script>
 
 <svelte:head>
@@ -31,12 +40,27 @@
 				<h4 class="h4 text-center font-semibold">Gotcha, we'll get back to you asap!</h4>
 			{:else if form?.error}
 				<h4 class="h4 text-center font-semibold">
-					Something went wrong, try again later or email us directly. We'll get this sorted one way
-					or another.
+					Something went wrong, try again later or email us directly at <a
+						href="mailto:team@twotone.app"
+						class="underline">team@twotone.app</a
+					>. We'll get this sorted one way or another.
 				</h4>
+			{:else if loading}
+				<ConicGradient stops={conicStops} spin>Launching carrier pigeon</ConicGradient>
 			{:else}
-				<form method="POST">
-					<label class="label">
+				<form
+					method="POST"
+					use:enhance={() => {
+						loading = true;
+						return ({ update }) => {
+							// Set invalidateAll to false if you don't want to reload page data when submitting
+							update({ invalidateAll: false }).finally(async () => {
+								loading = false;
+							});
+						};
+					}}
+				>
+					<label class="label" aria-required>
 						<span>Email</span>
 						<input
 							class="input p-3"
@@ -50,28 +74,32 @@
 						<span>Username</span>
 						<input class="input p-3" name="username" type="text" />
 					</label>
-					<label class="label mt-3">Type of Problem</label>
-					<select class="select my-4" name="type" required>
-						<option value="Login">Login</option>
-						<option value="Sign Up">Sign Up</option>
-						<option value="Account Delete">Account Delete</option>
-						<option value="Song Search">Song Search</option>
-						<option value="Profile Search">Profile Search</option>
-						<option value="Its UGLY">Its UGLY</option>
-						<option value="Other">Other</option>
-					</select>
-					<div class="space-y-2">
-						<label class="label mt-3">Platform</label>
-						<label class="flex items-center space-x-2">
-							<input class="radio" type="radio" checked name="platform" value="iOS" />
-							<p>iOS</p>
-						</label>
-						<label class="flex items-center space-x-2">
-							<input class="radio" type="radio" name="platform" value="Android" />
-							<p>Android</p>
+					<label class="label mt-3"
+						>Type of Problem
+						<select class="select my-4" name="type" required>
+							<option value="Login">Login</option>
+							<option value="Sign Up">Sign Up</option>
+							<option value="Account Delete">Account Delete</option>
+							<option value="Song Search">Song Search</option>
+							<option value="Profile Search">Profile Search</option>
+							<option value="Its UGLY">Its UGLY</option>
+							<option value="Other">Other</option>
+						</select>
+					</label>
+					<div class="space-y-2" aria-required>
+						<label class="label mt-3"
+							>Platform
+							<label class="flex items-center space-x-2">
+								<input class="radio" type="radio" checked name="platform" value="iOS" />
+								<p>iOS</p>
+							</label>
+							<label class="flex items-center space-x-2">
+								<input class="radio" type="radio" name="platform" value="Android" />
+								<p>Android</p>
+							</label>
 						</label>
 					</div>
-					<label class="label">
+					<label class="label" aria-required>
 						<span>Okay so what happened?</span>
 						<textarea
 							class="textarea p-3 line"

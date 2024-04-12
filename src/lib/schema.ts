@@ -256,6 +256,7 @@ export type Database = {
 					created_at: string;
 					description: string;
 					email: string;
+					email_error: string | null;
 					id: number;
 					platform: string;
 					type: string | null;
@@ -265,6 +266,7 @@ export type Database = {
 					created_at?: string;
 					description: string;
 					email: string;
+					email_error?: string | null;
 					id?: number;
 					platform: string;
 					type?: string | null;
@@ -274,6 +276,7 @@ export type Database = {
 					created_at?: string;
 					description?: string;
 					email?: string;
+					email_error?: string | null;
 					id?: number;
 					platform?: string;
 					type?: string | null;
