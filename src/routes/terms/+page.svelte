@@ -61,9 +61,53 @@
 			</div>
 			<div>
 				<span
+					><dt class="text-lg text-tertiary-400 font-semibold">
+						DMCA | Claims of Copyright Infringement
+					</dt>
+					<dd>
+						Tunji Productions respects the intellectual property rights of others, and requires its
+						users to do the same. If you believe that your copyrighted work has been reproduced in a
+						manner which constitutes copyright infringement, you may notify Sonemic's copyright
+						agent in accordance with Title 17, United States Code, Section 512(c)(2), by providing
+						the following:
+						<ul class="space-y-4 list-disc list-inside my-5">
+							<li class="list-item">
+								Identification of the copyrighted work that you claim has been infringed;
+							</li>
+							<li class="list-item">
+								Identification of the material that you claim is infringing and needs to be removed,
+								including a description of where it is located on the Services so that the copyright
+								agent can locate it;
+							</li>
+							<li class="list-item">
+								Your address, telephone number, and, if available, e-mail address, so that the
+								copyright agent may contact you about your complaint; and
+							</li>
+							<li class="list-item">
+								A signed statement that the above information is accurate; that you have a good
+								faith belief that the identified use of the material is not authorized by the
+								copyright owner, its agent, or the law; and, under penalty of perjury, that you are
+								the copyright owner or are authorized to act on the copyright owner’s behalf in this
+								situation.
+							</li>
+						</ul>
+						<p>Notices of copyright infringement claims should be sent as follows:</p>
+						<p>by email: <a href="mailto:team@twotone.app" class="underline">team@twotone.app</a></p>
+					</dd></span
+				>
+			</div>
+			<div>
+				<span
 					><dt class="text-lg text-tertiary-400 font-semibold">Ownership of Content</dt>
-					<dd>Tunji Productions owns the app TwoTone and the content hosted on the app.</dd>
-					<dd>However, user-created content can be attributed to individual posters.</dd>
+					<dd>Tunji Productions owns the app TwoTone.</dd>
+					<dd>
+						TwoTone (and Tunji Productions by extension) does not attempt to claim copyright or
+						ownership of material that you submit, however, TwoTone claims a non-exclusive
+						worldwide, royalty free, perpetual, non-revocable license to reproduce your material
+						(Otherwise, we would not be able to display it to other users). In addition, you agree
+						to give other users the same license to reprint or save your material for their personal
+						use.
+					</dd>
 				</span>
 			</div>
 			<div>

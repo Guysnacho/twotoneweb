@@ -23,6 +23,7 @@
 					<a class="text-xl uppercase font-bold" href="/">TwoTone</a>
 				</svelte:fragment>
 				<svelte:fragment slot="trail">
+					<a class="btn btn-sm variant-ghost-surface" href="/terms"> Terms n That </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/privacy"> Privacy </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/support"> Support </a>
 				</svelte:fragment>
