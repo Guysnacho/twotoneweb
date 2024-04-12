@@ -31,12 +31,14 @@
 				<h4 class="h4 text-center font-semibold">Gotcha, we'll get back to you asap!</h4>
 			{:else if form?.error}
 				<h4 class="h4 text-center font-semibold">
-					Something went wrong, try again later or email us directly. We'll get this sorted one way
-					or another.
+					Something went wrong, try again later or email us directly at <a
+						href="mailto:team@twotone.app"
+						class="underline">team@twotone.app</a
+					>. We'll get this sorted one way or another.
 				</h4>
 			{:else}
 				<form method="POST">
-					<label class="label">
+					<label class="label" aria-required>
 						<span>Email</span>
 						<input
 							class="input p-3"
@@ -50,28 +52,32 @@
 						<span>Username</span>
 						<input class="input p-3" name="username" type="text" />
 					</label>
-					<label class="label mt-3">Type of Problem</label>
-					<select class="select my-4" name="type" required>
-						<option value="Login">Login</option>
-						<option value="Sign Up">Sign Up</option>
-						<option value="Account Delete">Account Delete</option>
-						<option value="Song Search">Song Search</option>
-						<option value="Profile Search">Profile Search</option>
-						<option value="Its UGLY">Its UGLY</option>
-						<option value="Other">Other</option>
-					</select>
-					<div class="space-y-2">
-						<label class="label mt-3">Platform</label>
-						<label class="flex items-center space-x-2">
-							<input class="radio" type="radio" checked name="platform" value="iOS" />
-							<p>iOS</p>
-						</label>
-						<label class="flex items-center space-x-2">
-							<input class="radio" type="radio" name="platform" value="Android" />
-							<p>Android</p>
+					<label class="label mt-3"
+						>Type of Problem
+						<select class="select my-4" name="type" required>
+							<option value="Login">Login</option>
+							<option value="Sign Up">Sign Up</option>
+							<option value="Account Delete">Account Delete</option>
+							<option value="Song Search">Song Search</option>
+							<option value="Profile Search">Profile Search</option>
+							<option value="Its UGLY">Its UGLY</option>
+							<option value="Other">Other</option>
+						</select>
+					</label>
+					<div class="space-y-2" aria-required>
+						<label class="label mt-3"
+							>Platform
+							<label class="flex items-center space-x-2">
+								<input class="radio" type="radio" checked name="platform" value="iOS" />
+								<p>iOS</p>
+							</label>
+							<label class="flex items-center space-x-2">
+								<input class="radio" type="radio" name="platform" value="Android" />
+								<p>Android</p>
+							</label>
 						</label>
 					</div>
-					<label class="label">
+					<label class="label" aria-required>
 						<span>Okay so what happened?</span>
 						<textarea
 							class="textarea p-3 line"

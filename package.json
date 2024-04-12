@@ -45,6 +45,7 @@
 		"@trpc/client": "^10.45.0",
 		"@trpc/server": "^10.38.2",
 		"musicbrainz-api": "^0.14.0",
+		"resend": "^3.2.0",
 		"superjson": "^1.13.1",
 		"trpc-svelte-query": "^2.0.5",
 		"zod": "^3.22.2"
