@@ -29,7 +29,7 @@ export const sotdRouter = router({
 		const supabaseQuery = await supabase
 			.from('sotd')
 			.select(
-				'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url)'
+				'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
 			)
 			.limit(15);
 		return supabaseQuery;
