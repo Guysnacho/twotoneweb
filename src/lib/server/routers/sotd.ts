@@ -26,12 +26,22 @@ export const sotdRouter = router({
 			return supabaseQuery.data;
 		}),
 	getFeed: superSecretProc.query(async ({ ctx: { supabase } }) => {
-		const supabaseQuery = await supabase
+		const { data, error, count } = await supabase
 			.from('sotd')
 			.select(
 				'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
 			)
 			.limit(15);
-		return supabaseQuery;
+
+		if (error) {
+			throw error;
+		}
+
+		if (count) {
+			console.debug('Get Supabase Results');
+			console.debug(data[0]);
+		}
+
+		return data;
 	})
 });
