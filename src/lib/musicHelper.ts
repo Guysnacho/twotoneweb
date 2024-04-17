@@ -1,6 +1,9 @@
 import type { IReleaseMatch } from 'musicbrainz-api';
 
-export interface ServiceResult {
+/**
+ * @deprecated
+ */
+export interface DeezerServiceResult {
 	id: string;
 	readable: boolean;
 	title: string;
@@ -19,7 +22,10 @@ export interface ServiceResult {
 	type: string;
 }
 
-export interface Album {
+/**
+ * @deprecated
+ */
+export interface DeezerAlbum {
 	id: string;
 	title: string;
 	cover: string;
@@ -32,7 +38,10 @@ export interface Album {
 	type: string;
 }
 
-export interface Artist {
+/**
+ * @deprecated
+ */
+export interface DeezerArtist {
 	id: string;
 	name: string;
 	link: string;
@@ -43,6 +52,63 @@ export interface Artist {
 	picture_xl: string;
 	tracklist: string;
 	type: string;
+}
+
+export interface Track {
+	album: Album;
+	artists: Artist[];
+	disc_number: number;
+	duration_ms: number;
+	explicit: boolean;
+	external_ids: ExternalIDS;
+	external_urls: ExternalUrls;
+	href: string;
+	id: string;
+	is_local: boolean;
+	name: string;
+	popularity: number;
+	preview_url: string;
+	track_number: number;
+	type: string;
+	uri: string;
+}
+
+export interface Album {
+	album_type: string;
+	artists: Artist[];
+	external_urls: ExternalUrls;
+	href: string;
+	id: string;
+	images: Image[];
+	name: string;
+	release_date: Date;
+	release_date_precision: string;
+	total_tracks: number;
+	type: string;
+	uri: string;
+}
+
+export interface Artist {
+	external_urls: ExternalUrls;
+	href: string;
+	id: string;
+	name: string;
+	type: string;
+	uri: string;
+}
+
+export interface ExternalUrls {
+	spotify: string;
+}
+
+export interface Image {
+	height: number;
+	url: string;
+	width: number;
+}
+
+export interface ExternalIDS {
+	isrc: string;
 }
 
 export const formatMusicBrainzResults = (songList: IReleaseMatch[]) => {
@@ -57,11 +123,12 @@ export const formatMusicBrainzResults = (songList: IReleaseMatch[]) => {
 };
 
 /**
+ * @deprecated
  * @description Trims song api response
  * @param songList
  * @returns formattedList
  */
-export const formatDeezerResults = (songList: ServiceResult[]) => {
+export const formatDeezerResults = (songList: DeezerServiceResult[]) => {
 	const formattedList = songList.map((song) => {
 		return {
 			service_id: song.id,
@@ -71,6 +138,32 @@ export const formatDeezerResults = (songList: ServiceResult[]) => {
 			album_art: song.album.cover_big,
 			preview_url: song.preview,
 			explicit: song.explicit_lyrics
+		};
+	});
+	return formattedList;
+};
+
+/**
+ * @description Trims song api response
+ * @param songList
+ * @returns formattedList
+ */
+export const formatSpotifyResults = (songList: Track[]) => {
+	const formattedList = songList.map((song) => {
+		let artistList: undefined | string = undefined;
+		song.artists.forEach((val) => {
+			artistList ? (artistList = val.name) : (artistList = artistList + `, ${val.name}`);
+		});
+		return {
+			service_id: song.id,
+			title: song.name,
+			album: song.album.name,
+			artists: artistList,
+			album_art:
+				song.album.images.length >= 2 ? song.album.images[1].url : song.album.images[1].url,
+			preview_url: song.external_urls?.spotify,
+			explicit: song.explicit,
+			isrc: song?.external_ids?.isrc
 		};
 	});
 	return formattedList;
