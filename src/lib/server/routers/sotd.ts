@@ -31,6 +31,7 @@ export const sotdRouter = router({
 			.select(
 				'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
 			)
+			.order('created_at', { ascending: false })
 			.limit(15);
 
 		if (error) {

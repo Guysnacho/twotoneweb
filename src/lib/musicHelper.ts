@@ -152,7 +152,7 @@ export const formatSpotifyResults = (songList: Track[]) => {
 	const formattedList = songList.map((song) => {
 		let artistList: undefined | string = undefined;
 		song.artists.forEach((val) => {
-			artistList ? (artistList = val.name) : (artistList = artistList + `, ${val.name}`);
+			!artistList ? (artistList = val.name) : (artistList = artistList + `, ${val.name}`);
 		});
 		return {
 			service_id: song.id,
