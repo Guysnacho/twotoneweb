@@ -24,5 +24,24 @@ export const sotdRouter = router({
 			console.debug('Fetched Songs of the day for user %s', id);
 
 			return supabaseQuery.data;
-		})
+		}),
+	getFeed: superSecretProc.query(async ({ ctx: { supabase } }) => {
+		const { data, error, count } = await supabase
+			.from('sotd')
+			.select(
+				'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
+			)
+			.limit(15);
+
+		if (error) {
+			throw error;
+		}
+
+		if (count) {
+			console.debug('Get Supabase Results');
+			console.debug(data[0]);
+		}
+
+		return data;
+	})
 });
