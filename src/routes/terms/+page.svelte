@@ -52,10 +52,11 @@
 			</div>
 			<div>
 				<span
-					><dt class="text-lg text-tertiary-400 font-semibold">Use of Deezer</dt>
+					><dt class="text-lg text-tertiary-400 font-semibold">Use of Spotify</dt>
 					<dd>
-						TwoTone utilizes Deezer for song results, with proper attribution given to the
-						respective songs.
+						TwoTone utilizes Spotify for song results, with proper attribution given to the
+						respective songs. By using the Spotify Platform we also comply with the full developer
+						terms of service and the licencing associated with it.
 					</dd></span
 				>
 			</div>
@@ -67,9 +68,9 @@
 					<dd>
 						Tunji Productions respects the intellectual property rights of others, and requires its
 						users to do the same. If you believe that your copyrighted work has been reproduced in a
-						manner which constitutes copyright infringement, you may notify Tunji Production's copyright
-						agent in accordance with Title 17, United States Code, Section 512(c)(2), by providing
-						the following:
+						manner which constitutes copyright infringement, you may notify Tunji Production's
+						copyright agent in accordance with Title 17, United States Code, Section 512(c)(2), by
+						providing the following:
 						<ul class="space-y-4 list-disc list-inside my-5">
 							<li class="list-item">
 								Identification of the copyrighted work that you claim has been infringed;
@@ -92,7 +93,9 @@
 							</li>
 						</ul>
 						<p>Notices of copyright infringement claims should be sent as follows:</p>
-						<p>by email: <a href="mailto:team@twotone.app" class="underline">team@twotone.app</a></p>
+						<p>
+							by email: <a href="mailto:team@twotone.app" class="underline">team@twotone.app</a>
+						</p>
 					</dd></span
 				>
 			</div>
