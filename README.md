@@ -39,7 +39,7 @@ Auth routes `/api/auth`
   [ ] - ~~Bubbles~~ Stickies
   [ ] - Playlists
 
-### Anthalogy
+### Anthology
 
   [ ] - List of the week
   [ ] - user's lists
