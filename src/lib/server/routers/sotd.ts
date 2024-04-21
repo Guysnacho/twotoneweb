@@ -25,24 +25,27 @@ export const sotdRouter = router({
 
 			return supabaseQuery.data;
 		}),
-	getFeed: superSecretProc.query(async ({ ctx: { supabase } }) => {
-		const { data, error, count } = await supabase
-			.from('sotd')
-			.select(
-				'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
-			)
-			.order('created_at', { ascending: false })
-			.limit(15);
+	getFeed: superSecretProc.query(
+		async ({
+			ctx: {
+				supabase,
+				session: { user }
+			}
+		}) => {
+			const { data, error, count } = await supabase
+				.from('sotd')
+				.select(
+					'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
+				)
+				.order('created_at', { ascending: false })
+				.limit(15);
 
-		if (error) {
-			throw error;
+			if (error) {
+				throw error;
+			}
+
+			console.debug('Fetched Feed for user %s', user.id);
+			return data;
 		}
-
-		if (count) {
-			console.debug('Get Supabase Results');
-			console.debug(data[0]);
-		}
-
-		return data;
-	})
+	)
 });
