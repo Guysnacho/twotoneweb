@@ -19,7 +19,7 @@
 		<p class="text-center">
 			Okay so boom, I'm not stealing anything and I don't plan on it, ever. Thank you for your time
 			😌
-			<br /> I'll Also find a way to add a changelog to this page so you can see iterations.
+			<br /> I'll also find a way to add a changelog to this page so you can see iterations.
 		</p>
 		<p>
 			Quick breakdown while I'm building stuff goes like this. I and Tunji Productions won't EVER
