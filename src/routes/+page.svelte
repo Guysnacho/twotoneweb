@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Logo from '$lib/logo.png';
+	import AppleSVG from '$lib/white-appstore-badge.svg';
 </script>
 
 <svelte:head>
@@ -7,7 +8,7 @@
 	<meta name="description" content="Home of organic music descovery. TwoTone music store" />
 </svelte:head>
 
-<div class="container h-full mx-auto flex justify-center items-center">
+<div class="container h-5/6 mx-auto flex justify-center items-center">
 	<div class="space-y-10 text-center flex flex-col items-center">
 		<h2 class="h2">Find music your way</h2>
 		<!-- Animated Logo -->
@@ -16,8 +17,20 @@
 			<img class="h-15 w-15" src={Logo} alt="TwoTone Logo" />
 		</figure>
 		<!-- / -->
-		<h2>TwoTone</h2>
+		<h2 class="h2">TwoTone</h2>
 	</div>
+</div>
+<div class="container mx-auto w-36 items-center">
+	<a
+		class="flex justify-center"
+		href="https://apps.apple.com/us/app/twotone-music/id6479975992?platform=iphone"
+		referrerpolicy="origin"
+		target="_blank"><img src={AppleSVG} alt="Apple Appstore Badge" /></a
+	>
+	<p class="text-center">or</p>
+	<a href="https://fsjr20c99uz.typeform.com/to/z7iuyYji" target="_blank" class="text-center"
+		><p>[ <span class="underline">Join the Waitlist!</span> ]</p></a
+	>
 </div>
 
 <style lang="postcss">
