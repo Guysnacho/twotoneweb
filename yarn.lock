@@ -12,11 +12,6 @@
   resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
-"@aptabase/web@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@aptabase/web/-/web-0.4.2.tgz#19b080fa33f842cd5abaf25ebfb19a70e39f182d"
-  integrity sha512-BixfHx2WzyGxwsHJwWkn5rHzN7EqgaHDgX3gcgNLnlXaxibOE8tJSOedoTy2W9ToVwlTCV69TvnacB4NMX8E1g==
-
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.18.20.tgz#984b4f9c8d0377443cc2dfcef266d02244593622"

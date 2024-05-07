@@ -1,7 +1,7 @@
 import { createContext } from '$lib/server/trpc/context';
+import { init } from '@aptabase/web';
 import { createTRPCSvelteServer } from 'trpc-svelte-query/server';
 import { trpcRouter } from './router';
-import { init, trackEvent } from '@aptabase/web';
 
 init('A-US-3188236203'); // 👈 this is where you enter your App Key
 
