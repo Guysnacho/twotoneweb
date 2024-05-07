@@ -10,15 +10,10 @@ export const trpcServer = createTRPCSvelteServer({
 	endpoint: '/api/trpc',
 	router: trpcRouter,
 	createContext: createContext,
-	onError: ({ path, error, ctx }) => {
+	onError: ({ path, error, ctx }) =>
 		console.log(
 			`request to ${path} from ${ctx?.requestOrigin || ctx?.event.platform} failed with error ${
 				error.message
 			}`
-		);
-		trackEvent('trpc_error', { path: path || '', error: error.message });
-		if (!error.message.includes('UNAUTHORIZED')) {
-			trackEvent('trpc_error', { path: path || '', error: error.message });
-		}
-	}
+		)
 });
