@@ -8,9 +8,7 @@
 	import '../app.postcss';
 	import { trpc } from './api/trpc/trpc.client';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
-	import { init } from '@aptabase/web';
 
-	init('A-US-3188236203'); // 👈 this is where you enter your App Key
 	//@ts-ignore
 	$: queryClient = trpc.queryClient;
 </script>

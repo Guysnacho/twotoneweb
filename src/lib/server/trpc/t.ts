@@ -1,11 +1,9 @@
 import { SEARCH_SECRET } from '$env/static/private';
-import { init } from '@aptabase/web';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { stringify } from 'querystring';
 import SuperJSON from 'superjson';
 import type { Context } from './context';
 
-init('A-US-3188236203'); // 👈 this is where you enter your App Key
 
 export const t = initTRPC.context<Context>().create({
 	transformer: SuperJSON

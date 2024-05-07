@@ -1,9 +1,6 @@
 import { createContext } from '$lib/server/trpc/context';
-import { init } from '@aptabase/web';
 import { createTRPCSvelteServer } from 'trpc-svelte-query/server';
 import { trpcRouter } from './router';
-
-init('A-US-3188236203'); // 👈 this is where you enter your App Key
 
 export const trpcServer = createTRPCSvelteServer({
 	batching: { enabled: true },
