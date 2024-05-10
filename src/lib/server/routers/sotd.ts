@@ -45,7 +45,7 @@ export const sotdRouter = router({
 			if (supabaseQuery.error) {
 				throw new TRPCError({ code: 'FORBIDDEN' });
 			}
-			console.debug(`Fetched Page ${page}Songs of the day for user ${id}`);
+			console.debug(`Fetched Page ${page} Songs of the day for user ${id}`);
 
 			return supabaseQuery.data;
 		}),
