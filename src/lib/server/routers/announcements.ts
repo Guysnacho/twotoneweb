@@ -1,5 +1,4 @@
 import { TRPCError } from '@trpc/server';
-import SuperJSON from 'superjson';
 
 import { publicProc, router } from '../trpc/t';
 
@@ -7,7 +6,7 @@ export const announcementsRouter = router({
 	get: publicProc.query(async ({ ctx: { supabase } }) => {
 		const { data, error } = await supabase.storage
 			.from('static')
-			.download('notifications/announcements.json', { transform: { format: 'origin' } });
+			.download('notifications/announcements.json');
 		if (data) {
 			console.debug('Fetched announcements');
 			const string = await data.text();
