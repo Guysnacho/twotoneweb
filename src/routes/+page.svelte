@@ -28,7 +28,7 @@
 		target="_blank"><img src={AppleSVG} alt="Apple Appstore Badge" /></a
 	>
 	<p class="text-center">or</p>
-	<a href="https://fsjr20c99uz.typeform.com/to/z7iuyYji" target="_blank" class="text-center"
+	<a href="https://x3yn84lm.forms.app/twotone-application-form" target="_blank" class="text-center"
 		><p>[ <span class="underline">Join the Waitlist!</span> ]</p></a
 	>
 </div>
