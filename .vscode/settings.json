@@ -1,7 +1,5 @@
 {
-	"prettier.documentSelectors": [
-		"**/*.svelte"
-	],
+	"prettier.documentSelectors": ["**/*.svelte"],
 	"tailwindCSS.classAttributes": [
 		"class",
 		"accent",
@@ -101,5 +99,8 @@
 		"track",
 		"width",
 		"zIndex"
-	]
+	],
+	"deno.enable": false,
+	"deno.unstable": false,
+	"deno.importMap": "../supabase/functions/import_map.json"
 }
