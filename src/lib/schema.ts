@@ -238,7 +238,7 @@ export type Database = {
 					{
 						foreignKeyName: 'public_sotd_song_id_fkey';
 						columns: ['song_id'];
-						isOneToOne: true;
+						isOneToOne: false;
 						referencedRelation: 'song';
 						referencedColumns: ['service_id'];
 					},
