@@ -10,7 +10,7 @@ export const sotdRouter = router({
 			})
 		)
 		.query(async ({ ctx: { supabase }, input: { id } }) => {
-			const supabaseQuery = await supabase
+			const { data, error } = await supabase
 				.from('sotd')
 				.select(
 					'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url)'
@@ -18,12 +18,12 @@ export const sotdRouter = router({
 				.eq('user_id', id)
 				.order('created_at', { ascending: false })
 				.limit(10);
-			if (supabaseQuery.error) {
+			if (error) {
 				throw new TRPCError({ code: 'FORBIDDEN' });
 			}
-			console.debug('Fetched Songs of the day for user %s', id);
+			console.debug(`Fetched Songs of the day for user ${id}`);
 
-			return supabaseQuery.data;
+			return data;
 		}),
 	getPageById: superSecretProc
 		.input(
@@ -33,7 +33,7 @@ export const sotdRouter = router({
 			})
 		)
 		.query(async ({ ctx: { supabase }, input: { id, page } }) => {
-			const supabaseQuery = await supabase
+			const { data, error } = await supabase
 				.from('sotd')
 				.select(
 					'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url)'
@@ -42,12 +42,12 @@ export const sotdRouter = router({
 				.order('created_at', { ascending: false })
 				.range(page * 10, page * 10 + 10)
 				.limit(10);
-			if (supabaseQuery.error) {
+			if (error) {
 				throw new TRPCError({ code: 'FORBIDDEN' });
 			}
 			console.debug(`Fetched Page ${page} Songs of the day for user ${id}`);
 
-			return supabaseQuery.data;
+			return data;
 		}),
 	getFeed: superSecretProc.query(
 		async ({
@@ -56,7 +56,7 @@ export const sotdRouter = router({
 				session: { user }
 			}
 		}) => {
-			const { data, error, count } = await supabase
+			const { data, error } = await supabase
 				.from('sotd')
 				.select(
 					'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
@@ -68,7 +68,7 @@ export const sotdRouter = router({
 				throw error;
 			}
 
-			console.debug('Fetched Feed for user %s', user.id);
+			console.debug(`Fetched Feed for user ${user.id}`);
 			return data;
 		}
 	),
@@ -86,7 +86,7 @@ export const sotdRouter = router({
 					session: { user }
 				}
 			}) => {
-				const { data, error, count } = await supabase
+				const { data, error } = await supabase
 					.from('sotd')
 					.select(
 						'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
