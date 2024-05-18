@@ -6,7 +6,7 @@ export const sotdRouter = router({
 	getById: superSecretProc
 		.input(
 			z.object({
-				id: z.string().min(1).describe('User id for sotd results // Must be TwoTone ID')
+				id: z.string().describe('User id for sotd results // Must be TwoTone ID')
 			})
 		)
 		.query(async ({ ctx: { supabase }, input: { id } }) => {
@@ -28,8 +28,8 @@ export const sotdRouter = router({
 	getPageById: superSecretProc
 		.input(
 			z.object({
-				id: z.string().min(1).describe('User id for sotd results // Must be TwoTone ID'),
-				page: z.number().min(1).describe('Page number of feed // Must be at least page 1')
+				id: z.string().describe('User id for sotd results // Must be TwoTone ID'),
+				page: z.number().describe('Page number of feed // Must be at least page 1')
 			})
 		)
 		.query(async ({ ctx: { supabase }, input: { id, page } }) => {
@@ -75,7 +75,7 @@ export const sotdRouter = router({
 	getFeedPage: superSecretProc
 		.input(
 			z.object({
-				page: z.number().min(1).describe('Page number of feed // Must be at least page 1')
+				page: z.number().describe('Page number of feed // Must be at least page 1')
 			})
 		)
 		.query(
