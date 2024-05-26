@@ -51,6 +51,39 @@ export type Database = {
 					}
 				];
 			};
+			followers: {
+				Row: {
+					followed_at: string | null;
+					followee_id: string;
+					follower_id: string;
+				};
+				Insert: {
+					followed_at?: string | null;
+					followee_id: string;
+					follower_id: string;
+				};
+				Update: {
+					followed_at?: string | null;
+					followee_id?: string;
+					follower_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'followers_followee_id_fkey';
+						columns: ['followee_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'followers_follower_id_fkey';
+						columns: ['follower_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			installs: {
 				Row: {
 					expo_tokens: string[] | null;
