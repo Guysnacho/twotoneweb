@@ -5,6 +5,8 @@ import { router, superSecretProc } from '../trpc/t';
 
 type SotdWFollowStatus = {
 	following: boolean;
+	user: Database['public']['Tables']['users']['Row'];
+	song: Database['public']['Tables']['song']['Row'];
 } & Database['public']['Tables']['sotd']['Row'];
 
 export const sotdRouter = router({
