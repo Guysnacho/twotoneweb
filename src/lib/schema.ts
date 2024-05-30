@@ -69,14 +69,14 @@ export type Database = {
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'followers_followee_id_fkey';
+						foreignKeyName: 'followee';
 						columns: ['followee_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'followers_follower_id_fkey';
+						foreignKeyName: 'follower';
 						columns: ['follower_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
@@ -402,13 +402,32 @@ export type Database = {
 				};
 				Returns: string;
 			};
+			get_sotd_w_following_user_id: {
+				Args: {
+					persona: string;
+				};
+				Returns: {
+					id: string;
+					content: string;
+					created_at: string;
+					song: Json;
+					user: Json;
+					following: boolean;
+				}[];
+			};
 		};
 		Enums: {
 			app_role: 'STOCK' | 'CURATOR' | 'ADMIN';
 			user_status: 'ONLINE' | 'OFFLINE' | 'LISTENING';
 		};
 		CompositeTypes: {
-			[_ in never]: never;
+			sotd_result: {
+				id: string | null;
+				content: string | null;
+				created_at: string | null;
+				song: Json | null;
+				user: Json | null;
+			};
 		};
 	};
 };

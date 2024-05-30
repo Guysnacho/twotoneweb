@@ -1,6 +1,11 @@
+import { Database } from '$lib/schema';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { router, superSecretProc } from '../trpc/t';
+
+type SotdWFollowStatus = {
+	following: boolean;
+} & Database['public']['Tables']['sotd']['Row'];
 
 export const sotdRouter = router({
 	getById: superSecretProc
@@ -87,19 +92,18 @@ export const sotdRouter = router({
 				}
 			}) => {
 				const { data, error } = await supabase
-					.from('sotd')
-					.select(
-						'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url), user:users(*)'
-					)
-					.order('created_at', { ascending: false })
+					.rpc('get_sotd_w_following_user_id', { persona: user.id }, { count: 'exact' })
 					.range(page * 15, page * 15 + 15)
-					.limit(15);
+					.limit(15)
+					.returns<SotdWFollowStatus[]>();
 
 				if (error) {
 					throw error;
 				}
 
 				console.debug(`Fetched page ${page} of Feed for user ${user.id}`);
+				// console.debug('Updated Feed - count | ' + count);
+				// console.debug(data);
 				return data;
 			}
 		)
