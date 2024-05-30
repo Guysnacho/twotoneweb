@@ -51,6 +51,39 @@ export type Database = {
 					}
 				];
 			};
+			followers: {
+				Row: {
+					followed_at: string | null;
+					followee_id: string;
+					follower_id: string;
+				};
+				Insert: {
+					followed_at?: string | null;
+					followee_id: string;
+					follower_id: string;
+				};
+				Update: {
+					followed_at?: string | null;
+					followee_id?: string;
+					follower_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'followee';
+						columns: ['followee_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'follower';
+						columns: ['follower_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			installs: {
 				Row: {
 					expo_tokens: string[] | null;
@@ -369,13 +402,32 @@ export type Database = {
 				};
 				Returns: string;
 			};
+			get_sotd_w_following_user_id: {
+				Args: {
+					persona: string;
+				};
+				Returns: {
+					id: string;
+					content: string;
+					created_at: string;
+					song: Json;
+					user: Json;
+					following: boolean;
+				}[];
+			};
 		};
 		Enums: {
 			app_role: 'STOCK' | 'CURATOR' | 'ADMIN';
 			user_status: 'ONLINE' | 'OFFLINE' | 'LISTENING';
 		};
 		CompositeTypes: {
-			[_ in never]: never;
+			sotd_result: {
+				id: string | null;
+				content: string | null;
+				created_at: string | null;
+				song: Json | null;
+				user: Json | null;
+			};
 		};
 	};
 };
