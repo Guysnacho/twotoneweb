@@ -10,6 +10,9 @@ type SotdWFollowStatus = {
 } & Database['public']['Tables']['sotd']['Row'];
 
 export const sotdRouter = router({
+	/**
+	 * @deprecated
+	 */
 	getById: superSecretProc
 		.input(
 			z.object({

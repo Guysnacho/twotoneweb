@@ -53,31 +53,31 @@ export type Database = {
 			};
 			followers: {
 				Row: {
-					followed_at: string | null;
+					followed_at: string;
 					followee_id: string;
 					follower_id: string;
 				};
 				Insert: {
-					followed_at?: string | null;
+					followed_at?: string;
 					followee_id: string;
 					follower_id: string;
 				};
 				Update: {
-					followed_at?: string | null;
+					followed_at?: string;
 					followee_id?: string;
 					follower_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'followee';
-						columns: ['followee_id'];
+						foreignKeyName: 'follower';
+						columns: ['follower_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'follower';
-						columns: ['follower_id'];
+						foreignKeyName: 'followers_followee_id_fkey';
+						columns: ['followee_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
@@ -102,41 +102,6 @@ export type Database = {
 						foreignKeyName: 'installs_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: true;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
-			};
-			like_dislike: {
-				Row: {
-					content_id: string | null;
-					content_type: number | null;
-					created_at: string;
-					id: string;
-					updated_at: string;
-					user_id: string | null;
-				};
-				Insert: {
-					content_id?: string | null;
-					content_type?: number | null;
-					created_at?: string;
-					id?: string;
-					updated_at?: string;
-					user_id?: string | null;
-				};
-				Update: {
-					content_id?: string | null;
-					content_type?: number | null;
-					created_at?: string;
-					id?: string;
-					updated_at?: string;
-					user_id?: string | null;
-				};
-				Relationships: [
-					{
-						foreignKeyName: 'like_dislike_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
 					}
@@ -284,6 +249,32 @@ export type Database = {
 					},
 					{
 						foreignKeyName: 'sotd_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			sotd_likes: {
+				Row: {
+					created_at: string;
+					sotd_id: string;
+					user_id: string;
+				};
+				Insert: {
+					created_at?: string;
+					sotd_id: string;
+					user_id?: string;
+				};
+				Update: {
+					created_at?: string;
+					sotd_id?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'like_dislike_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
