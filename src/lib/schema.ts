@@ -53,31 +53,31 @@ export type Database = {
 			};
 			followers: {
 				Row: {
-					followed_at: string | null;
+					followed_at: string;
 					followee_id: string;
 					follower_id: string;
 				};
 				Insert: {
-					followed_at?: string | null;
+					followed_at?: string;
 					followee_id: string;
 					follower_id: string;
 				};
 				Update: {
-					followed_at?: string | null;
+					followed_at?: string;
 					followee_id?: string;
 					follower_id?: string;
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'followee';
-						columns: ['followee_id'];
+						foreignKeyName: 'follower';
+						columns: ['follower_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
 					},
 					{
-						foreignKeyName: 'follower';
-						columns: ['follower_id'];
+						foreignKeyName: 'followers_followee_id_fkey';
+						columns: ['followee_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
