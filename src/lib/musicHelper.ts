@@ -187,15 +187,19 @@ export const isValidSearchRequest = (url: URL) => {
  * @returns
  */
 export const fetchSavedToken = async () => {
+	console.debug('Fetching token');
 	const { data } = await supabase.from('service_tokens').select('*').maybeSingle();
 	if (!data) {
+		console.debug('Apple Token not found');
 		return undefined;
 	}
 	const current = new Date();
 	const exp = new Date(data.expired_at);
 	if (current >= exp) {
+		console.debug('Apple Token expired');
 		return undefined;
 	}
+	console.debug('Apple Token retrieved');
 	return data?.token;
 };
 
@@ -211,5 +215,5 @@ export const saveToken = async (token: string, issued_at: number, expired_at: nu
 		console.debug({ expired_at, issued_at, token });
 		console.debug(error);
 		throw error;
-	}
+	} else console.debug('Successfully saved token');
 };

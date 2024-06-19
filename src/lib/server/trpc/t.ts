@@ -73,9 +73,10 @@ export const appleSearchProc = t.procedure.use(
 		}
 
 		const token = await fetchSavedToken();
+		console.debug('Token present in db ? ' + token !== undefined);
 
 		// If we have an unexpired token
-		if (token !== undefined || token !== '') {
+		if (token !== undefined && token !== '') {
 			return next({
 				ctx: {
 					// infers the `session` as non-nullable
@@ -88,7 +89,7 @@ export const appleSearchProc = t.procedure.use(
 
 		const issued_at = new Date().getMilliseconds();
 		const expires_at = new Date().getMilliseconds() + 1000 * 60; //* 60 * 24,
-		const appleKey = await jose.importPKCS8(APPLE_SERVICE_KEY, 'es256');
+		const appleKey = await jose.importPKCS8(APPLE_SERVICE_KEY, 'ECDH-ES');
 		console.debug('Successfully built Apple Music Key - %s', appleKey.type);
 
 		// Build
@@ -104,7 +105,7 @@ export const appleSearchProc = t.procedure.use(
 				'https://www.twotone.app'
 			]
 		})
-			.setProtectedHeader({ kid: KEY_ID, alg: 'ES256', enc: 'ES256' })
+			.setProtectedHeader({ kid: KEY_ID, alg: 'ECDH-ES', enc: 'A128CBC-HS256' })
 			.encrypt(appleKey);
 
 		console.debug('Successfully built developer token - %s', jwt);
