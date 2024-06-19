@@ -54,14 +54,14 @@ export interface DeezerArtist {
 	type: string;
 }
 
-export interface Track {
-	album: Album;
-	artists: Artist[];
+export interface SpotifyTrack {
+	album: SpotifyAlbum;
+	artists: SpotifyArtist[];
 	disc_number: number;
 	duration_ms: number;
 	explicit: boolean;
-	external_ids: ExternalIDS;
-	external_urls: ExternalUrls;
+	external_ids: SpotifyExternalIDS;
+	external_urls: SpotifyExternalUrls;
 	href: string;
 	id: string;
 	is_local: boolean;
@@ -73,13 +73,13 @@ export interface Track {
 	uri: string;
 }
 
-export interface Album {
+export interface SpotifyAlbum {
 	album_type: string;
-	artists: Artist[];
-	external_urls: ExternalUrls;
+	artists: SpotifyArtist[];
+	external_urls: SpotifyExternalUrls;
 	href: string;
 	id: string;
-	images: Image[];
+	images: SpotifyImage[];
 	name: string;
 	release_date: Date;
 	release_date_precision: string;
@@ -88,8 +88,8 @@ export interface Album {
 	uri: string;
 }
 
-export interface Artist {
-	external_urls: ExternalUrls;
+export interface SpotifyArtist {
+	external_urls: SpotifyExternalUrls;
 	href: string;
 	id: string;
 	name: string;
@@ -97,17 +97,17 @@ export interface Artist {
 	uri: string;
 }
 
-export interface ExternalUrls {
+export interface SpotifyExternalUrls {
 	spotify: string;
 }
 
-export interface Image {
+export interface SpotifyImage {
 	height: number;
 	url: string;
 	width: number;
 }
 
-export interface ExternalIDS {
+export interface SpotifyExternalIDS {
 	isrc: string;
 }
 
@@ -148,7 +148,7 @@ export const formatDeezerResults = (songList: DeezerServiceResult[]) => {
  * @param songList
  * @returns formattedList
  */
-export const formatSpotifyResults = (songList: Track[]) => {
+export const formatSpotifyResults = (songList: SpotifyTrack[]) => {
 	const formattedList = songList.map((song) => {
 		let artistList: undefined | string = undefined;
 		song.artists.forEach((val) => {
@@ -162,6 +162,7 @@ export const formatSpotifyResults = (songList: Track[]) => {
 			album_art:
 				song.album.images.length >= 2 ? song.album.images[1].url : song.album.images[1].url,
 			preview_url: song.external_urls?.spotify,
+			stream_url: song.preview_url,
 			explicit: song.explicit,
 			isrc: song?.external_ids?.isrc
 		};

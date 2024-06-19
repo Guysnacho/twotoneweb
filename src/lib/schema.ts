@@ -167,6 +167,8 @@ export type Database = {
 					likes: number;
 					preview_url: string | null;
 					service_id: string;
+					service_ids: Json | null;
+					stream_url: string | null;
 					title: string;
 					updated_at: string;
 					full_title: string | null;
@@ -182,6 +184,8 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id: string;
+					service_ids?: Json | null;
+					stream_url?: string | null;
 					title: string;
 					updated_at?: string;
 				};
@@ -196,6 +200,8 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id?: string;
+					service_ids?: Json | null;
+					stream_url?: string | null;
 					title?: string;
 					updated_at?: string;
 				};
@@ -404,6 +410,18 @@ export type Database = {
 					song: Json;
 					user: Json;
 					following: boolean;
+				}[];
+			};
+			search_users: {
+				Args: {
+					prefix: string;
+				};
+				Returns: {
+					about: string | null;
+					avatar_url: string | null;
+					id: string;
+					role: 'STOCK' | 'CURATOR' | 'ADMIN';
+					username: string | null;
 				}[];
 			};
 		};
