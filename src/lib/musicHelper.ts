@@ -1,4 +1,5 @@
 import type { IReleaseMatch } from 'musicbrainz-api';
+import { supabase } from './supabaseClient';
 
 /**
  * @deprecated
@@ -17,8 +18,8 @@ export interface DeezerServiceResult {
 	explicit_content_cover: number;
 	preview: string;
 	md5_image: string;
-	artist: Artist;
-	album: Album;
+	artist: DeezerArtist;
+	album: DeezerAlbum;
 	type: string;
 }
 
@@ -179,4 +180,36 @@ export const isValidSearchRequest = (url: URL) => {
 	if (!url.searchParams.has('track') || url.searchParams.get('track')?.length == 0)
 		return undefined;
 	return url.searchParams.get('track') as string;
+};
+
+/**
+ * Fetch Apple token from DB and check if its expired
+ * @returns
+ */
+export const fetchSavedToken = async () => {
+	const { data } = await supabase.from('service_tokens').select('*').maybeSingle();
+	if (!data) {
+		return undefined;
+	}
+	const current = new Date();
+	const exp = new Date(data.expired_at);
+	if (current >= exp) {
+		return undefined;
+	}
+	return data?.token;
+};
+
+/**
+ * Save generated token in DB for refetching later
+ * @param token
+ * @param issued_at
+ * @param expired_at
+ */
+export const saveToken = async (token: string, issued_at: number, expired_at: number) => {
+	const { error } = await supabase.from('service_tokens').upsert({ expired_at, issued_at, token });
+	if (error) {
+		console.debug({ expired_at, issued_at, token });
+		console.debug(error);
+		throw error;
+	}
 };
