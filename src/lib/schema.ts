@@ -155,6 +155,27 @@ export type Database = {
 					}
 				];
 			};
+			service_tokens: {
+				Row: {
+					expired_at: number;
+					id: number;
+					issued_at: number;
+					token: string;
+				};
+				Insert: {
+					expired_at: number;
+					id?: never;
+					issued_at: number;
+					token: string;
+				};
+				Update: {
+					expired_at?: number;
+					id?: never;
+					issued_at?: number;
+					token?: string;
+				};
+				Relationships: [];
+			};
 			song: {
 				Row: {
 					album: string;
