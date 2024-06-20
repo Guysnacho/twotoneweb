@@ -231,9 +231,19 @@ export const formatAppleResults = (songList: AppleResults[]) => {
 			title: song.attributes.name,
 			album: song.attributes.albumName,
 			artists: song.attributes.artistName,
-			album_art: song.attributes.artwork[0].url.replace('{h}', '300').replace('{w}', '300'),
-			preview_url: song.attributes.url,
-			stream_url: song.attributes.previews[0].url,
+			album_art:
+				song.attributes.artwork && song.attributes.artwork.length > 0
+					? song.attributes.artwork[0].url.replace('{h}', '300').replace('{w}', '300')
+					: song.attributes.artwork?.url
+					? song.attributes.artwork.url.replace('{h}', '300').replace('{w}', '300')
+					: '',
+			preview_url: song.attributes?.url,
+			stream_url:
+				song.attributes?.previews && song.attributes.previews.length > 0
+					? song.attributes?.previews[0].url
+					: song.attributes?.previews?.url
+					? song.attributes?.previews?.url
+					: '',
 			explicit: song.attributes.contentRating == 'explicit',
 			isrc: song.attributes.isrc
 		};
