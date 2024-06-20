@@ -188,14 +188,18 @@ export const isValidSearchRequest = (url: URL) => {
  */
 export const fetchSavedToken = async () => {
 	console.debug('Fetching token');
-	const { data } = await supabase.from('service_tokens').select('*').maybeSingle();
+	const { data } = await supabase
+		.from('service_tokens')
+		.select('*')
+		.order('issued_at', { ascending: true })
+		.limit(1)
+		.maybeSingle();
 	if (!data) {
 		console.debug('Apple Token not found');
 		return undefined;
 	}
-	const current = new Date();
-	const exp = new Date(data.expired_at);
-	if (current >= exp) {
+	const current = Math.round(new Date().getTime() / 1000);
+	if (current >= data!.expired_at) {
 		console.debug('Apple Token expired');
 		return undefined;
 	}
@@ -209,8 +213,14 @@ export const fetchSavedToken = async () => {
  * @param issued_at
  * @param expired_at
  */
-export const saveToken = async (token: string, issued_at: number, expired_at: number) => {
-	const { error } = await supabase.from('service_tokens').upsert({ expired_at, issued_at, token });
+export const saveToken = async (token: string, issued_at: Date) => {
+	await supabase.from('service_tokens').delete();
+	const expired_at = new Date();
+	expired_at.setDate(issued_at.getDate() + 1);
+
+	const { error } = await supabase
+		.from('service_tokens')
+		.insert({ expired_at: expired_at.valueOf(), issued_at: issued_at.valueOf(), token });
 	if (error) {
 		console.debug({ expired_at, issued_at, token });
 		console.debug(error);
