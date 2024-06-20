@@ -112,6 +112,54 @@ export interface SpotifyExternalIDS {
 	isrc: string;
 }
 
+export interface AppleResults {
+	id: string;
+	type: string;
+	href: string;
+	attributes: Attributes;
+}
+
+export interface Attributes {
+	albumName: string;
+	genreNames: string[];
+	trackNumber: number;
+	releaseDate: Date;
+	durationInMillis: number;
+	isrc: string;
+	artwork: Artwork[];
+	composerName: string;
+	url: string;
+	playParams: PlayParams;
+	discNumber: number;
+	hasCredits: boolean;
+	hasLyrics: boolean;
+	isAppleDigitalMaster: boolean;
+	name: string;
+	previews: Preview[];
+	contentRating: string;
+	artistName: string;
+}
+
+export interface Artwork {
+	width: number;
+	height: number;
+	url: string;
+	bgColor: string;
+	textColor1: string;
+	textColor2: string;
+	textColor3: string;
+	textColor4: string;
+}
+
+export interface PlayParams {
+	id: string;
+	kind: string;
+}
+
+export interface Preview {
+	url: string;
+}
+
 export const formatMusicBrainzResults = (songList: IReleaseMatch[]) => {
 	const formattedList = songList.map((song) => {
 		return {
@@ -161,11 +209,33 @@ export const formatSpotifyResults = (songList: SpotifyTrack[]) => {
 			album: song.album.name,
 			artists: artistList,
 			album_art:
-				song.album.images.length >= 2 ? song.album.images[1].url : song.album.images[1].url,
+				song.album.images.length >= 2 ? song.album.images[1].url : song.album.images[0].url,
 			preview_url: song.external_urls?.spotify,
 			stream_url: song.preview_url,
 			explicit: song.explicit,
 			isrc: song?.external_ids?.isrc
+		};
+	});
+	return formattedList;
+};
+
+/**
+ * @description Trims apple song api response
+ * @param songList
+ * @returns formattedList
+ */
+export const formatAppleResults = (songList: AppleResults[]) => {
+	const formattedList = songList.map((song) => {
+		return {
+			service_id: song.id,
+			title: song.attributes.name,
+			album: song.attributes.albumName,
+			artists: song.attributes.artistName,
+			album_art: song.attributes.artwork[0].url.replace('{h}', '300').replace('{w}', '300'),
+			preview_url: song.attributes.url,
+			stream_url: song.attributes.previews[0].url,
+			explicit: song.attributes.contentRating == 'explicit',
+			isrc: song.attributes.isrc
 		};
 	});
 	return formattedList;
