@@ -199,7 +199,7 @@ export const formatDeezerResults = (songList: DeezerServiceResult[]) => {
  */
 export const formatSpotifyResults = (songList: SpotifyTrack[]) => {
 	const formattedList = songList.map((song) => {
-		let artistList: undefined | string = undefined;
+		let artistList: string | undefined = undefined;
 		song.artists.forEach((val) => {
 			!artistList ? (artistList = val.name) : (artistList = artistList + `, ${val.name}`);
 		});

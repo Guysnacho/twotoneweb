@@ -42,12 +42,28 @@ export const searchRouter = router({
 			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {
 				const spottyResults = formatSpotifyResults(spottyResponse.tracks.items);
+				const savedTitles = [''];
+				const savedArtists = [''];
 				const savedServiceIds = supaResults.data
-					.map((supaResult) => supaResult.service_id)
+					.map((supaResult) => {
+						savedTitles.push(supaResult.title.toLocaleLowerCase());
+						savedArtists.push(supaResult.artists.toLocaleLowerCase());
+						return supaResult.service_id;
+					})
 					.toString();
-				const filteredSongs = spottyResults.filter(
-					(result) => !savedServiceIds.includes(result.service_id)
-				);
+				// If service id matches or if title and artist match
+				const filteredSongs = spottyResults.filter((result) => {
+					if (savedServiceIds.includes(result.service_id)) {
+						return false;
+					} else if (
+						savedArtists.includes(result.artists.toLocaleLowerCase()) &&
+						savedTitles.includes(result.title.toLocaleLowerCase())
+					) {
+						return false;
+					}
+					return true;
+				});
+				console.debug('sending results');
 				return [...supaResults.data, ...filteredSongs];
 			}
 
@@ -67,11 +83,7 @@ export const searchRouter = router({
 			console.debug('Song search for ' + query);
 
 			const supabaseQuery = supabase
-				.from('song')
-				.select('*')
-				.textSearch('full_title', query, {
-					type: 'phrase'
-				})
+				.rpc('search_songs', { prefix: query.replaceAll(' ', '+') })
 				.limit(3);
 			//	Find storefronts
 			// TODO impl propper storefront use
@@ -116,16 +128,31 @@ export const searchRouter = router({
 			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {
 				const appleResults = formatAppleResults(appleResponse);
+				const savedTitles: string[] = [];
+				const savedArtists: string[] = [];
 				const savedServiceIds = supaResults.data
-					.map((supaResult) => supaResult.service_id)
+					.map((supaResult) => {
+						savedTitles.push(supaResult.title.toLocaleLowerCase());
+						savedArtists.push(supaResult.artists.toLocaleLowerCase());
+						return supaResult.service_id;
+					})
 					.toString();
-				const filteredSongs = appleResults.filter(
-					(result) => !savedServiceIds.includes(result.service_id)
-				);
+				// If service id matches or if title and artist match
+				const filteredSongs = appleResults.filter((result) => {
+					if (savedServiceIds.includes(result.service_id)) {
+						return false;
+					} else if (
+						savedArtists.includes(result.artists.toLocaleLowerCase()) &&
+						savedTitles.includes(result.title.toLocaleLowerCase())
+					) {
+						return false;
+					}
+					return true;
+				});
+				console.debug('sending results');
 				return [...supaResults.data, ...filteredSongs];
 			}
 
-			console.debug(appleResponse);
 			return formatAppleResults(appleResponse);
 		})
 });
