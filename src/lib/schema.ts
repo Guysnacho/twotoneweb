@@ -192,7 +192,6 @@ export type Database = {
 					stream_url: string | null;
 					title: string;
 					updated_at: string;
-					full_title: string | null;
 				};
 				Insert: {
 					album: string;
@@ -414,12 +413,6 @@ export type Database = {
 			[_ in never]: never;
 		};
 		Functions: {
-			full_title: {
-				Args: {
-					'': unknown;
-				};
-				Returns: string;
-			};
 			get_sotd_w_following_user_id: {
 				Args: {
 					persona: string;
@@ -431,6 +424,27 @@ export type Database = {
 					song: Json;
 					user: Json;
 					following: boolean;
+				}[];
+			};
+			search_songs: {
+				Args: {
+					prefix: string;
+				};
+				Returns: {
+					album: string;
+					album_art: string;
+					artists: string;
+					created_at: string;
+					dislikes: number;
+					explicit: boolean;
+					id: string;
+					likes: number;
+					preview_url: string | null;
+					service_id: string;
+					service_ids: Json | null;
+					stream_url: string | null;
+					title: string;
+					updated_at: string;
 				}[];
 			};
 			search_users: {
