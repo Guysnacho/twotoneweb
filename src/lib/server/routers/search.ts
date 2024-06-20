@@ -21,11 +21,7 @@ export const searchRouter = router({
 			console.debug('Song search for ' + query);
 
 			const supabaseQuery = supabase
-				.from('song')
-				.select('*')
-				.textSearch('full_title', query, {
-					type: 'phrase'
-				})
+				.rpc('search_songs', { prefix: query.replaceAll(' ', '+') })
 				.limit(3);
 			const serviceFetch = fetch(
 				`${MUSIC_API_HOST}?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
