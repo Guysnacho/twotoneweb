@@ -280,7 +280,8 @@ export const fetchSavedToken = async () => {
 	}
 	console.debug(data);
 	const current = new Date();
-	if (current >= new Date(data!.expired_at)) {
+	// Not sure why this isn't working yet
+	if (current >= new Date(data.expired_at)) {
 		console.debug('Apple Token expired');
 		return undefined;
 	}
