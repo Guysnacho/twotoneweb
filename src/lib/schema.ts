@@ -155,6 +155,27 @@ export type Database = {
 					}
 				];
 			};
+			service_tokens: {
+				Row: {
+					expired_at: number;
+					id: number;
+					issued_at: number;
+					token: string;
+				};
+				Insert: {
+					expired_at: number;
+					id?: never;
+					issued_at: number;
+					token: string;
+				};
+				Update: {
+					expired_at?: number;
+					id?: never;
+					issued_at?: number;
+					token?: string;
+				};
+				Relationships: [];
+			};
 			song: {
 				Row: {
 					album: string;
@@ -167,9 +188,10 @@ export type Database = {
 					likes: number;
 					preview_url: string | null;
 					service_id: string;
+					service_ids: Json | null;
+					stream_url: string | null;
 					title: string;
 					updated_at: string;
-					full_title: string | null;
 				};
 				Insert: {
 					album: string;
@@ -182,6 +204,8 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id: string;
+					service_ids?: Json | null;
+					stream_url?: string | null;
 					title: string;
 					updated_at?: string;
 				};
@@ -196,6 +220,8 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id?: string;
+					service_ids?: Json | null;
+					stream_url?: string | null;
 					title?: string;
 					updated_at?: string;
 				};
@@ -387,12 +413,6 @@ export type Database = {
 			[_ in never]: never;
 		};
 		Functions: {
-			full_title: {
-				Args: {
-					'': unknown;
-				};
-				Returns: string;
-			};
 			get_sotd_w_following_user_id: {
 				Args: {
 					persona: string;
@@ -404,6 +424,39 @@ export type Database = {
 					song: Json;
 					user: Json;
 					following: boolean;
+				}[];
+			};
+			search_songs: {
+				Args: {
+					prefix: string;
+				};
+				Returns: {
+					album: string;
+					album_art: string;
+					artists: string;
+					created_at: string;
+					dislikes: number;
+					explicit: boolean;
+					id: string;
+					likes: number;
+					preview_url: string | null;
+					service_id: string;
+					service_ids: Json | null;
+					stream_url: string | null;
+					title: string;
+					updated_at: string;
+				}[];
+			};
+			search_users: {
+				Args: {
+					prefix: string;
+				};
+				Returns: {
+					about: string | null;
+					avatar_url: string | null;
+					id: string;
+					role: 'STOCK' | 'CURATOR' | 'ADMIN';
+					username: string | null;
 				}[];
 			};
 		};

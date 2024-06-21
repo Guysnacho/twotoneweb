@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import { writeFile } from 'fs';
 
 import { z } from 'zod';
 import { publicProc, router, superSecretProc } from '../trpc/t';
@@ -51,15 +52,15 @@ export const announcementsRouter = router({
 					.from('static')
 					.update(
 						'notifications/announcements.json',
-						atob(JSON.stringify({ announcements: input.announcements }))
+						JSON.stringify({ features: input.announcements })
 					);
-				console.debug('Mission accomplished. Announcements updated - ' + data?.path);
 				if (error) {
 					throw new TRPCError({
 						code: 'INTERNAL_SERVER_ERROR',
 						message: error.message
 					});
 				} else {
+					console.debug('Mission accomplished. Announcements updated - ' + data?.path);
 					return 'mission accomplished';
 				}
 			}
