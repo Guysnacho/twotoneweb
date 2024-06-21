@@ -278,8 +278,9 @@ export const fetchSavedToken = async () => {
 		console.debug('Apple Token not found');
 		return undefined;
 	}
-	const current = Math.round(new Date().getTime() / 1000);
-	if (current >= data!.expired_at) {
+	console.debug(data);
+	const current = new Date();
+	if (current >= new Date(data!.expired_at)) {
 		console.debug('Apple Token expired');
 		return undefined;
 	}

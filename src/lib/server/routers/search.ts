@@ -117,6 +117,9 @@ export const searchRouter = router({
 			}
 
 			if (!serviceResults.ok) {
+				console.error('Apple search error - ')
+				console.error(serviceResults.status)
+				console.error(serviceResults.statusText)
 				throw new TRPCError({
 					code: 'INTERNAL_SERVER_ERROR',
 					message: 'Something went wrong checking with 🍎, try again later :)'
