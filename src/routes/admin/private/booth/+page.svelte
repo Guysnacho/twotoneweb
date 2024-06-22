@@ -12,15 +12,11 @@
 		{ color: 'rgb(var(--color-secondary-500))', start: 75, end: 100 }
 	];
 
-	if (data.session !== null) {
+	if (data.session === null) {
 		data.supabase.auth.signOut().finally(() => goto('/admin'));
 	}
 
 	$: loading = false;
-
-	const handleLogout = async (email: string, password: string) => {
-		data.supabase.auth.signOut().finally(() => goto('/admin'));
-	};
 </script>
 
 <svelte:head>
