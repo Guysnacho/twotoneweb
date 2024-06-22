@@ -22,7 +22,7 @@
 			loading = false;
 		} else {
 			loading = false;
-			goto('/admin/private/booth');
+			goto('/admin/booth');
 		}
 	};
 </script>
@@ -55,7 +55,15 @@
 			{:else if loading}
 				<ConicGradient stops={conicStops} spin>Launching carrier pigeon</ConicGradient>
 			{:else}
-				<form method="POST">
+				<form
+					method="POST"
+					use:enhance={({ cancel, formData }) => {
+						// @ts-ignore-next-line
+						handleLogin(formData.get('email'), formData.get('password'));
+						// Set invalidateAll to false if you don't want to reload page data when submitting
+						cancel();
+					}}
+				>
 					<label class="label" aria-required>
 						<span>Email</span>
 						<input
