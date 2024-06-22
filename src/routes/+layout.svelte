@@ -8,7 +8,6 @@
 	import '../app.postcss';
 	import { trpc } from './api/trpc/trpc.client';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
-	import { page } from '$app/stores';
 
 	//@ts-ignore
 	$: queryClient = trpc.queryClient;
@@ -27,12 +26,6 @@
 					<a class="btn btn-sm variant-ghost-surface" href="/terms"> Terms n That </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/privacy"> Privacy </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/support"> Support </a>
-					{#if $page.url.pathname.includes('admin')}<a
-							class="btn btn-sm variant-ghost-surface"
-							href="#"
-						>
-							Logout
-						</a>{/if}
 				</svelte:fragment>
 			</AppBar>
 		</svelte:fragment>
