@@ -46,6 +46,7 @@
 		"@tanstack/svelte-query": "^5.17.19",
 		"@trpc/client": "^10.45.2",
 		"@trpc/server": "^10.45.2",
+		"expo-server-sdk": "^3.10.0",
 		"jsonwebtoken": "^9.0.2",
 		"musicbrainz-api": "^0.14.0",
 		"resend": "^3.2.0",
