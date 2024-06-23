@@ -37,14 +37,13 @@ export async function createContext(event: RequestEvent) {
 		}
 	}
 
-	const {
-		data: { session }
-	} = await supabase.auth.getSession();
+	const { session, user } = await event.locals.safeGetSession();
 
 	return {
 		requestOrigin: event.request.headers.get('origin'),
 		event,
 		session,
+		user,
 
 		/**
 		 * The Supabase instance with the authenticated session on it (RLS works)

@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 
 	export let data;
-	$: ({ supabase, session, user } = data);
+	$: ({ supabase, user } = data);
 
 	beforeNavigate((nav) => {
 		if (nav.type === 'goto' && !user) {
@@ -12,26 +12,26 @@
 		}
 	});
 
-	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
-			if (!newSession) {
-				/**
-				 * Queue this as a task so the navigation won't prevent the
-				 * triggering function from completing
-				 */
-				setTimeout(() => {
-					if ($page.url.pathname.includes('admin/private/booth')) {
-						goto('/admin', { invalidateAll: true });
-					}
-				});
-			}
-			if (newSession?.expires_at !== session?.expires_at) {
-				invalidate('supabase:auth');
-			}
-		});
+	// onMount(() => {
+	// 	const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+	// 		if (!newSession) {
+	// 			/**
+	// 			 * Queue this as a task so the navigation won't prevent the
+	// 			 * triggering function from completing
+	// 			 */
+	// 			setTimeout(() => {
+	// 				if ($page.url.pathname.includes('admin/private/booth')) {
+	// 					goto('/admin', { invalidateAll: true });
+	// 				}
+	// 			});
+	// 		}
+	// 		if (!newSession?.expires_at || newSession?.expires_at < new Date().valueOf()) {
+	// 			invalidate('supabase:auth');
+	// 		}
+	// 	});
 
-		return () => data.subscription.unsubscribe();
-	});
+	// 	return () => data.subscription.unsubscribe();
+	// });
 
 	const logout = () => {
 		console.log('Clicked logout');

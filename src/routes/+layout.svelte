@@ -14,9 +14,11 @@
 	export let data: LayoutData;
 
 	$: queryClient = data.trpc.queryClient;
-	const handleLogout = () => {
+	function handleLogout() {
+		console.log("Logging out");
+		
 		data.supabase.auth.signOut({ scope: 'local' }).finally(() => goto('/'));
-	};
+	}
 </script>
 
 <QueryClientProvider client={queryClient}>
@@ -26,14 +28,23 @@
 			<!-- App Bar -->
 			<AppBar>
 				<svelte:fragment slot="lead">
-					<a class="text-xl uppercase font-bold" href="/">TwoTone</a>
+					<a class="text-xl uppercase font-bold" href="/" aria-roledescription="Home Link"
+						>TwoTone</a
+					>
 				</svelte:fragment>
 				<svelte:fragment slot="trail">
 					<a class="btn btn-sm variant-ghost-surface" href="/terms"> Terms n That </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/privacy"> Privacy </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/support"> Support </a>
 					{#if $page.url.pathname.includes('private')}
-						<a class="btn btn-sm variant-ghost-surface" on:click={handleLogout}> Logout </a>
+						<button class="btn variant-filled-primary" type="submit">Logout</button><a
+							class="btn btn-sm variant-ghost-surface"
+							on:click={() => handleLogout()}
+							on:keyup={() => handleLogout()}
+							on:keydown={() => handleLogout()}
+						>
+							Logout
+						</a>
 					{:else}
 						<a class="btn btn-sm variant-ghost-surface" href="/admin"> Login </a>
 					{/if}
