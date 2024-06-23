@@ -10,10 +10,12 @@
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 
 	//@ts-ignore
-	$: queryClient = trpc.queryClient;
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 </script>
 
-<QueryClientProvider client={queryClient}>
+<QueryClientProvider client={data.trpc.queryClient}>
 	<!-- App Shell -->
 	<AppShell>
 		<svelte:fragment slot="header">

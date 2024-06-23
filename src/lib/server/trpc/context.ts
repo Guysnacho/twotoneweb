@@ -1,15 +1,28 @@
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from '$env/static/private';
+import { SUPABASE_ANON_KEY } from '$env/static/private';
+import { PUBLIC_SUPABASE_URL } from '$env/static/public';
 import type { Database } from '$lib/schema';
-import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
+import { createServerClient } from '@supabase/ssr';
 import type { RequestEvent } from '@sveltejs/kit';
 import type { inferAsyncReturnType } from '@trpc/server';
 
 export async function createContext(event: RequestEvent) {
 	// if there's auth cookie it'll be authenticated by this helper
-	const supabase = createSupabaseServerClient<Database>({
-		event: event,
-		supabaseUrl: SUPABASE_URL,
-		supabaseKey: SUPABASE_ANON_KEY
+	const supabase = createServerClient<Database>(PUBLIC_SUPABASE_URL, SUPABASE_ANON_KEY, {
+		cookies: {
+			get: (key) => event.cookies.get(key),
+			/**
+			 * Note: You have to add the `path` variable to the
+			 * set and remove method due to sveltekit's cookie API
+			 * requiring this to be set, setting the path to an empty string
+			 * will replicate previous/standard behaviour (https://kit.svelte.dev/docs/types#public-types-cookies)
+			 */
+			set: (key, value, options) => {
+				event.cookies.set(key, value, { ...options, path: '/' });
+			},
+			remove: (key, options) => {
+				event.cookies.delete(key, { ...options, path: '/' });
+			}
+		}
 	});
 
 	// native sends these instead of cookie auth
