@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import Logo from '$lib/logo.png';
 	import { ConicGradient, type ConicStop } from '@skeletonlabs/skeleton';
@@ -44,43 +45,50 @@
 			<p class="text-center">Nothing to see heeeere. You can still login though :)</p>
 		{/if}
 		<div class="space-y-4">
-			{#if form?.success}
-				<h4 class="h4 text-center font-semibold">Gotcha, we'll get back to you asap!</h4>
-			{:else if form?.error}
+			{#if form?.error}
 				<h4 class="h4 text-center font-semibold">
-					Something went wrong, try again later. We'll get this sorted one way or another. Fill out
-					a support form while you're at it though.
+					Something went wrong - {form.error}
 				</h4>
 			{:else if loading}
 				<ConicGradient stops={conicStops} spin>Launching carrier pigeon</ConicGradient>
-			{:else}
-				<form method="POST">
-					<label class="label" aria-required>
-						<span>Email</span>
-						<input
-							class="input p-3"
-							name="email"
-							type="email"
-							placeholder="definitely_not_pharell@gmail.com"
-							required
-						/>
-					</label>
-					<label class="label" aria-required>
-						<span>Password</span>
-						<input
-							class="input p-3"
-							name="password"
-							type="password"
-							placeholder="super_sECure_passWord"
-							required
-						/>
-					</label>
-
-					<div class="flex justify-center mt-4">
-						<button class="btn variant-filled-primary" type="submit">Submit</button>
-					</div>
-				</form>
 			{/if}
+			<form
+				method="POST"
+				use:enhance={() => {
+					loading = true;
+					return ({ update }) => {
+						// Set invalidateAll to false if you don't want to reload page data when submitting
+						update({ invalidateAll: false }).finally(async () => {
+							loading = false;
+						});
+					};
+				}}
+			>
+				<label class="label" aria-required>
+					<span>Email</span>
+					<input
+						class="input p-3"
+						name="email"
+						type="email"
+						placeholder="definitely_not_pharell@gmail.com"
+						required
+					/>
+				</label>
+				<label class="label" aria-required>
+					<span>Password</span>
+					<input
+						class="input p-3"
+						name="password"
+						type="password"
+						placeholder="super_sECure_passWord"
+						required
+					/>
+				</label>
+
+				<div class="flex justify-center mt-4">
+					<button class="btn variant-filled-primary" type="submit">Submit</button>
+				</div>
+			</form>
 		</div>
 		<a href="/"> [ Go Home! ] </a>
 	</div>

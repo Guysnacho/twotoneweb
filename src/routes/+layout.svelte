@@ -9,10 +9,14 @@
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import '../app.postcss';
 	import type { LayoutData } from './$types';
+	import { goto } from '$app/navigation';
 
 	export let data: LayoutData;
 
 	$: queryClient = data.trpc.queryClient;
+	const handleLogout = () => {
+		data.supabase.auth.signOut({ scope: 'local' }).finally(() => goto('/'));
+	};
 </script>
 
 <QueryClientProvider client={queryClient}>
@@ -28,10 +32,10 @@
 					<a class="btn btn-sm variant-ghost-surface" href="/terms"> Terms n That </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/privacy"> Privacy </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/support"> Support </a>
-					{#if $page.url.pathname.includes('admin')}
-						<a class="btn btn-sm variant-ghost-surface" href="#"> Logout </a>
+					{#if $page.url.pathname.includes('private')}
+						<a class="btn btn-sm variant-ghost-surface" on:click={handleLogout}> Logout </a>
 					{:else}
-						<a class="btn btn-sm variant-ghost-surface" href="#"> Login </a>
+						<a class="btn btn-sm variant-ghost-surface" href="/admin"> Login </a>
 					{/if}
 				</svelte:fragment>
 			</AppBar>

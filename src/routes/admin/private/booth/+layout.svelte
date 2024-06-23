@@ -1,12 +1,11 @@
 <script lang="ts">
-	import type { LayoutData } from './$types';
 	import { goto } from '$app/navigation';
-	import { redirect } from '@sveltejs/kit';
+	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
-	if (data.user === null) {
-		data.supabase.auth.signOut().finally(() => redirect(303, '/admin'));
-	}
+	// if (data.user === null) {
+	// 	data.supabase.auth.signOut().finally(() => goto('/admin'));
+	// }
 </script>
 
 <slot />

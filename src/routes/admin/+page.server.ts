@@ -12,8 +12,7 @@ export const actions: Actions = {
 		console.log('Attempted to login');
 		if (error) {
 			console.error(error);
-			alert('Ran into an issue during login - ' + error.message);
-			return redirect(303, '/admin');
+			return { error: error.message };
 		} else {
 			console.log('Successful login');
 			return redirect(303, '/admin/private/booth');
