@@ -94,7 +94,7 @@ const isValidResetRequest = async (request: Request) => {
 			console.debug('Password reset request body');
 			console.debug(request.body);
 
-			throw error(HttpCodes.BADREQUEST, {
+			error(HttpCodes.BADREQUEST, {
 				code: HttpCodes.BADREQUEST,
 				message: "Couldn't understand request"
 			});

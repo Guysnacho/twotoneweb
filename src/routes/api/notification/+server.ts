@@ -81,10 +81,10 @@ export const GET = (() => {
 export const POST = (async ({ request }) => {
 	const payload = await isValidNotificationReq(request);
 	if (!payload) {
-		throw error(HttpCodes.BADREQUEST, {
-			code: HttpCodes.BADREQUEST,
-			message: 'Invalid signup request'
-		});
+		error(HttpCodes.BADREQUEST, {
+        			code: HttpCodes.BADREQUEST,
+        			message: 'Invalid signup request'
+        		});
 	}
 
 	// Create a new Expo SDK client
@@ -152,10 +152,10 @@ export const POST = (async ({ request }) => {
 		})
 		.then(async (res) => {
 			if (res.error?.status) {
-				throw error(res.error.status || HttpCodes.BADREQUEST, {
-					code: res.error.status || HttpCodes.BADREQUEST,
-					message: res.error.message
-				});
+				error(res.error.status || HttpCodes.BADREQUEST, {
+                					code: res.error.status || HttpCodes.BADREQUEST,
+                					message: res.error.message
+                				});
 			} else if (res.data?.user) {
 				return json(
 					{
@@ -166,19 +166,19 @@ export const POST = (async ({ request }) => {
 					{ status: 201, statusText: 'Account Created' }
 				);
 			} else {
-				throw error(HttpCodes.INTERNALERROR, {
-					code: HttpCodes.INTERNALERROR,
-					message: 'Error during account creation'
-				});
+				error(HttpCodes.INTERNALERROR, {
+                					code: HttpCodes.INTERNALERROR,
+                					message: 'Error during account creation'
+                				});
 			}
 		})
 		.catch((err) => {
 			console.log(err);
 
-			throw error(HttpCodes.INTERNALERROR, {
-				code: HttpCodes.INTERNALERROR,
-				message: 'Error during account creation'
-			});
+			error(HttpCodes.INTERNALERROR, {
+            				code: HttpCodes.INTERNALERROR,
+            				message: 'Error during account creation'
+            			});
 		});
 }) satisfies RequestHandler;
 
