@@ -9,7 +9,7 @@
 		$page.url.searchParams.has('email') &&
 		$page.url.searchParams.has('tokenHash');
 	const handleSubmit = () => {
-		console.debug($page.url.searchParams.toString());
+		console.log($page.url.searchParams.toString());
 		if (newPassword.length < 6) {
 			alert('Password must be at least 6 characters long');
 		} else {
@@ -35,7 +35,7 @@
 				})
 				.catch((err) => {
 					alert('Ooof, looks like something went wrong.');
-					console.debug(err);
+					console.log(err);
 				});
 		}
 	};

@@ -91,8 +91,8 @@ const isValidResetRequest = async (request: Request) => {
 			} else return payload;
 		})
 		.catch(() => {
-			console.debug('Password reset request body');
-			console.debug(request.body);
+			console.log('Password reset request body');
+			console.log(request.body);
 
 			error(HttpCodes.BADREQUEST, {
 				code: HttpCodes.BADREQUEST,

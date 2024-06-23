@@ -187,7 +187,7 @@ export const POST = (async ({ request }) => {
 //  * @description Handle supabase user deletion
 //  */
 // export const DELETE = (async ({ request, url }) => {
-// 	console.debug('Delete request recieved');
+// 	console.log('Delete request recieved');
 
 // 	const id = isValidDeleteRequest(request, url);
 
