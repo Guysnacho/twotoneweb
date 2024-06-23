@@ -1,23 +1,11 @@
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
-import { trpcRouter } from '$lib/server/trpc/router';
+import { trpc } from '$lib/trpc';
 import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr';
-import { httpBatchLink } from '@trpc/client';
-import SuperJSON, { parse } from 'superjson';
-import { createTRPCSvelte } from 'trpc-svelte-query';
-import { LayoutLoad } from './$types';
+import { parse } from 'superjson';
+import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async (event) => {
-	depends('supabase:auth');
-
-	const trpc = createTRPCSvelte<typeof trpcRouter>({
-		links: [
-			httpBatchLink({
-				url: 'http://localhost:5173/api/trpc',
-				fetch: event.fetch
-			})
-		],
-		transformer: SuperJSON
-	});
+	event.depends('supabase:auth');
 
 	const supabase = isBrowser()
 		? createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
@@ -37,11 +25,12 @@ export const load: LayoutLoad = async (event) => {
 				},
 				cookies: {
 					get() {
-						return JSON.stringify(data.session);
+						return JSON.stringify(event.data.session);
 					}
 				}
 		  });
 
+	const { data: userData } = await supabase.auth.getUser();
 	/**
 	 * It's fine to use `getSession` here, because on the client, `getSession` is
 	 * safe, and on the server, it reads `session` from the `LayoutData`, which
@@ -51,5 +40,5 @@ export const load: LayoutLoad = async (event) => {
 		data: { session }
 	} = await supabase.auth.getSession();
 
-	return { supabase, session, trpc };
+	return { supabase, session, user: userData?.user, trpc };
 };

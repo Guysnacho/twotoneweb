@@ -5,17 +5,16 @@
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
 	// Most of your app wide CSS should be put in this file
 	import { AppBar, AppShell } from '@skeletonlabs/skeleton';
-	import '../app.postcss';
-	import { trpc } from './api/trpc/trpc.client';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
+	import '../app.postcss';
+	import type { LayoutData } from './$types';
 
-	//@ts-ignore
-	import type { PageData } from './$types';
+	export let data: LayoutData;
 
-	export let data: PageData;
+	$: queryClient = data.trpc.queryClient;
 </script>
 
-<QueryClientProvider client={data.trpc.queryClient}>
+<QueryClientProvider client={queryClient}>
 	<!-- App Shell -->
 	<AppShell>
 		<svelte:fragment slot="header">
