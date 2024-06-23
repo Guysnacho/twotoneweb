@@ -7,5 +7,3 @@ export const trpcRouter = router({
 	search: searchRouter,
 	announcements: announcementsRouter
 });
-
-export type TrpcRouter = typeof router;
