@@ -36,7 +36,7 @@
 					<a class="btn btn-sm variant-ghost-surface" href="/terms"> Terms n That </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/privacy"> Privacy </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/support"> Support </a>
-					{#if $page.url.pathname.includes('private')}
+					<!-- {#if $page.url.pathname.includes('private')}
 						<button
 							class="btn variant-filled-primary"
 							on:click|stopPropagation|once={() => {
@@ -46,7 +46,7 @@
 						>
 					{:else}
 						<a class="btn variant-filled-primary" href="/admin"> Login </a>
-					{/if}
+					{/if} -->
 				</svelte:fragment>
 			</AppBar>
 		</svelte:fragment>
