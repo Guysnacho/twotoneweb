@@ -35,17 +35,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.safeGetSession = async () => {
 		const { user } = await event.locals.supabase.auth
 			.getUser()
+			// @ts-expect-error User response and user are close enough I think
 			.then(async (user: User) => {
 				if (user) {
-					console.debug('Safe get session succeeded ' + user.user_metadata.username);
 					return { user };
 				} else return { user: null };
 			})
-			.catch(() => {
-				return { user: null };
+			.catch((err) => {
+				console.debug(err);
+				return { session: null, user: null };
 			});
 
-		return { user };
+		return { session: null, user };
 	};
 
 	return resolve(event, {

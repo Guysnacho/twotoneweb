@@ -1,9 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import Logo from '$lib/logo.png';
 	import { type ConicStop } from '@skeletonlabs/skeleton';
-	import type { PageData } from './$types';
-	export let data: PageData;
+	import type { LayoutData } from './$types';
+	import { page } from '$app/stores';
+
+	export let data: LayoutData;
+	// data.user?.user_metadata.username
 
 	const conicStops: ConicStop[] = [
 		{ color: 'transparent', start: 0, end: 25 },
@@ -24,7 +26,11 @@
 
 <div class="h-full mx-auto my-9 w-4/6 flex justify-center items-center">
 	<div class="space-y-10 flex flex-col items-center">
-		<h2 class="h2 text-center font-semibold">Welcome __username__</h2>
+		<h2 class="h2 text-center font-semibold">
+			Welcome {data && data.user?.user_metadata != null
+				? data.user?.user_metadata.username || ''
+				: ''}
+		</h2>
 		<!-- Animated Logo -->
 		<figure>
 			<section class="img-bg" />
