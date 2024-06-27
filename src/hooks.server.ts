@@ -42,7 +42,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 				} else return { user: null };
 			})
 			.catch(() => {
-				console.debug('Safe get session failed');
 				return { user: null };
 			});
 
