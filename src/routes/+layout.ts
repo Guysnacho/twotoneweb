@@ -1,7 +1,6 @@
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 import { trpc } from '$lib/trpc';
-import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr';
-import { parse } from 'superjson';
+import { createBrowserClient, createServerClient, isBrowser, parse } from '@supabase/ssr';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async (event) => {

@@ -7,6 +7,7 @@
 	$: ({ supabase, user } = data);
 
 	beforeNavigate((nav) => {
+		console.log('navigation type - ' + nav.type);
 		if (nav.type === 'goto' && !user) {
 			goto('/admin');
 		}

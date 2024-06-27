@@ -37,12 +37,11 @@ export async function createContext(event: RequestEvent) {
 		}
 	}
 
-	const { session, user } = await event.locals.safeGetSession();
+	const { user } = await event.locals.safeGetSession();
 
 	return {
 		requestOrigin: event.request.headers.get('origin'),
 		event,
-		session,
 		user,
 
 		/**

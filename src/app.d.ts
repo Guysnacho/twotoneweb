@@ -4,8 +4,7 @@
 declare namespace App {
 	interface Locals {
 		supabase: SupabaseClient<Database>;
-		safeGetSession: () => Promise<{ session: Session | null; user: User | null }>;
-		session: Session | null;
+		safeGetSession: () => Promise<{ user: User | null }>;
 		user: User | null;
 	}
 	// interface PageData {}

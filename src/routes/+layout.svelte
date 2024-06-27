@@ -15,8 +15,8 @@
 
 	$: queryClient = data.trpc.queryClient;
 	function handleLogout() {
-		console.log("Logging out");
-		
+		console.log('Logging out');
+
 		data.supabase.auth.signOut({ scope: 'local' }).finally(() => goto('/'));
 	}
 </script>
@@ -37,16 +37,15 @@
 					<a class="btn btn-sm variant-ghost-surface" href="/privacy"> Privacy </a>
 					<a class="btn btn-sm variant-ghost-surface" href="/support"> Support </a>
 					{#if $page.url.pathname.includes('private')}
-						<button class="btn variant-filled-primary" type="submit">Logout</button><a
-							class="btn btn-sm variant-ghost-surface"
-							on:click={() => handleLogout()}
-							on:keyup={() => handleLogout()}
-							on:keydown={() => handleLogout()}
+						<button
+							class="btn variant-filled-primary"
+							on:click|stopPropagation|once={() => {
+								// handleLogout()
+								console.debug('doing stuff');
+							}}>Logout</button
 						>
-							Logout
-						</a>
 					{:else}
-						<a class="btn btn-sm variant-ghost-surface" href="/admin"> Login </a>
+						<a class="btn variant-filled-primary" href="/admin"> Login </a>
 					{/if}
 				</svelte:fragment>
 			</AppBar>

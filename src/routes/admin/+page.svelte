@@ -71,6 +71,7 @@
 						name="email"
 						type="email"
 						placeholder="definitely_not_pharell@gmail.com"
+						autocomplete="email"
 						required
 					/>
 				</label>
@@ -81,6 +82,7 @@
 						name="password"
 						type="password"
 						placeholder="super_sECure_passWord"
+						autocomplete="current-password"
 						required
 					/>
 				</label>

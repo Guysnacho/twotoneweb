@@ -1,5 +1,5 @@
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
-import { Database } from '$lib/schema';
+import type { Database } from '$lib/schema';
 import { createServerClient } from '@supabase/ssr';
 import type { User } from '@supabase/supabase-js';
 import type { Handle } from '@sveltejs/kit';
@@ -37,15 +37,16 @@ export const handle: Handle = async ({ event, resolve }) => {
 			.getUser()
 			.then(async (user: User) => {
 				if (user) {
+					console.debug('Safe get session succeeded ' + user.user_metadata.username);
 					return { user };
 				} else return { user: null };
 			})
-			.catch((err) => {
-				console.debug(err);
-				return { session: null, user: null };
+			.catch(() => {
+				console.debug('Safe get session failed');
+				return { user: null };
 			});
 
-		return { session: null, user };
+		return { user };
 	};
 
 	return resolve(event, {
