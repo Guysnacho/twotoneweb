@@ -7,6 +7,9 @@ import { z } from 'zod';
 import { betterSearchProc, router, spicySearchProc } from '../trpc/t';
 
 export const searchRouter = router({
+	/**
+	 * Spotify search, default
+	 */
 	song: spicySearchProc
 		.input(
 			z.object({
