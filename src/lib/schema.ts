@@ -188,7 +188,7 @@ export type Database = {
 					likes: number;
 					preview_url: string | null;
 					service_id: string;
-					service_ids: Json | null;
+					service_name: Database['public']['Enums']['service_name'];
 					stream_url: string | null;
 					title: string;
 					updated_at: string;
@@ -204,7 +204,7 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id: string;
-					service_ids?: Json | null;
+					service_name?: Database['public']['Enums']['service_name'];
 					stream_url?: string | null;
 					title: string;
 					updated_at?: string;
@@ -220,7 +220,7 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id?: string;
-					service_ids?: Json | null;
+					service_name?: Database['public']['Enums']['service_name'];
 					stream_url?: string | null;
 					title?: string;
 					updated_at?: string;
@@ -234,6 +234,7 @@ export type Database = {
 					dislikes: number;
 					id: string;
 					likes: number;
+					service_name: Database['public']['Enums']['service_name'] | null;
 					song_id: string;
 					updated_at: string;
 					user_id: string | null;
@@ -244,6 +245,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
+					service_name?: Database['public']['Enums']['service_name'] | null;
 					song_id: string;
 					updated_at?: string;
 					user_id?: string | null;
@@ -254,6 +256,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
+					service_name?: Database['public']['Enums']['service_name'] | null;
 					song_id?: string;
 					updated_at?: string;
 					user_id?: string | null;
@@ -441,7 +444,7 @@ export type Database = {
 					likes: number;
 					preview_url: string | null;
 					service_id: string;
-					service_ids: Json | null;
+					service_name: Database['public']['Enums']['service_name'];
 					stream_url: string | null;
 					title: string;
 					updated_at: string;
@@ -462,6 +465,7 @@ export type Database = {
 		};
 		Enums: {
 			app_role: 'STOCK' | 'CURATOR' | 'ADMIN';
+			service_name: 'SPOTIFY' | 'APPLE' | 'SOUNDCLOUD';
 			user_status: 'ONLINE' | 'OFFLINE' | 'LISTENING';
 		};
 		CompositeTypes: {
