@@ -44,15 +44,19 @@ export const spicySearchProc = t.procedure.use(
 );
 
 export const betterSearchProc = t.procedure
-	.input(z.object({ service: z.enum(['spotify', 'apple', 'soundcloud']) }))
+	.meta(
+		z.object({
+			service: z.enum(['spotify', 'apple', 'soundcloud'])
+		})
+	)
 	.use(
-		t.middleware(async ({ ctx, next }) => {
+		t.middleware(async ({ ctx, meta, next }) => {
 			if (!ctx.user) {
 				throw new TRPCError({ code: 'UNAUTHORIZED' });
 			}
 
 			let searchToken = '';
-			switch (ctx.event.request.headers.get('service')) {
+			switch (meta?.service as 'spotify' | 'apple' | 'soundcloud') {
 				case 'spotify':
 					searchToken = await fetchSpotifyToken();
 					break;
