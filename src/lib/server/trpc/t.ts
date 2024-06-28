@@ -1,11 +1,11 @@
-import { APPLE_SERVICE_KEY, ISS_ID, KEY_ID, SEARCH_SECRET } from '$env/static/private';
-import { fetchSavedToken, saveToken } from '$lib/musicHelper';
+import { SEARCH_SECRET } from '$env/static/private';
 import { TRPCError, initTRPC } from '@trpc/server';
 import { stringify } from 'querystring';
 import SuperJSON from 'superjson';
 import type { Context } from './context';
 
-import * as jswt from 'jsonwebtoken';
+import { z } from 'zod';
+import { fetchAppleToken, fetchSoundcloudToken, fetchSpotifyToken } from './authHelpers';
 
 export const t = initTRPC.context<Context>().create({
 	transformer: SuperJSON
@@ -53,9 +53,6 @@ export const spicySearchProc = t.procedure.use(
 				message: 'Something went wrong while fetching auth token, try again in a minute.'
 			});
 		}
-
-		const searchToken = (await authorization.json()).access_token;
-		console.debug('Successfully fetched token - %s', searchToken);
 		return next({
 			ctx: {
 				// infers the `session` as non-nullable
@@ -67,50 +64,37 @@ export const spicySearchProc = t.procedure.use(
 	})
 );
 
-export const appleSearchProc = t.procedure.use(
-	t.middleware(async ({ ctx, next }) => {
-		if (!ctx.session || !ctx.session.user) {
-			throw new TRPCError({ code: 'UNAUTHORIZED' });
-		}
+export const betterSearchProc = t.procedure
+	.input(z.object({ service: z.enum(['spotify', 'apple', 'soundcloud']) }))
+	.use(
+		t.middleware(async ({ ctx, next }) => {
+			if (!ctx.session || !ctx.session.user) {
+				throw new TRPCError({ code: 'UNAUTHORIZED' });
+			}
 
-		const token = await fetchSavedToken();
-		console.debug('Token present in db ? ' + token !== undefined);
-
-		// If we have an unexpired token
-		if (token !== undefined && token !== '') {
+			let searchToken = '';
+			switch (ctx.event.request.headers.get('service')) {
+				case 'spotify':
+					searchToken = await fetchSpotifyToken();
+					break;
+				case 'apple':
+					searchToken = await fetchAppleToken();
+					break;
+				case 'soundcloud':
+					searchToken = await fetchSoundcloudToken();
+					break;
+				default:
+					throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported service provided' });
+			}
 			return next({
 				ctx: {
 					// infers the `session` as non-nullable
 					session: { ...ctx.session, user: ctx.session.user },
 					// enrich context with auth token
-					appleSearchToken: token
+					searchToken
 				}
 			});
-		} else {
-			const issued_at = new Date();
-
-			const appleJwt = jswt.sign(
-				{},
-				'-----BEGIN PRIVATE KEY-----\n' + APPLE_SERVICE_KEY + '\n-----END PRIVATE KEY-----',
-				{
-					algorithm: 'ES256',
-					expiresIn: '24h',
-					issuer: ISS_ID,
-					header: { alg: 'ES256', kid: KEY_ID }
-				}
-			);
-			console.debug('Successfully built developer token - %s', appleJwt);
-			await saveToken(appleJwt, issued_at);
-			return next({
-				ctx: {
-					// infers the `session` as non-nullable
-					session: { ...ctx.session, user: ctx.session.user },
-					// enrich context with auth token
-					appleSearchToken: appleJwt
-				}
-			});
-		}
-	})
-);
+		})
+	);
 
 export const publicProc = t.procedure;
