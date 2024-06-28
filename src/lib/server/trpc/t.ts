@@ -1,6 +1,4 @@
-import { SEARCH_SECRET } from '$env/static/private';
 import { TRPCError, initTRPC } from '@trpc/server';
-import { stringify } from 'querystring';
 import SuperJSON from 'superjson';
 import type { Context } from './context';
 
@@ -17,13 +15,12 @@ export const router = t.router;
 
 export const superSecretProc = t.procedure.use(
 	t.middleware(({ ctx, next }) => {
-		if (!ctx.session || !ctx.session.user) {
+		if (!ctx.user) {
 			throw new TRPCError({ code: 'UNAUTHORIZED' });
 		}
 		return next({
 			ctx: {
-				// infers the `session` as non-nullable
-				session: { ...ctx.session, user: ctx.session.user }
+				user: ctx.user
 			}
 		});
 	})
@@ -31,32 +28,14 @@ export const superSecretProc = t.procedure.use(
 
 export const spicySearchProc = t.procedure.use(
 	t.middleware(async ({ ctx, next }) => {
-		if (!ctx.session || !ctx.session.user) {
+		if (!ctx.user) {
 			throw new TRPCError({ code: 'UNAUTHORIZED' });
 		}
-		// Fetch spotify auth token
-		const authorization = await fetch('https://accounts.spotify.com/api/token', {
-			method: 'POST',
-			headers: {
-				Authorization: 'Basic ' + SEARCH_SECRET,
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Cache-Control': 'max-age=3600'
-			},
-			body: stringify({
-				grant_type: 'client_credentials'
-			})
-		});
+		const searchToken = await fetchSpotifyToken();
 
-		if (!authorization.ok) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
-				message: 'Something went wrong while fetching auth token, try again in a minute.'
-			});
-		}
 		return next({
 			ctx: {
-				// infers the `session` as non-nullable
-				session: { ...ctx.session, user: ctx.session.user },
+				user: ctx.user,
 				// enrich context with auth token
 				searchToken
 			}
@@ -68,7 +47,7 @@ export const betterSearchProc = t.procedure
 	.input(z.object({ service: z.enum(['spotify', 'apple', 'soundcloud']) }))
 	.use(
 		t.middleware(async ({ ctx, next }) => {
-			if (!ctx.session || !ctx.session.user) {
+			if (!ctx.user) {
 				throw new TRPCError({ code: 'UNAUTHORIZED' });
 			}
 
@@ -88,8 +67,7 @@ export const betterSearchProc = t.procedure
 			}
 			return next({
 				ctx: {
-					// infers the `session` as non-nullable
-					session: { ...ctx.session, user: ctx.session.user },
+					user: ctx.user,
 					// enrich context with auth token
 					searchToken
 				}

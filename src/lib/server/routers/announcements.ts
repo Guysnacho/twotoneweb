@@ -31,12 +31,10 @@ export const announcementsRouter = router({
 			input,
 			ctx: {
 				supabase,
-				session: {
-					user: { id }
-				}
+				user
 			}
 		}) => {
-			const { data, error } = await supabase.from('users').select('id,role').eq('id', id).single();
+			const { data, error } = await supabase.from('users').select('id,role').eq('id', user.id).single();
 			if (error) {
 				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message });
 			} else if (data.role !== 'ADMIN') {

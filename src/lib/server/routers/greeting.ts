@@ -31,9 +31,9 @@ function getTimeOfWithDate(date: Date) {
 }
 
 export const greetingRouter = router({
-	greet: publicProc.query(async ({ ctx: { session } }) => {
+	greet: publicProc.query(async ({ ctx: { user } }) => {
 		return `Good ${getTimeOfDay()}${
-			session?.user.user_metadata.username ? ' ' + session?.user.user_metadata.username : ''
+			user?.user_metadata.username ? ' ' + user?.user_metadata.username : ''
 		}!`;
 	}),
 	greetWTime: publicProc
@@ -42,11 +42,9 @@ export const greetingRouter = router({
 				date: z.date({}).describe('text used to search for song')
 			})
 		)
-		.query(async ({ ctx: { session }, input: { date } }) => {
+		.query(async ({ ctx: { user }, input: { date } }) => {
 			console.debug('Greeting event with date');
 			console.debug(date);
-			return `Good ${getTimeOfWithDate(date)}${
-				session?.user.user_metadata.username ? ' ' + session?.user.user_metadata.username : ''
-			}!`;
+			return `Good ${getTimeOfWithDate(date)}${user?.user_metadata.username}!`;
 		})
 });
