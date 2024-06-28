@@ -1,5 +1,5 @@
 import { APPLE_API_HOST, MUSIC_API_HOST } from '$env/static/private';
-import { formatAppleResults, formatSpotifyResults } from '$lib/musicHelper';
+import { filterSongs, formatAppleResults, formatSpotifyResults } from '$lib/musicHelper';
 import { supabase } from '$lib/supabaseClient';
 import { TRPCError } from '@trpc/server';
 import querystring from 'querystring';
@@ -42,27 +42,8 @@ export const searchRouter = router({
 			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {
 				const spottyResults = formatSpotifyResults(spottyResponse.tracks.items);
-				const savedTitles = [''];
-				const savedArtists = [''];
-				const savedServiceIds = supaResults.data
-					.map((supaResult) => {
-						savedTitles.push(supaResult.title.toLocaleLowerCase());
-						savedArtists.push(supaResult.artists.toLocaleLowerCase());
-						return supaResult.service_id;
-					})
-					.toString();
-				// If service id matches or if title and artist match
-				const filteredSongs = spottyResults.filter((result) => {
-					if (savedServiceIds.includes(result.service_id)) {
-						return false;
-					} else if (
-						savedArtists.includes(result.artists.toLocaleLowerCase()) &&
-						savedTitles.includes(result.title.toLocaleLowerCase())
-					) {
-						return false;
-					}
-					return true;
-				});
+				const filteredSongs = filterSongs(supaResults.data, spottyResults);
+
 				console.debug('sending results');
 				return [...supaResults.data, ...filteredSongs];
 			}
@@ -110,28 +91,8 @@ export const searchRouter = router({
 			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {
 				const spottyResults = formatSpotifyResults(spottyResponse.tracks.items);
-				const savedTitles = [''];
-				const savedArtists = [''];
-				const savedServiceIds = supaResults.data
-					.map((supaResult) => {
-						savedTitles.push(supaResult.title.toLocaleLowerCase());
-						savedArtists.push(supaResult.artists.toLocaleLowerCase());
-						return supaResult.service_id;
-					})
-					.toString();
-				// If service id matches or if title and artist match
-				const filteredSongs = spottyResults.filter((result) => {
-					if (savedServiceIds.includes(result.service_id)) {
-						return false;
-					} else if (
-						// todo - Drop this if later, now that we're saving per service
-						savedArtists.includes(result.artists.toLocaleLowerCase()) &&
-						savedTitles.includes(result.title.toLocaleLowerCase())
-					) {
-						return false;
-					}
-					return true;
-				});
+
+				const filteredSongs = filterSongs(supaResults.data, spottyResults);
 				console.debug('sending results');
 				return [...supaResults.data, ...filteredSongs];
 			}
@@ -144,7 +105,7 @@ export const searchRouter = router({
 				query: z.string().min(2).describe('text used to search for song')
 			})
 		)
-		.query(async ({ ctx: { appleSearchToken }, input: { query } }) => {
+		.query(async ({ ctx: { searchToken }, input: { query } }) => {
 			if (query.length < 2) {
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
 			}
@@ -177,7 +138,7 @@ export const searchRouter = router({
 				})}`,
 				{
 					headers: {
-						Authorization: 'Bearer ' + appleSearchToken
+						Authorization: 'Bearer ' + searchToken
 					}
 				}
 			);
@@ -203,27 +164,8 @@ export const searchRouter = router({
 			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {
 				const appleResults = formatAppleResults(appleResponse);
-				const savedTitles: string[] = [];
-				const savedArtists: string[] = [];
-				const savedServiceIds = supaResults.data
-					.map((supaResult) => {
-						savedTitles.push(supaResult.title.toLocaleLowerCase());
-						savedArtists.push(supaResult.artists.toLocaleLowerCase());
-						return supaResult.service_id;
-					})
-					.toString();
-				// If service id matches or if title and artist match
-				const filteredSongs = appleResults.filter((result) => {
-					if (savedServiceIds.includes(result.service_id)) {
-						return false;
-					} else if (
-						savedArtists.includes(result.artists.toLocaleLowerCase()) &&
-						savedTitles.includes(result.title.toLocaleLowerCase())
-					) {
-						return false;
-					}
-					return true;
-				});
+
+				const filteredSongs = filterSongs(supaResults.data, appleResults);
 				console.debug('sending results');
 				return [...supaResults.data, ...filteredSongs];
 			}

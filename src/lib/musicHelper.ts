@@ -1,4 +1,5 @@
 import type { IReleaseMatch } from 'musicbrainz-api';
+import type { Database } from './schema';
 import { supabase } from './supabaseClient';
 
 /**
@@ -160,6 +161,18 @@ export interface Preview {
 	url: string;
 }
 
+export type FormattedSong =  {
+	service_id: string;
+	title: string;
+	album: string;
+	artists: string;
+	album_art: string;
+	preview_url: string;
+	stream_url: string;
+	explicit: boolean;
+	isrc: string;
+}
+
 export const formatMusicBrainzResults = (songList: IReleaseMatch[]) => {
 	const formattedList = songList.map((song) => {
 		return {
@@ -197,7 +210,9 @@ export const formatDeezerResults = (songList: DeezerServiceResult[]) => {
  * @param songList
  * @returns formattedList
  */
-export const formatSpotifyResults = (songList: SpotifyTrack[]) => {
+export const formatSpotifyResults = (
+	songList: SpotifyTrack[]
+): [] => {
 	const formattedList = songList.map((song) => {
 		let artistList: string | undefined = undefined;
 		song.artists.forEach((val) => {
@@ -308,4 +323,45 @@ export const saveToken = async (token: string, issued_at: Date) => {
 		console.debug(error);
 		throw error;
 	} else console.debug('Successfully saved token');
+};
+
+export const filterSongs = (
+	supaResults: Database['public']['Tables']['song']['Row'][],
+	serviceResults: {
+		service_id: string;
+		title: string;
+		album: string;
+		artists: string;
+		album_art: string;
+		preview_url: string;
+		stream_url: string;
+		explicit: boolean;
+		isrc: string;
+	}[]
+) => {
+	const savedTitles = [''];
+	const savedArtists = [''];
+	const savedServiceIds = supaResults
+		.map((supaResult) => {
+			savedTitles.push(supaResult.title.toLocaleLowerCase());
+			savedArtists.push(supaResult.artists.toLocaleLowerCase());
+			return supaResult.service_id;
+		})
+		.toString();
+
+	// If service id matches or if title and artist match
+	const filteredSongs = serviceResults.filter((result) => {
+		if (savedServiceIds.includes(result.service_id)) {
+			return false;
+		} else if (
+			// todo - Drop this if later, now that we're saving per service
+			savedArtists.includes(result.artists.toLocaleLowerCase()) &&
+			savedTitles.includes(result.title.toLocaleLowerCase())
+		) {
+			return false;
+		}
+		return true;
+	});
+
+	return filteredSongs;
 };
