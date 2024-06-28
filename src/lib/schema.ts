@@ -450,6 +450,28 @@ export type Database = {
 					updated_at: string;
 				}[];
 			};
+			search_songs_by_service: {
+				Args: {
+					prefix: string;
+					selected_service: Database['public']['Enums']['service_name'];
+				};
+				Returns: {
+					id: string;
+					title: string;
+					album: string;
+					artists: string;
+					likes: number;
+					dislikes: number;
+					created_at: string;
+					updated_at: string;
+					album_art: string;
+					service_id: string;
+					preview_url: string;
+					explicit: boolean;
+					stream_url: string;
+					service_name: Database['public']['Enums']['service_name'];
+				}[];
+			};
 			search_users: {
 				Args: {
 					prefix: string;
