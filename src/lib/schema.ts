@@ -188,7 +188,7 @@ export type Database = {
 					likes: number;
 					preview_url: string | null;
 					service_id: string;
-					service_ids: Json | null;
+					service_name: Database['public']['Enums']['service_name'];
 					stream_url: string | null;
 					title: string;
 					updated_at: string;
@@ -204,7 +204,7 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id: string;
-					service_ids?: Json | null;
+					service_name?: Database['public']['Enums']['service_name'];
 					stream_url?: string | null;
 					title: string;
 					updated_at?: string;
@@ -220,7 +220,7 @@ export type Database = {
 					likes?: number;
 					preview_url?: string | null;
 					service_id?: string;
-					service_ids?: Json | null;
+					service_name?: Database['public']['Enums']['service_name'];
 					stream_url?: string | null;
 					title?: string;
 					updated_at?: string;
@@ -234,6 +234,7 @@ export type Database = {
 					dislikes: number;
 					id: string;
 					likes: number;
+					service_name: Database['public']['Enums']['service_name'];
 					song_id: string;
 					updated_at: string;
 					user_id: string | null;
@@ -244,6 +245,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
+					service_name?: Database['public']['Enums']['service_name'];
 					song_id: string;
 					updated_at?: string;
 					user_id?: string | null;
@@ -254,6 +256,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
+					service_name?: Database['public']['Enums']['service_name'];
 					song_id?: string;
 					updated_at?: string;
 					user_id?: string | null;
@@ -431,20 +434,42 @@ export type Database = {
 					prefix: string;
 				};
 				Returns: {
-					album: string;
-					album_art: string;
-					artists: string;
-					created_at: string;
-					dislikes: number;
-					explicit: boolean;
 					id: string;
-					likes: number;
-					preview_url: string | null;
-					service_id: string;
-					service_ids: Json | null;
-					stream_url: string | null;
 					title: string;
+					album: string;
+					artists: string;
+					likes: number;
+					dislikes: number;
+					created_at: string;
 					updated_at: string;
+					album_art: string;
+					service_id: string;
+					preview_url: string;
+					explicit: boolean;
+					stream_url: string;
+					service_name: Database['public']['Enums']['service_name'];
+				}[];
+			};
+			search_songs_by_service: {
+				Args: {
+					prefix: string;
+					selected_service: Database['public']['Enums']['service_name'];
+				};
+				Returns: {
+					id: string;
+					title: string;
+					album: string;
+					artists: string;
+					likes: number;
+					dislikes: number;
+					created_at: string;
+					updated_at: string;
+					album_art: string;
+					service_id: string;
+					preview_url: string;
+					explicit: boolean;
+					stream_url: string;
+					service_name: Database['public']['Enums']['service_name'];
 				}[];
 			};
 			search_users: {
@@ -462,6 +487,7 @@ export type Database = {
 		};
 		Enums: {
 			app_role: 'STOCK' | 'CURATOR' | 'ADMIN';
+			service_name: 'spotify' | 'apple' | 'soundcloud';
 			user_status: 'ONLINE' | 'OFFLINE' | 'LISTENING';
 		};
 		CompositeTypes: {

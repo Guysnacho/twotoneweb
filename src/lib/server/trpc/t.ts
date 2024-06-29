@@ -1,65 +1,46 @@
-import { APPLE_SERVICE_KEY, ISS_ID, KEY_ID, SEARCH_SECRET } from '$env/static/private';
-import { fetchSavedToken, saveToken } from '$lib/musicHelper';
 import { TRPCError, initTRPC } from '@trpc/server';
-import { stringify } from 'querystring';
 import SuperJSON from 'superjson';
-import type { Context } from './context';
+import type { Context, Meta } from './context';
 
-import * as jswt from 'jsonwebtoken';
+import { fetchAppleToken, fetchSoundcloudToken, fetchSpotifyToken } from './authHelpers';
 
-export const t = initTRPC.context<Context>().create({
-	transformer: SuperJSON
-});
+export const t = initTRPC
+	.context<Context>()
+	.meta<Meta>()
+	.create({
+		transformer: SuperJSON,
+		defaultMeta: {
+			service: 'spotify'
+		}
+	});
 
 export const router = t.router;
 
 //Check if user request is authed
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+	if (!ctx.session) {
+		throw new TRPCError({ code: 'UNAUTHORIZED' });
+	}
 
-export const superSecretProc = t.procedure.use(
-	t.middleware(({ ctx, next }) => {
-		if (!ctx.session || !ctx.session.user) {
-			throw new TRPCError({ code: 'UNAUTHORIZED' });
+	return next({
+		ctx: {
+			// infers the `user` as non-nullable
+			user: { ...ctx.session.user }
 		}
-		return next({
-			ctx: {
-				// infers the `session` as non-nullable
-				session: { ...ctx.session, user: ctx.session.user }
-			}
-		});
-	})
-);
+	});
+});
+
+export const superSecretProc = t.procedure.use(enforceUserIsAuthed);
 
 export const spicySearchProc = t.procedure.use(
-	t.middleware(async ({ ctx, next }) => {
-		if (!ctx.session || !ctx.session.user) {
-			throw new TRPCError({ code: 'UNAUTHORIZED' });
-		}
-		// Fetch spotify auth token
-		const authorization = await fetch('https://accounts.spotify.com/api/token', {
-			method: 'POST',
-			headers: {
-				Authorization: 'Basic ' + SEARCH_SECRET,
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Cache-Control': 'max-age=3600'
-			},
-			body: stringify({
-				grant_type: 'client_credentials'
-			})
-		});
+	enforceUserIsAuthed.unstable_pipe(async (opts) => {
+		const { ctx } = opts;
+		const searchToken = await fetchSpotifyToken();
 
-		if (!authorization.ok) {
-			throw new TRPCError({
-				code: 'FORBIDDEN',
-				message: 'Something went wrong while fetching auth token, try again in a minute.'
-			});
-		}
-
-		const searchToken = (await authorization.json()).access_token;
-		console.debug('Successfully fetched token - %s', searchToken);
-		return next({
+		return opts.next({
 			ctx: {
-				// infers the `session` as non-nullable
-				session: { ...ctx.session, user: ctx.session.user },
+				user: { ...ctx.session?.user },
+
 				// enrich context with auth token
 				searchToken
 			}
@@ -67,49 +48,39 @@ export const spicySearchProc = t.procedure.use(
 	})
 );
 
-export const appleSearchProc = t.procedure.use(
-	t.middleware(async ({ ctx, next }) => {
-		if (!ctx.session || !ctx.session.user) {
-			throw new TRPCError({ code: 'UNAUTHORIZED' });
+export const betterSearchProc = t.procedure.use(
+	enforceUserIsAuthed.unstable_pipe(async (opts) => {
+		const { ctx, meta, next } = opts;
+		let builtCtx = {
+			user: ctx.user,
+			spotifyToken: '',
+			appleToken: '',
+			soundcloudToken: ''
+		};
+
+		console.debug('preferred service - ' + meta?.service);
+		switch (meta?.service as 'spotify' | 'apple' | 'soundcloud' | 'all') {
+			// enrich context with tokens
+			case 'spotify':
+				builtCtx.spotifyToken = await fetchSpotifyToken();
+				break;
+			case 'apple':
+				builtCtx.appleToken = await fetchAppleToken();
+				break;
+			case 'soundcloud':
+				builtCtx.soundcloudToken = await fetchSoundcloudToken();
+				break;
+			case 'all':
+				builtCtx.spotifyToken = await fetchSpotifyToken();
+				builtCtx.appleToken = await fetchAppleToken();
+				builtCtx.soundcloudToken = await fetchSoundcloudToken();
+				break;
+			default:
+				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported service provided' });
 		}
-
-		const token = await fetchSavedToken();
-		console.debug('Token present in db ? ' + token !== undefined);
-
-		// If we have an unexpired token
-		if (token !== undefined && token !== '') {
-			return next({
-				ctx: {
-					// infers the `session` as non-nullable
-					session: { ...ctx.session, user: ctx.session.user },
-					// enrich context with auth token
-					appleSearchToken: token
-				}
-			});
-		} else {
-			const issued_at = new Date();
-
-			const appleJwt = jswt.sign(
-				{},
-				'-----BEGIN PRIVATE KEY-----\n' + APPLE_SERVICE_KEY + '\n-----END PRIVATE KEY-----',
-				{
-					algorithm: 'ES256',
-					expiresIn: '24h',
-					issuer: ISS_ID,
-					header: { alg: 'ES256', kid: KEY_ID }
-				}
-			);
-			console.debug('Successfully built developer token - %s', appleJwt);
-			await saveToken(appleJwt, issued_at);
-			return next({
-				ctx: {
-					// infers the `session` as non-nullable
-					session: { ...ctx.session, user: ctx.session.user },
-					// enrich context with auth token
-					appleSearchToken: appleJwt
-				}
-			});
-		}
+		return next({
+			ctx: builtCtx
+		});
 	})
 );
 

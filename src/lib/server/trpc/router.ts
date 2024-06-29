@@ -8,4 +8,4 @@ export const trpcRouter = router({
 	announcements: announcementsRouter
 });
 
-export type TrpcRouter = typeof router;
+export type TrpcRouter = typeof trpcRouter;

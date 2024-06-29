@@ -1,5 +1,4 @@
 import { TRPCError } from '@trpc/server';
-import { writeFile } from 'fs';
 
 import { z } from 'zod';
 import { publicProc, router, superSecretProc } from '../trpc/t';
@@ -26,17 +25,14 @@ export const announcementsRouter = router({
 			throw new TRPCError({ code: 'NOT_FOUND' });
 		}
 	}),
-	announce: superSecretProc.input(z.object({ announcements: z.array(z.string()) })).mutation(
-		async ({
-			input,
-			ctx: {
-				supabase,
-				session: {
-					user: { id }
-				}
-			}
-		}) => {
-			const { data, error } = await supabase.from('users').select('id,role').eq('id', id).single();
+	announce: superSecretProc
+		.input(z.object({ announcements: z.array(z.string()) }))
+		.mutation(async ({ input, ctx: { supabase, session } }) => {
+			const { data, error } = await supabase
+				.from('users')
+				.select('id,role')
+				.eq('id', session?.user.id)
+				.single();
 			if (error) {
 				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message });
 			} else if (data.role !== 'ADMIN') {
@@ -64,6 +60,5 @@ export const announcementsRouter = router({
 					return 'mission accomplished';
 				}
 			}
-		}
-	)
+		})
 });

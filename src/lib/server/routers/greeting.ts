@@ -31,10 +31,14 @@ function getTimeOfWithDate(date: Date) {
 }
 
 export const greetingRouter = router({
-	greet: publicProc.query(async ({ ctx: { session } }) => {
-		return `Good ${getTimeOfDay()}${
-			session?.user.user_metadata.username ? ' ' + session?.user.user_metadata.username : ''
-		}!`;
+	greet: publicProc.query(async ({ ctx: { session, supabase } }) => {
+		const { data, error } = await supabase
+			.from('users')
+			.select('*')
+			.eq('id', session?.user.id)
+			.single();
+		const name = data!.username;
+		return `Good ${getTimeOfDay()}${name ? ' ' + name : ''}!`;
 	}),
 	greetWTime: publicProc
 		.input(
@@ -42,11 +46,14 @@ export const greetingRouter = router({
 				date: z.date({}).describe('text used to search for song')
 			})
 		)
-		.query(async ({ ctx: { session }, input: { date } }) => {
+		.query(async ({ ctx: { session, supabase }, input: { date } }) => {
+			const { data, error } = await supabase
+				.from('users')
+				.select('*')
+				.eq('id', session?.user.id)
+				.single();
 			console.debug('Greeting event with date');
-			console.debug(date);
-			return `Good ${getTimeOfWithDate(date)}${
-				session?.user.user_metadata.username ? ' ' + session?.user.user_metadata.username : ''
-			}!`;
+			const name = data!.username;
+			return `Good ${getTimeOfWithDate(date)}${name}!`;
 		})
 });
