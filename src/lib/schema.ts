@@ -434,20 +434,20 @@ export type Database = {
 					prefix: string;
 				};
 				Returns: {
-					album: string;
-					album_art: string;
-					artists: string;
-					created_at: string;
-					dislikes: number;
-					explicit: boolean;
 					id: string;
-					likes: number;
-					preview_url: string | null;
-					service_id: string;
-					service_name: Database['public']['Enums']['service_name'];
-					stream_url: string | null;
 					title: string;
+					album: string;
+					artists: string;
+					likes: number;
+					dislikes: number;
+					created_at: string;
 					updated_at: string;
+					album_art: string;
+					service_id: string;
+					preview_url: string;
+					explicit: boolean;
+					stream_url: string;
+					service_name: Database['public']['Enums']['service_name'];
 				}[];
 			};
 			search_songs_by_service: {
