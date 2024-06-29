@@ -2,7 +2,6 @@ import { TRPCError, initTRPC } from '@trpc/server';
 import SuperJSON from 'superjson';
 import type { Context, Meta } from './context';
 
-import { z } from 'zod';
 import { fetchAppleToken, fetchSoundcloudToken, fetchSpotifyToken } from './authHelpers';
 
 export const t = initTRPC
@@ -49,37 +48,32 @@ export const spicySearchProc = t.procedure.use(
 	})
 );
 
-export const betterSearchProc = t.procedure
-	.meta(
-		z.object({
-			service: z.enum(['spotify', 'apple', 'soundcloud'])
-		})
-	)
-	.use(
-		enforceUserIsAuthed.unstable_pipe(async (opts) => {
-			const { ctx, meta, next } = opts;
-			let searchToken = '';
-			switch (meta?.service as 'spotify' | 'apple' | 'soundcloud') {
-				case 'spotify':
-					searchToken = await fetchSpotifyToken();
-					break;
-				case 'apple':
-					searchToken = await fetchAppleToken();
-					break;
-				case 'soundcloud':
-					searchToken = await fetchSoundcloudToken();
-					break;
-				default:
-					throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported service provided' });
+export const betterSearchProc = t.procedure.use(
+	enforceUserIsAuthed.unstable_pipe(async (opts) => {
+		const { ctx, meta, next } = opts;
+		let searchToken = '';
+		console.debug('preferred service - ' + meta?.service);
+		switch (meta?.service as 'spotify' | 'apple' | 'soundcloud') {
+			case 'spotify':
+				searchToken = await fetchSpotifyToken();
+				break;
+			case 'apple':
+				searchToken = await fetchAppleToken();
+				break;
+			case 'soundcloud':
+				searchToken = await fetchSoundcloudToken();
+				break;
+			default:
+				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported service provided' });
+		}
+		return next({
+			ctx: {
+				user: ctx.user,
+				// enrich context with auth token
+				searchToken
 			}
-			return next({
-				ctx: {
-					user: ctx.user,
-					// enrich context with auth token
-					searchToken
-				}
-			});
-		})
-	);
+		});
+	})
+);
 
 export const publicProc = t.procedure;

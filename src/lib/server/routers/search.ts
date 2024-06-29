@@ -11,6 +11,7 @@ export const searchRouter = router({
 	 * Spotify search, default
 	 */
 	song: spicySearchProc
+		.meta({ service: 'spotify' })
 		.input(
 			z.object({
 				query: z.string().min(2).describe('text used to search for song')
@@ -54,6 +55,7 @@ export const searchRouter = router({
 			return formatSpotifyResults(spottyResponse.tracks.items);
 		}),
 	spotify: betterSearchProc
+		.meta({ service: 'spotify' })
 		.input(
 			z.object({
 				query: z
@@ -72,7 +74,7 @@ export const searchRouter = router({
 			const supabaseQuery = supabase
 				.rpc('search_songs_by_service', {
 					prefix: query.replaceAll(' ', '+'),
-					selected_service: 'SPOTIFY'
+					selected_service: 'spotify'
 				})
 				.limit(3);
 			const serviceFetch = fetch(
@@ -103,6 +105,7 @@ export const searchRouter = router({
 			return formatSpotifyResults(spottyResponse.tracks.items);
 		}),
 	apple: betterSearchProc
+		.meta({ service: 'apple' })
 		.input(
 			z.object({
 				query: z.string().min(2).describe('text used to search for song')
@@ -118,7 +121,7 @@ export const searchRouter = router({
 			const supabaseQuery = supabase
 				.rpc('search_songs_by_service', {
 					prefix: query.replaceAll(' ', '+'),
-					selected_service: 'APPLE'
+					selected_service: 'apple'
 				})
 				.limit(3);
 			//	Find storefronts
