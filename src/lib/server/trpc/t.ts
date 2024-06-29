@@ -12,30 +12,30 @@ export const t = initTRPC.context<Context>().create({
 export const router = t.router;
 
 //Check if user request is authed
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+	if (!ctx.session) {
+		throw new TRPCError({ code: 'UNAUTHORIZED' });
+	}
 
-export const superSecretProc = t.procedure.use(
-	t.middleware(({ ctx, next }) => {
-		if (!ctx.user) {
-			throw new TRPCError({ code: 'UNAUTHORIZED' });
+	return next({
+		ctx: {
+			// infers the `user` as non-nullable
+			user: { ...ctx.session.user }
 		}
-		return next({
-			ctx: {
-				user: ctx.user
-			}
-		});
-	})
-);
+	});
+});
+
+export const superSecretProc = t.procedure.use(enforceUserIsAuthed);
 
 export const spicySearchProc = t.procedure.use(
-	t.middleware(async ({ ctx, next }) => {
-		if (!ctx.user) {
-			throw new TRPCError({ code: 'UNAUTHORIZED' });
-		}
+	enforceUserIsAuthed.unstable_pipe(async (opts) => {
+		const { ctx } = opts;
 		const searchToken = await fetchSpotifyToken();
 
-		return next({
+		return opts.next({
 			ctx: {
-				user: ctx.user,
+				user: { ...ctx.session?.user },
+
 				// enrich context with auth token
 				searchToken
 			}
@@ -50,11 +50,8 @@ export const betterSearchProc = t.procedure
 		})
 	)
 	.use(
-		t.middleware(async ({ ctx, meta, next }) => {
-			if (!ctx.user) {
-				throw new TRPCError({ code: 'UNAUTHORIZED' });
-			}
-
+		enforceUserIsAuthed.unstable_pipe(async (opts) => {
+			const { ctx, meta, next } = opts;
 			let searchToken = '';
 			switch (meta?.service as 'spotify' | 'apple' | 'soundcloud') {
 				case 'spotify':

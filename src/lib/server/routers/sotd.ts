@@ -59,7 +59,7 @@ export const sotdRouter = router({
 
 			return data;
 		}),
-	getFeed: superSecretProc.query(async ({ ctx: { supabase, user } }) => {
+	getFeed: superSecretProc.query(async ({ ctx: { supabase, session: { user } } }) => {
 		const { data, error } = await supabase
 			.from('sotd')
 			.select(
@@ -81,7 +81,7 @@ export const sotdRouter = router({
 				page: z.number().describe('Page number of feed // Must be at least page 1')
 			})
 		)
-		.query(async ({ input: { page }, ctx: { supabase, user } }) => {
+		.query(async ({ input: { page }, ctx: { supabase, session: { user } } }) => {
 			const { data, error } = await supabase
 				.rpc('get_sotd_w_following_user_id', { persona: user.id }, { count: 'exact' })
 				.range(page * 15, page * 15 + 15)

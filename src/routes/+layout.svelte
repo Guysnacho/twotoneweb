@@ -4,21 +4,13 @@
 	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
 	// Most of your app wide CSS should be put in this file
-	import { page } from '$app/stores';
 	import { AppBar, AppShell } from '@skeletonlabs/skeleton';
-	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import '../app.postcss';
-	import type { LayoutData } from './$types';
-	import { goto } from '$app/navigation';
+	import { trpc } from '$lib/trpc';
+	import { QueryClientProvider } from '@tanstack/svelte-query';
 
-	export let data: LayoutData;
-
-	$: queryClient = data.trpc.queryClient;
-	function handleLogout() {
-		console.log('Logging out');
-
-		data.supabase.auth.signOut({ scope: 'local' }).finally(() => goto('/'));
-	}
+	//@ts-ignore
+	$: queryClient = trpc.queryClient;
 </script>
 
 <QueryClientProvider client={queryClient}>

@@ -1,28 +1,16 @@
 import { SUPABASE_ANON_KEY } from '$env/static/private';
 import { PUBLIC_SUPABASE_URL } from '$env/static/public';
 import type { Database } from '$lib/schema';
-import { createServerClient } from '@supabase/ssr';
+import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import type { RequestEvent } from '@sveltejs/kit';
 import type { inferAsyncReturnType } from '@trpc/server';
 
 export async function createContext(event: RequestEvent) {
 	// if there's auth cookie it'll be authenticated by this helper
-	const supabase = createServerClient<Database>(PUBLIC_SUPABASE_URL, SUPABASE_ANON_KEY, {
-		cookies: {
-			get: (key) => event.cookies.get(key),
-			/**
-			 * Note: You have to add the `path` variable to the
-			 * set and remove method due to sveltekit's cookie API
-			 * requiring this to be set, setting the path to an empty string
-			 * will replicate previous/standard behaviour (https://kit.svelte.dev/docs/types#public-types-cookies)
-			 */
-			set: (key, value, options) => {
-				event.cookies.set(key, value, { ...options, path: '/' });
-			},
-			remove: (key, options) => {
-				event.cookies.delete(key, { ...options, path: '/' });
-			}
-		}
+	const supabase = createSupabaseServerClient<Database>({
+		event: event,
+		supabaseUrl: PUBLIC_SUPABASE_URL,
+		supabaseKey: SUPABASE_ANON_KEY
 	});
 
 	// native sends these instead of cookie auth
@@ -37,12 +25,14 @@ export async function createContext(event: RequestEvent) {
 		}
 	}
 
-	const { user } = await event.locals.safeGetSession();
+	const {
+		data: { session }
+	} = await supabase.auth.getSession();
 
 	return {
 		requestOrigin: event.request.headers.get('origin'),
 		event,
-		user,
+		session,
 
 		/**
 		 * The Supabase instance with the authenticated session on it (RLS works)
