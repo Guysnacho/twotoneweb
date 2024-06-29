@@ -27,7 +27,7 @@ export const searchRouter = router({
 				.rpc('search_songs', { prefix: query.replaceAll(' ', '+') })
 				.limit(3);
 			const serviceFetch = fetch(
-				`${MUSIC_API_HOST}?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
+				`${MUSIC_API_HOST}/search?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
 				{
 					headers: {
 						Authorization: 'Bearer ' + searchToken
@@ -38,7 +38,9 @@ export const searchRouter = router({
 			const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
 
 			if (supaResults.error) {
-				throw new TRPCError({ code: 'FORBIDDEN' });
+				console.error('Supabase search query failed');
+				console.error(supaResults.error);
+				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: supaResults.error.message });
 			}
 			const spottyResponse = await serviceResults.json();
 
@@ -60,52 +62,65 @@ export const searchRouter = router({
 				service: z
 					.enum(['spotify', 'apple'])
 					.describe("User's preferred service // invalid service provided"),
-				title: z
-					.string()
-					.min(2)
-					.describe("Song title we're searching for // Song title we're searching for"),
-				artist: z
-					.string()
-					.min(2)
-					.describe("Artist we're searching for // Artist we're searching for")
+				serviceId: z.string().describe('ID of the song in question // ID of the song in question')
 			})
 		)
 		.mutation(
 			async ({
-				ctx: { spotifyToken, appleToken, supabase },
-				input: { service, artist, title }
+				ctx: { spotifyToken, appleToken, soundcloudToken, supabase },
+				input: { service, serviceId }
 			}) => {
-				console.debug(`Song search for ${title} by ${artist}`);
-				if (query.length < 2) {
-					throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
+				console.debug(`Song reconcile started for song id ${serviceId} on ${service}`);
+				if (!service || !serviceId) {
+					throw new TRPCError({
+						code: 'BAD_REQUEST',
+						message: 'Either your service or song were empty'
+					});
 				}
+				let serviceFetch;
+				let serviceResults = [];
 
-				const serviceFetch = fetch(
-					`$MUSIC_API_HOST?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
-					{
-						headers: {
-							Authorization: 'Bearer ' + searchToken
-						}
+				switch (service) {
+					case 'apple':
+						serviceFetch = await fetch(`${APPLE_API_HOST}/us/songs/${serviceId}`, {
+							headers: {
+								Authorization: 'Bearer ' + appleToken
+							}
+						});
+						serviceResults = formatAppleResults((await serviceFetch.json()).data);
+						break;
+					case 'spotify':
+						serviceFetch = await fetch(`${MUSIC_API_HOST}/tracks/${serviceId}`, {
+							headers: {
+								Authorization: 'Bearer ' + spotifyToken
+							}
+						});
+						serviceResults = formatSpotifyResults([await serviceFetch.json()]);
+						break;
+					default:
+						throw new TRPCError({
+							code: 'NOT_FOUND',
+							message: 'Either your service, artist, or title were empty'
+						});
+						break;
+				}
+				if (serviceResults.length < 1) {
+					throw new TRPCError({
+						code: 'INTERNAL_SERVER_ERROR',
+						message: 'Oop, something went wrong. Please submit some feedback from your settings'
+					});
+				} else {
+					const { status, error } = await supabase.from('song').insert(serviceResults[0]);
+					if (error) {
+						console.error(error);
+						throw new TRPCError({
+							code: 'INTERNAL_SERVER_ERROR',
+							message: 'So close, something went wrong during the save.'
+						});
+					} else {
+						return status;
 					}
-				);
-
-				const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
-
-				if (supaResults.error) {
-					throw new TRPCError({ code: 'FORBIDDEN' });
 				}
-				const spottyResponse = await serviceResults.json();
-
-				// Remove duplicate record from service is service id matches
-				if (supaResults.data?.length) {
-					const spottyResults = formatSpotifyResults(spottyResponse.tracks.items);
-
-					const filteredSongs = filterSongs(supaResults.data, spottyResults);
-					console.debug('sending results');
-					return [...supaResults.data, ...filteredSongs];
-				}
-
-				return formatSpotifyResults(spottyResponse.tracks.items);
 			}
 		),
 	spotify: betterSearchProc
@@ -132,7 +147,7 @@ export const searchRouter = router({
 				})
 				.limit(3);
 			const serviceFetch = fetch(
-				`${MUSIC_API_HOST}?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
+				`${MUSIC_API_HOST}/search?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
 				{
 					headers: {
 						Authorization: 'Bearer ' + spotifyToken
@@ -220,7 +235,9 @@ export const searchRouter = router({
 			const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
 
 			if (supaResults.error) {
-				throw new TRPCError({ code: 'FORBIDDEN' });
+				console.error('Supabase search query failed');
+				console.error(supaResults.error);
+				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: supaResults.error.message });
 			}
 
 			if (!serviceResults.ok) {
