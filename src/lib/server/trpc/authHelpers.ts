@@ -1,8 +1,9 @@
 import { APPLE_SERVICE_KEY, ISS_ID, KEY_ID, SEARCH_SECRET } from '$env/static/private';
 import { fetchSavedToken, saveToken } from '$lib/musicHelper';
 import { TRPCError } from '@trpc/server';
-import * as jwt from 'jsonwebtoken';
 import { stringify } from 'querystring';
+
+import jswt from 'jsonwebtoken';
 
 export const fetchSpotifyToken = async () => {
 	// Fetch spotify auth token
@@ -41,8 +42,10 @@ export const fetchAppleToken = async () => {
 		const issued_at = new Date();
 
 		let appleJwt = '';
+		console.log('jswt');
+		console.log(jswt);
 		try {
-			appleJwt = jwt.sign(
+			appleJwt = jswt.sign(
 				{},
 				'-----BEGIN PRIVATE KEY-----\n' + APPLE_SERVICE_KEY + '\n-----END PRIVATE KEY-----',
 				{

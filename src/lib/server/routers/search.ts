@@ -1,6 +1,5 @@
 import { APPLE_API_HOST, MUSIC_API_HOST } from '$env/static/private';
 import { filterSongs, formatAppleResults, formatSpotifyResults } from '$lib/musicHelper';
-import { supabase } from '$lib/supabaseClient';
 import { TRPCError } from '@trpc/server';
 import querystring from 'querystring';
 import { z } from 'zod';
@@ -17,7 +16,7 @@ export const searchRouter = router({
 				query: z.string().min(2).describe('text used to search for song')
 			})
 		)
-		.query(async ({ ctx: { searchToken }, input: { query } }) => {
+		.query(async ({ ctx: { searchToken, supabase }, input: { query } }) => {
 			if (query.length < 2) {
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
 			}
@@ -64,7 +63,7 @@ export const searchRouter = router({
 					.describe("text used to search for song // song title and artist we're searching for")
 			})
 		)
-		.query(async ({ ctx: { searchToken }, input: { query } }) => {
+		.query(async ({ ctx: { searchToken, supabase }, input: { query } }) => {
 			if (query.length < 2) {
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
 			}
@@ -111,7 +110,7 @@ export const searchRouter = router({
 				query: z.string().min(2).describe('text used to search for song')
 			})
 		)
-		.query(async ({ ctx: { searchToken }, input: { query } }) => {
+		.query(async ({ ctx: { searchToken, supabase }, input: { query } }) => {
 			if (query.length < 2) {
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
 			}

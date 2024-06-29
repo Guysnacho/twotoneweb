@@ -1,5 +1,4 @@
 import { TRPCError } from '@trpc/server';
-import { writeFile } from 'fs';
 
 import { z } from 'zod';
 import { publicProc, router, superSecretProc } from '../trpc/t';
