@@ -6,7 +6,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import type { inferAsyncReturnType } from '@trpc/server';
 
 export interface Meta {
-	service?: 'spotify' | 'apple' | 'soundcloud';
+	service?: 'spotify' | 'apple' | 'soundcloud' | 'all';
 }
 
 export async function createContext(event: RequestEvent) {

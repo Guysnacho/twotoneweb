@@ -46,7 +46,7 @@ export const sotdRouter = router({
 			const { data, error } = await supabase
 				.from('sotd')
 				.select(
-					'id, content, created_at, song(service_id, title, album, artists, album_art, explicit, preview_url)'
+					'id, user_id, content, created_at, service_name, song(service_id, title, album, artists, album_art, explicit, preview_url, service_name)'
 				)
 				.eq('user_id', id)
 				.order('created_at', { ascending: false })
