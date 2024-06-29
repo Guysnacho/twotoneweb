@@ -62,7 +62,7 @@ export const betterSearchProc = t.procedure.use(
 		switch (meta?.service as 'spotify' | 'apple' | 'soundcloud' | 'all') {
 			// enrich context with tokens
 			case 'spotify':
-				builtCtx.soundcloudToken = await fetchSpotifyToken();
+				builtCtx.spotifyToken = await fetchSpotifyToken();
 				break;
 			case 'apple':
 				builtCtx.appleToken = await fetchAppleToken();
