@@ -51,50 +51,30 @@ export const spicySearchProc = t.procedure.use(
 export const betterSearchProc = t.procedure.use(
 	enforceUserIsAuthed.unstable_pipe(async (opts) => {
 		const { ctx, meta, next } = opts;
-		let spotifyToken = '';
-		let appleToken = '';
-		let soundcloudToken = '';
-		let builtCtx = {};
+		let builtCtx = {
+			user: ctx.user,
+			spotifyToken: '',
+			appleToken: '',
+			soundcloudToken: ''
+		};
 
 		console.debug('preferred service - ' + meta?.service);
 		switch (meta?.service as 'spotify' | 'apple' | 'soundcloud' | 'all') {
+			// enrich context with tokens
 			case 'spotify':
-				spotifyToken = await fetchSpotifyToken();
-				builtCtx = {
-					user: ctx.user,
-					// enrich context with auth token
-					spotifyToken
-				};
+				builtCtx.soundcloudToken = await fetchSpotifyToken();
 				break;
 			case 'apple':
-				appleToken = await fetchAppleToken();
-				builtCtx = {
-					user: ctx.user,
-					// enrich context with auth token
-					appleToken
-				};
+				builtCtx.appleToken = await fetchAppleToken();
 				break;
 			case 'soundcloud':
-				soundcloudToken = await fetchSoundcloudToken();
-				builtCtx = {
-					user: ctx.user,
-					// enrich context with auth token
-					soundcloudToken
-				};
+				builtCtx.soundcloudToken = await fetchSoundcloudToken();
 				break;
 			case 'all':
-				spotifyToken = await fetchSpotifyToken();
-				appleToken = await fetchAppleToken();
-				soundcloudToken = await fetchSoundcloudToken();
-				return next({
-					ctx: {
-						user: ctx.user,
-						// all service tokens
-						spotifyToken,
-						appleToken,
-						soundcloudToken
-					}
-				});
+				builtCtx.spotifyToken = await fetchSpotifyToken();
+				builtCtx.appleToken = await fetchAppleToken();
+				builtCtx.soundcloudToken = await fetchSoundcloudToken();
+				break;
 			default:
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported service provided' });
 		}
