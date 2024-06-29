@@ -24,7 +24,10 @@ export const searchRouter = router({
 			console.debug('Song search for ' + query);
 
 			const supabaseQuery = supabase
-				.rpc('search_songs', { prefix: query.replaceAll(' ', '+') })
+				.rpc('search_songs_by_service', {
+					prefix: query.replaceAll(' ', '+'),
+					selected_service: 'spotify'
+				})
 				.limit(3);
 			const serviceFetch = fetch(
 				`${MUSIC_API_HOST}/search?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
