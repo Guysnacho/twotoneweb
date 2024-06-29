@@ -143,7 +143,9 @@ export const searchRouter = router({
 			const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
 
 			if (supaResults.error) {
-				throw new TRPCError({ code: 'FORBIDDEN' });
+				console.error('Supabase search query failed');
+				console.error(supaResults.error);
+				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: supaResults.error.message });
 			}
 			const spottyResponse = await serviceResults.json();
 
