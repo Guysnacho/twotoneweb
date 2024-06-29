@@ -51,21 +51,36 @@ export const spicySearchProc = t.procedure.use(
 export const betterSearchProc = t.procedure.use(
 	enforceUserIsAuthed.unstable_pipe(async (opts) => {
 		const { ctx, meta, next } = opts;
-		let searchToken = '';
 		let spotifyToken = '';
 		let appleToken = '';
 		let soundcloudToken = '';
+		let builtCtx = {};
 
 		console.debug('preferred service - ' + meta?.service);
 		switch (meta?.service as 'spotify' | 'apple' | 'soundcloud' | 'all') {
 			case 'spotify':
-				searchToken = await fetchSpotifyToken();
+				spotifyToken = await fetchSpotifyToken();
+				builtCtx = {
+					user: ctx.user,
+					// enrich context with auth token
+					spotifyToken
+				};
 				break;
 			case 'apple':
-				searchToken = await fetchAppleToken();
+				appleToken = await fetchAppleToken();
+				builtCtx = {
+					user: ctx.user,
+					// enrich context with auth token
+					appleToken
+				};
 				break;
 			case 'soundcloud':
-				searchToken = await fetchSoundcloudToken();
+				soundcloudToken = await fetchSoundcloudToken();
+				builtCtx = {
+					user: ctx.user,
+					// enrich context with auth token
+					soundcloudToken
+				};
 				break;
 			case 'all':
 				spotifyToken = await fetchSpotifyToken();
@@ -84,11 +99,7 @@ export const betterSearchProc = t.procedure.use(
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported service provided' });
 		}
 		return next({
-			ctx: {
-				user: ctx.user,
-				// enrich context with auth token
-				searchToken
-			}
+			ctx: builtCtx
 		});
 	})
 );

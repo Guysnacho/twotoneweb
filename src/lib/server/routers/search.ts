@@ -53,6 +53,61 @@ export const searchRouter = router({
 
 			return formatSpotifyResults(spottyResponse.tracks.items);
 		}),
+	reconcile: betterSearchProc
+		.meta({ service: 'all' })
+		.input(
+			z.object({
+				service: z
+					.enum(['spotify', 'apple'])
+					.describe("User's preferred service // invalid service provided"),
+				title: z
+					.string()
+					.min(2)
+					.describe("Song title we're searching for // Song title we're searching for"),
+				artist: z
+					.string()
+					.min(2)
+					.describe("Artist we're searching for // Artist we're searching for")
+			})
+		)
+		.mutation(
+			async ({
+				ctx: { spotifyToken, appleToken, supabase },
+				input: { service, artist, title }
+			}) => {
+				console.debug(`Song search for ${title} by ${artist}`);
+				if (query.length < 2) {
+					throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
+				}
+
+				const serviceFetch = fetch(
+					`$MUSIC_API_HOST?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
+					{
+						headers: {
+							Authorization: 'Bearer ' + searchToken
+						}
+					}
+				);
+
+				const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
+
+				if (supaResults.error) {
+					throw new TRPCError({ code: 'FORBIDDEN' });
+				}
+				const spottyResponse = await serviceResults.json();
+
+				// Remove duplicate record from service is service id matches
+				if (supaResults.data?.length) {
+					const spottyResults = formatSpotifyResults(spottyResponse.tracks.items);
+
+					const filteredSongs = filterSongs(supaResults.data, spottyResults);
+					console.debug('sending results');
+					return [...supaResults.data, ...filteredSongs];
+				}
+
+				return formatSpotifyResults(spottyResponse.tracks.items);
+			}
+		),
 	spotify: betterSearchProc
 		.meta({ service: 'spotify' })
 		.input(
@@ -63,7 +118,7 @@ export const searchRouter = router({
 					.describe("text used to search for song // song title and artist we're searching for")
 			})
 		)
-		.query(async ({ ctx: { searchToken, supabase }, input: { query } }) => {
+		.query(async ({ ctx: { spotifyToken, supabase }, input: { query } }) => {
 			if (query.length < 2) {
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
 			}
@@ -80,7 +135,7 @@ export const searchRouter = router({
 				`${MUSIC_API_HOST}?${querystring.stringify({ q: query, type: 'track', limit: 7 })}`,
 				{
 					headers: {
-						Authorization: 'Bearer ' + searchToken
+						Authorization: 'Bearer ' + spotifyToken
 					}
 				}
 			);
@@ -91,6 +146,18 @@ export const searchRouter = router({
 				throw new TRPCError({ code: 'FORBIDDEN' });
 			}
 			const spottyResponse = await serviceResults.json();
+
+			if (spottyResponse.error) {
+				console.error(spottyResponse.error);
+				throw new TRPCError({
+					code: 'INTERNAL_SERVER_ERROR',
+					message: 'Ran into an issue calling Spotify',
+					cause: spottyResponse.error.message
+				});
+			}
+
+			console.debug('new spotty response');
+			console.debug(spottyResponse);
 
 			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {
@@ -110,7 +177,7 @@ export const searchRouter = router({
 				query: z.string().min(2).describe('text used to search for song')
 			})
 		)
-		.query(async ({ ctx: { searchToken, supabase }, input: { query } }) => {
+		.query(async ({ ctx: { appleToken, supabase }, input: { query } }) => {
 			if (query.length < 2) {
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
 			}
@@ -143,7 +210,7 @@ export const searchRouter = router({
 				})}`,
 				{
 					headers: {
-						Authorization: 'Bearer ' + searchToken
+						Authorization: 'Bearer ' + appleToken
 					}
 				}
 			);
