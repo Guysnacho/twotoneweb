@@ -52,8 +52,12 @@ export const betterSearchProc = t.procedure.use(
 	enforceUserIsAuthed.unstable_pipe(async (opts) => {
 		const { ctx, meta, next } = opts;
 		let searchToken = '';
+		let spotifyToken = '';
+		let appleToken = '';
+		let soundcloudToken = '';
+
 		console.debug('preferred service - ' + meta?.service);
-		switch (meta?.service as 'spotify' | 'apple' | 'soundcloud') {
+		switch (meta?.service as 'spotify' | 'apple' | 'soundcloud' | 'all') {
 			case 'spotify':
 				searchToken = await fetchSpotifyToken();
 				break;
@@ -63,6 +67,19 @@ export const betterSearchProc = t.procedure.use(
 			case 'soundcloud':
 				searchToken = await fetchSoundcloudToken();
 				break;
+			case 'all':
+				spotifyToken = await fetchSpotifyToken();
+				appleToken = await fetchAppleToken();
+				soundcloudToken = await fetchSoundcloudToken();
+				return next({
+					ctx: {
+						user: ctx.user,
+						// all service tokens
+						spotifyToken,
+						appleToken,
+						soundcloudToken
+					}
+				});
 			default:
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unsupported service provided' });
 		}
