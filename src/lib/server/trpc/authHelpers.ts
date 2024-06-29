@@ -40,16 +40,22 @@ export const fetchAppleToken = async () => {
 	} else {
 		const issued_at = new Date();
 
-		const appleJwt = jwt.sign(
-			{},
-			'-----BEGIN PRIVATE KEY-----\n' + APPLE_SERVICE_KEY + '\n-----END PRIVATE KEY-----',
-			{
-				algorithm: 'ES256',
-				expiresIn: '24h',
-				issuer: ISS_ID,
-				header: { alg: 'ES256', kid: KEY_ID }
-			}
-		);
+		let appleJwt = '';
+		try {
+			appleJwt = jwt.sign(
+				{},
+				'-----BEGIN PRIVATE KEY-----\n' + APPLE_SERVICE_KEY + '\n-----END PRIVATE KEY-----',
+				{
+					algorithm: 'ES256',
+					expiresIn: '24h',
+					issuer: ISS_ID,
+					header: { alg: 'ES256', kid: KEY_ID }
+				}
+			);
+		} catch (error) {
+			console.error(error);
+			throw new Error('Ran into an issue calling Apple');
+		}
 		console.debug('Successfully built developer token - %s', appleJwt);
 		await saveToken(appleJwt, issued_at);
 		return appleJwt;
