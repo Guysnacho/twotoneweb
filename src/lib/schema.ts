@@ -234,7 +234,7 @@ export type Database = {
 					dislikes: number;
 					id: string;
 					likes: number;
-					service_name: Database['public']['Enums']['service_name'] | null;
+					service_name: Database['public']['Enums']['service_name'];
 					song_id: string;
 					updated_at: string;
 					user_id: string | null;
@@ -245,7 +245,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
-					service_name?: Database['public']['Enums']['service_name'] | null;
+					service_name?: Database['public']['Enums']['service_name'];
 					song_id: string;
 					updated_at?: string;
 					user_id?: string | null;
@@ -256,7 +256,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
-					service_name?: Database['public']['Enums']['service_name'] | null;
+					service_name?: Database['public']['Enums']['service_name'];
 					song_id?: string;
 					updated_at?: string;
 					user_id?: string | null;
@@ -487,7 +487,7 @@ export type Database = {
 		};
 		Enums: {
 			app_role: 'STOCK' | 'CURATOR' | 'ADMIN';
-			service_name: 'SPOTIFY' | 'APPLE' | 'SOUNDCLOUD';
+			service_name: 'spotify' | 'apple' | 'soundcloud';
 			user_status: 'ONLINE' | 'OFFLINE' | 'LISTENING';
 		};
 		CompositeTypes: {
