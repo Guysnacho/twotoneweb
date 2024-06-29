@@ -8,5 +8,5 @@ export const trpcServer = createTRPCSvelteServer({
 	router: trpcRouter,
 	createContext: createContext,
 	onError: ({ path, error, ctx }) =>
-		console.log(`request to ${path} from ${ctx?.requestOrigin} failed with error ${error.message}`)
+		console.debug(`request to ${path} from ${ctx?.requestOrigin} failed with error ${error.message}`)
 });

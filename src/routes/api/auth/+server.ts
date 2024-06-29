@@ -58,7 +58,7 @@ export const GET = (() => {
 // 			}
 // 		})
 // 		.catch((err) => {
-// 			console.log(err);
+// 			console.debug(err);
 
 // 			throw error(HttpCodes.INTERNALERROR, {
 // 				code: HttpCodes.INTERNALERROR,
@@ -72,7 +72,7 @@ export const GET = (() => {
 //  * @description Handle supabase user deletion
 //  */
 // export const DELETE = (async ({ request, url }) => {
-// 	console.log('Delete request recieved');
+// 	console.debug('Delete request recieved');
 
 // 	const id = isValidDeleteRequest(request, url);
 
@@ -107,7 +107,7 @@ export const GET = (() => {
 // 			}
 // 		})
 // 		.catch((err) => {
-// 			console.log(err);
+// 			console.debug(err);
 
 // 			throw error(HttpCodes.INTERNALERROR, {
 // 				code: HttpCodes.INTERNALERROR,

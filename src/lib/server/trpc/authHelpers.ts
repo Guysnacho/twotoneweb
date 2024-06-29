@@ -42,8 +42,8 @@ export const fetchAppleToken = async () => {
 		const issued_at = new Date();
 
 		let appleJwt = '';
-		console.log('jswt');
-		console.log(jswt);
+		console.debug('jswt');
+		console.debug(jswt);
 		try {
 			appleJwt = jswt.sign(
 				{},

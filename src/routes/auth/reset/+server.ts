@@ -26,11 +26,11 @@ export const POST: RequestHandler = async ({ request }) => {
 			type: 'recovery'
 		})
 		.then(async (res) => {
-			console.log('Verified OTP');
-			console.log(res);
+			console.debug('Verified OTP');
+			console.debug(res);
 			if (res.error) {
-				console.log('Verified OTP | Error');
-				console.log(res.error);
+				console.debug('Verified OTP | Error');
+				console.debug(res.error);
 				throw error(res.error.status || HttpCodes.INTERNALERROR, {
 					code: res.error?.status || HttpCodes.INTERNALERROR,
 					message: res.error?.message
@@ -39,11 +39,11 @@ export const POST: RequestHandler = async ({ request }) => {
 			return await supabase.auth.admin
 				.updateUserById(res.data.user?.id || '', { password: payload.password })
 				.then(async (res) => {
-					console.log('Returned user by id');
-					console.log(res);
+					console.debug('Returned user by id');
+					console.debug(res);
 
 					if (res.data?.user != null) {
-						console.log('Sent email confirmation');
+						console.debug('Sent email confirmation');
 						return json('Password reset successful', {
 							status: 201
 						});
@@ -78,8 +78,8 @@ const isValidResetRequest = async (request: Request) => {
 	return await request
 		.json()
 		.then((payload: { email: string; password: string; token: string; tokenHash: string }) => {
-			console.log('payload');
-			console.log(payload);
+			console.debug('payload');
+			console.debug(payload);
 
 			if (
 				payload.email == null ||
@@ -91,8 +91,8 @@ const isValidResetRequest = async (request: Request) => {
 			} else return payload;
 		})
 		.catch(() => {
-			console.log('Password reset request body');
-			console.log(request.body);
+			console.debug('Password reset request body');
+			console.debug(request.body);
 
 			error(HttpCodes.BADREQUEST, {
 				code: HttpCodes.BADREQUEST,
