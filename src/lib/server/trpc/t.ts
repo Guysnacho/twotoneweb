@@ -1,13 +1,19 @@
 import { TRPCError, initTRPC } from '@trpc/server';
 import SuperJSON from 'superjson';
-import type { Context } from './context';
+import type { Context, Meta } from './context';
 
 import { z } from 'zod';
 import { fetchAppleToken, fetchSoundcloudToken, fetchSpotifyToken } from './authHelpers';
 
-export const t = initTRPC.context<Context>().create({
-	transformer: SuperJSON
-});
+export const t = initTRPC
+	.context<Context>()
+	.meta<Meta>()
+	.create({
+		transformer: SuperJSON,
+		defaultMeta: {
+			service: 'spotify'
+		}
+	});
 
 export const router = t.router;
 

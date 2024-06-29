@@ -5,6 +5,10 @@ import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import type { RequestEvent } from '@sveltejs/kit';
 import type { inferAsyncReturnType } from '@trpc/server';
 
+export interface Meta {
+	service?: 'spotify' | 'apple' | 'soundcloud';
+}
+
 export async function createContext(event: RequestEvent) {
 	// if there's auth cookie it'll be authenticated by this helper
 	const supabase = createSupabaseServerClient<Database>({
