@@ -161,7 +161,7 @@ export interface Preview {
 	url: string;
 }
 
-export type FormattedSong =  {
+export type FormattedSong = {
 	service_id: string;
 	title: string;
 	album: string;
@@ -171,7 +171,7 @@ export type FormattedSong =  {
 	stream_url: string;
 	explicit: boolean;
 	isrc: string;
-}
+};
 
 export const formatMusicBrainzResults = (songList: IReleaseMatch[]) => {
 	const formattedList = songList.map((song) => {
@@ -210,9 +210,7 @@ export const formatDeezerResults = (songList: DeezerServiceResult[]) => {
  * @param songList
  * @returns formattedList
  */
-export const formatSpotifyResults = (
-	songList: SpotifyTrack[]
-): [] => {
+export const formatSpotifyResults = (songList: SpotifyTrack[]): [] => {
 	const formattedList = songList.map((song) => {
 		let artistList: string | undefined = undefined;
 		song.artists.forEach((val) => {
@@ -228,7 +226,8 @@ export const formatSpotifyResults = (
 			preview_url: song.external_urls?.spotify,
 			stream_url: song.preview_url,
 			explicit: song.explicit,
-			isrc: song?.external_ids?.isrc
+			isrc: song?.external_ids?.isrc,
+			service_name: 'spotify'
 		};
 	});
 	return formattedList;
@@ -260,7 +259,8 @@ export const formatAppleResults = (songList: AppleResults[]) => {
 					? song.attributes?.previews?.url
 					: '',
 			explicit: song.attributes.contentRating == 'explicit',
-			isrc: song.attributes.isrc
+			isrc: song.attributes.isrc,
+			service_name: 'apple'
 		};
 	});
 	return formattedList;
