@@ -54,6 +54,6 @@ export const greetingRouter = router({
 				.single();
 			console.debug('Greeting event with date');
 			const name = data!.username;
-			return `Good ${getTimeOfWithDate(date)}${name}!`;
+			return `Good ${getTimeOfWithDate(date)} ${name}!`;
 		})
 });
