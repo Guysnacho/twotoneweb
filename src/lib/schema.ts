@@ -107,6 +107,29 @@ export type Database = {
 					}
 				];
 			};
+			noti_token: {
+				Row: {
+					token: string;
+					user_id: string;
+				};
+				Insert: {
+					token: string;
+					user_id: string;
+				};
+				Update: {
+					token?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'noti_token_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: true;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			review: {
 				Row: {
 					content: string;
@@ -234,7 +257,7 @@ export type Database = {
 					dislikes: number;
 					id: string;
 					likes: number;
-					service_name: Database['public']['Enums']['service_name'];
+					service_name: Database['public']['Enums']['service_name'] | null;
 					song_id: string;
 					updated_at: string;
 					user_id: string | null;
@@ -245,7 +268,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
-					service_name?: Database['public']['Enums']['service_name'];
+					service_name?: Database['public']['Enums']['service_name'] | null;
 					song_id: string;
 					updated_at?: string;
 					user_id?: string | null;
@@ -256,7 +279,7 @@ export type Database = {
 					dislikes?: number;
 					id?: string;
 					likes?: number;
-					service_name?: Database['public']['Enums']['service_name'];
+					service_name?: Database['public']['Enums']['service_name'] | null;
 					song_id?: string;
 					updated_at?: string;
 					user_id?: string | null;
