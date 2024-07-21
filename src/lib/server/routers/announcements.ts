@@ -87,32 +87,31 @@ export const announcementsRouter = router({
 			const { data, error } = await supabase.from('noti_token').select('token');
 			if (error) {
 				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message });
-			} else {
-				console.debug('Publishing noti');
-				const validTokens = data.filter((user) => {
-					console.debug('Token Pulled - ' + user.token);
-					return Expo.isExpoPushToken(user.token);
-				});
-				const messages: ExpoPushMessage[] = validTokens.map((user) => {
-					return { to: user.token, title, body };
-				});
-				const expo = new Expo({
-					accessToken: EXPO_ACCESS_TOKEN
-				});
-				let res: ExpoPushMessage[][];
-				try {
-					res = expo.chunkPushNotifications(messages);
-				} catch (error) {
-					throw new TRPCError({
-						code: 'INTERNAL_SERVER_ERROR',
-						message: error.message
-					});
-				}
-				console.debug('Chunked Messages - ');
-				console.debug(res);
-
-				console.debug('Mission accomplished. Chunks sent - ' + res.length);
-				return;
 			}
+			console.debug('Publishing noti');
+			const validTokens = data.filter((user) => {
+				console.debug('Token Pulled - ' + user.token);
+				return Expo.isExpoPushToken(user.token);
+			});
+			const messages: ExpoPushMessage[] = validTokens.map((user) => {
+				return { to: user.token, title, body };
+			});
+			const expo = new Expo({
+				accessToken: EXPO_ACCESS_TOKEN
+			});
+
+			const chunks = expo.chunkPushNotifications(messages);
+			let count = 0;
+			for (const chunk of chunks) {
+				try {
+					await expo.sendPushNotificationsAsync(chunk);
+					count++;
+				} catch (error) {
+					console.error('Error occured - ' + error.message);
+				}
+			}
+
+			console.debug('Mission accomplished. %d out of %d chunks sent', count, chunks.length);
+			return;
 		})
 });
