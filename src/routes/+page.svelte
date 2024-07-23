@@ -5,7 +5,7 @@
 
 <svelte:head>
 	<title>TwoTone</title>
-	<meta name="description" content="Home of organic music descovery. TwoTone music store" />
+	<meta name="description" content="Home of organic music descovery. TwoTone Music" />
 </svelte:head>
 
 <div class="container h-5/6 mx-auto flex justify-center items-center">
