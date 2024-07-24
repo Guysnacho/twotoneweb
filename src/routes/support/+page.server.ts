@@ -1,6 +1,6 @@
 import { MY_EMAIL, RESEND_API_KEY } from '$env/static/private';
 import { supabase } from '$lib/supabaseClient';
-import { Actions } from '@sveltejs/kit';
+import type { Actions } from '@sveltejs/kit';
 import { Resend } from 'resend';
 
 const resend = new Resend(RESEND_API_KEY);
@@ -8,11 +8,25 @@ const resend = new Resend(RESEND_API_KEY);
 export const actions = {
 	default: async ({ request }) => {
 		const input = await request.formData();
+		const attachmentData = input.get('attachments');
+		const attachments = [];
+		if (attachmentData) {
+			// @ts-expect-error upset about attachementData casting, just testing
+			for (let idx = 0; idx < (attachmentData as FileList).length; idx++) {
+				// @ts-expect-error upset about attachementData casting, just testing
+				const item = (attachmentData as FileList).item(idx);
+				attachments.push({
+					filename: item?.name,
+					content: Buffer.from((await item?.arrayBuffer())!)
+				});
+			}
+		}
 
 		const { error } = await resend.emails.send({
 			from: 'TwoTone <team@messages.twotone.app>',
 			to: MY_EMAIL,
 			subject: 'TwoTone Support',
+			attachments,
 			html: `<div>
 			<img
 			  src="https://twotone.app/_app/immutable/assets/logo.d02cbc58.png"

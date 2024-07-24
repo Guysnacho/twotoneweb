@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Logo from '$lib/logo.png';
-	import { ConicGradient, type ConicStop } from '@skeletonlabs/skeleton';
+	import { ConicGradient, FileDropzone, type ConicStop } from '@skeletonlabs/skeleton';
 	import type { ActionData } from './$types';
 	export let form: ActionData;
 
@@ -50,6 +50,7 @@
 			{:else}
 				<form
 					method="POST"
+					enctype="multipart/form-data"
 					use:enhance={() => {
 						loading = true;
 						return ({ update }) => {
@@ -60,7 +61,7 @@
 						};
 					}}
 				>
-					<label class="label" aria-required>
+					<label class="label mt-5" aria-required>
 						<span>Email</span>
 						<input
 							class="input p-3"
@@ -70,13 +71,13 @@
 							required
 						/>
 					</label>
-					<label class="label">
+					<label class="label mt-5">
 						<span>Username</span>
 						<input class="input p-3" name="username" type="text" />
 					</label>
-					<label class="label mt-3"
+					<label class="label mt-5"
 						>Type of Problem
-						<select class="select my-4" name="type" required>
+						<select class="select my-2" name="type" required>
 							<option value="Login">Login</option>
 							<option value="Sign Up">Sign Up</option>
 							<option value="Account Delete">Account Delete</option>
@@ -87,9 +88,9 @@
 						</select>
 					</label>
 					<div class="space-y-2" aria-required>
-						<label class="label mt-3"
+						<label class="label mt-5"
 							>Platform
-							<label class="flex items-center space-x-2">
+							<label class="flex items-center space-x-2 mt-2">
 								<input class="radio" type="radio" checked name="platform" value="iOS" />
 								<p>iOS</p>
 							</label>
@@ -99,14 +100,24 @@
 							</label>
 						</label>
 					</div>
-					<label class="label" aria-required>
+					<label class="label mt-5" aria-required>
 						<span>Okay so what happened?</span>
 						<textarea
-							class="textarea p-3 line"
+							class="textarea p-3 line my-2"
 							name="description"
 							placeholder="Song of the day preview isn't showing up. I'm very sad about this."
 							required
 						/>
+					</label>
+					<label class="label my-3">
+						<span>Attachments</span>
+						<FileDropzone name="attachments">
+							<svelte:fragment slot="lead" />
+							<svelte:fragment slot="message"
+								>Upload a screenshot if you've got one.</svelte:fragment
+							>
+							<svelte:fragment slot="meta">PNG and JPG are allowed.</svelte:fragment>
+						</FileDropzone>
 					</label>
 					<div class="flex justify-center mt-4">
 						<button class="btn variant-filled-primary" type="submit">Submit</button>
