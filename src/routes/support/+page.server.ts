@@ -9,17 +9,15 @@ export const actions = {
 	default: async ({ request }) => {
 		const input = await request.formData();
 		const attachmentData = input.get('attachments');
+		console.log('attachmentData');
+		console.log(attachmentData);
 		const attachments = [];
 		if (attachmentData) {
-			// @ts-expect-error upset about attachementData casting, just testing
-			for (let idx = 0; idx < (attachmentData as FileList).length; idx++) {
-				// @ts-expect-error upset about attachementData casting, just testing
-				const item = (attachmentData as FileList).item(idx);
-				attachments.push({
-					filename: item?.name,
-					content: Buffer.from((await item?.arrayBuffer())!)
-				});
-			}
+			const file = attachmentData as File;
+			attachments.push({
+				filename: file?.name,
+				content: Buffer.from((await file?.arrayBuffer())!)
+			});
 		}
 
 		const { error } = await resend.emails.send({
