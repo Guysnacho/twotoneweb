@@ -1,4 +1,10 @@
-import { APPLE_SERVICE_KEY, ISS_ID, KEY_ID, SEARCH_SECRET } from '$env/static/private';
+import {
+	APPLE_SERVICE_KEY,
+	ISS_ID,
+	KEY_ID,
+	SEARCH_SECRET,
+	SOUNDCLOUD_SEARCH_SECRET
+} from '$env/static/private';
 import { fetchSavedToken, saveToken } from '$lib/musicHelper';
 import { TRPCError } from '@trpc/server';
 import { stringify } from 'querystring';
@@ -67,11 +73,12 @@ export const fetchAppleToken = async () => {
 
 export const fetchSoundcloudToken = async () => {
 	// Fetch spotify auth token
-	const authorization = await fetch('https://accounts.spotify.com/api/token', {
+	const authorization = await fetch('https://secure.soundcloud.com/oauth/token', {
 		method: 'POST',
 		headers: {
-			Authorization: 'Basic ' + SEARCH_SECRET,
+			Authorization: 'Basic ' + SOUNDCLOUD_SEARCH_SECRET,
 			'Content-Type': 'application/x-www-form-urlencoded',
+			'Accept-Encoding': 'application/json; charset=utf-8',
 			'Cache-Control': 'max-age=3600'
 		},
 		body: stringify({
