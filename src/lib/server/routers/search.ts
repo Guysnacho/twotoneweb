@@ -1,5 +1,10 @@
-import { APPLE_API_HOST, MUSIC_API_HOST } from '$env/static/private';
-import { filterSongs, formatAppleResults, formatSpotifyResults } from '$lib/musicHelper';
+import { APPLE_API_HOST, MUSIC_API_HOST, SOUNDCLOUD_API_HOST } from '$env/static/private';
+import {
+	filterSongs,
+	formatAppleResults,
+	formatSoundcloudResults,
+	formatSpotifyResults
+} from '$lib/musicHelper';
 import { TRPCError } from '@trpc/server';
 import querystring from 'querystring';
 import { z } from 'zod';
@@ -265,5 +270,67 @@ export const searchRouter = router({
 			}
 
 			return formatAppleResults(appleResponse);
+		}),
+	soundcloud: betterSearchProc
+		.meta({ service: 'soundcloud' })
+		.input(
+			z.object({
+				query: z.string().min(2).describe('text used to search for song')
+			})
+		)
+		.query(async ({ ctx: { soundcloudToken, supabase }, input: { query } }) => {
+			if (query.length < 2) {
+				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
+			}
+
+			console.debug('Song search for ' + query);
+
+			const supabaseQuery = supabase
+				.rpc('search_songs_by_service', {
+					prefix: query.replaceAll(' ', '+'),
+					selected_service: 'soundcloud'
+				})
+				.limit(3);
+			const serviceFetch = fetch(
+				`${SOUNDCLOUD_API_HOST}/tracks?${querystring.stringify({
+					q: query,
+					access: ['playable', 'preview', 'blocked'],
+					limit: 10
+				})}`,
+				{
+					headers: {
+						Authorization: 'OAuth ' + soundcloudToken
+					}
+				}
+			);
+
+			const [supaResults, serviceResults] = await Promise.all([supabaseQuery, serviceFetch]);
+
+			if (supaResults.error) {
+				throw new TRPCError({ code: 'FORBIDDEN' });
+			}
+
+			if (!serviceResults.ok) {
+				console.error('Soundcloud search error - ');
+				console.error(serviceResults.status);
+				console.error(serviceResults.statusText);
+				throw new TRPCError({
+					code: 'INTERNAL_SERVER_ERROR',
+					message: 'Something went wrong checking with ☁️, try again later :)'
+				});
+			}
+
+			const soundcloudResponse = await serviceResults.json();
+
+			// Remove duplicate record from service is service id matches
+			if (supaResults.data?.length) {
+				const soundcloudResults = formatSoundcloudResults(soundcloudResponse);
+
+				const filteredSongs = filterSongs(supaResults.data, soundcloudResults);
+				console.debug('sending results');
+				return [...supaResults.data, ...filteredSongs];
+			}
+
+			return formatSoundcloudResults(soundcloudResponse);
 		})
 });

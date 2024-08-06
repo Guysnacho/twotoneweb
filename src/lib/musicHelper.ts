@@ -161,6 +161,130 @@ export interface Preview {
 	url: string;
 }
 
+export interface SoundCloudResults {
+	kind: SoundcloudResultKind;
+	id: number;
+	created_at: string;
+	duration: number;
+	commentable: boolean;
+	comment_count: number;
+	sharing: SoundCloudSharing;
+	tag_list: string;
+	streamable: boolean;
+	embeddable_by: SoundCloudEmbeddableBy;
+	purchase_url: null | string;
+	purchase_title: null | string;
+	genre: null | string;
+	title: string;
+	description: null | string;
+	label_name: null | string;
+	release: null | string;
+	key_signature: null | string;
+	isrc: null | string;
+	bpm: null;
+	release_year: number | null;
+	release_month: number | null;
+	release_day: number | null;
+	license: SoundCloudLicense;
+	uri: string;
+	user: SoundCloudUser;
+	permalink_url: string;
+	artwork_url: null | string;
+	stream_url: null | string;
+	download_url: null | string;
+	waveform_url: string;
+	available_country_codes: null;
+	secret_uri: null;
+	user_favorite: null;
+	user_playback_count: null;
+	playback_count: number;
+	download_count: number;
+	favoritings_count: number;
+	reposts_count: number;
+	downloadable: boolean;
+	access: SoundCloudAccess;
+	policy: null;
+	monetization_model: null;
+}
+
+export enum SoundCloudAccess {
+	Blocked = 'blocked',
+	Playable = 'playable'
+}
+
+export enum SoundCloudEmbeddableBy {
+	All = 'all'
+}
+
+export enum SoundcloudResultKind {
+	Track = 'track'
+}
+
+export enum SoundCloudLicense {
+	AllRightsReserved = 'all-rights-reserved',
+	CcByNcNd = 'cc-by-nc-nd'
+}
+
+export enum SoundCloudSharing {
+	Public = 'public'
+}
+
+export interface SoundCloudUser {
+	avatar_url: string;
+	id: number;
+	kind: SoundCloudUserKind;
+	permalink_url: string;
+	uri: string;
+	username: string;
+	permalink: string;
+	created_at: string;
+	last_modified: string;
+	first_name: null | string;
+	last_name: null | string;
+	full_name: string;
+	city: null | string;
+	description: null | string;
+	country: null | string;
+	track_count: number;
+	public_favorites_count: number;
+	reposts_count: number;
+	followers_count: number;
+	followings_count: number;
+	plan: SoundCloudPlan;
+	myspace_name: null;
+	discogs_name: null;
+	website_title: null | string;
+	website: null | string;
+	comments_count: number;
+	online: boolean;
+	likes_count: number;
+	playlist_count: number;
+	subscriptions: SoundCloudSubscription[];
+}
+
+export enum SoundCloudUserKind {
+	User = 'user'
+}
+
+export enum SoundCloudPlan {
+	Free = 'Free',
+	ProUnlimited = 'Pro Unlimited'
+}
+
+export interface SoundCloudSubscription {
+	product: SoundCloudProduct;
+}
+
+export interface SoundCloudProduct {
+	id: ID;
+	name: SoundCloudPlan;
+}
+
+export enum ID {
+	CreatorProUnlimited = 'creator-pro-unlimited',
+	Free = 'free'
+}
+
 export type FormattedSong = {
 	service_id: string;
 	title: string;
@@ -261,6 +385,29 @@ export const formatAppleResults = (songList: AppleResults[]) => {
 			explicit: song.attributes.contentRating == 'explicit',
 			isrc: song.attributes.isrc,
 			service_name: 'apple'
+		};
+	});
+	return formattedList;
+};
+
+/**
+ * @description Trims soundcloud song api response
+ * @param songList
+ * @returns formattedList
+ */
+export const formatSoundcloudResults = (songList: SoundCloudResults[]) => {
+	const formattedList = songList.map((song) => {
+		return {
+			service_id: song.id,
+			title: song.title,
+			album: '',
+			artists: song.user.full_name,
+			album_art: song.artwork_url,
+			preview_url: song.permalink_url,
+			stream_url: song.stream_url,
+			explicit: false,
+			isrc: song.isrc,
+			service_name: 'soundcloud'
 		};
 	});
 	return formattedList;
