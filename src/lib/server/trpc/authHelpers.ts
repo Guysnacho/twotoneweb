@@ -94,6 +94,6 @@ export const fetchSoundcloudToken = async () => {
 	}
 
 	const searchToken = (await authorization.json()).access_token;
-	console.debug('Successfully fetched spotify token - %s', searchToken);
+	console.debug('Successfully fetched soundcloud token - %s', searchToken);
 	return searchToken;
 };

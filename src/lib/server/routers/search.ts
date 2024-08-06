@@ -294,7 +294,7 @@ export const searchRouter = router({
 			const serviceFetch = fetch(
 				`${SOUNDCLOUD_API_HOST}/tracks?${querystring.stringify({
 					q: query,
-					access: 'playable,preview,blocked',
+					access: ['playable', 'preview', 'blocked'],
 					limit: 10
 				})}`,
 				{
@@ -320,7 +320,7 @@ export const searchRouter = router({
 				});
 			}
 
-			const soundcloudResponse = (await serviceResults.json()).results.songs.data;
+			const soundcloudResponse = await serviceResults.json();
 
 			// Remove duplicate record from service is service id matches
 			if (supaResults.data?.length) {

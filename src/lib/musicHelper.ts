@@ -405,7 +405,7 @@ export const formatSoundcloudResults = (songList: SoundCloudResults[]) => {
 			album_art: song.artwork_url,
 			preview_url: song.permalink_url,
 			stream_url: song.stream_url,
-			explicit: '',
+			explicit: false,
 			isrc: song.isrc,
 			service_name: 'soundcloud'
 		};
