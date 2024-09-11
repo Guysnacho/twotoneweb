@@ -1,11 +1,28 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Logo from '$lib/logo.png';
+	import { onMount } from 'svelte';
 
-	const isValid =
-		$page.url.toString().includes('access_token') &&
-		$page.url.toString().includes('refresh_token') &&
-		$page.url.toString().includes('type');
+	$: isValid = false;
+	let access_token = $page.url.searchParams.get('access_token');
+	let refresh_token = $page.url.searchParams.get('refresh_token');
+	let type = $page.url.searchParams.get('type');
+	let token = $page.url.searchParams.get('token');
+	let email = $page.url.searchParams.get('email');
+	let tokenHash = $page.url.searchParams.get('tokenHash');
+
+	onMount(() => {
+		if (access_token && refresh_token && type) {
+			// Signup Flow
+			isValid = true;
+		} else if (token && email && tokenHash) {
+			// Not sure why they're different but Email confirm flow
+			isValid = true;
+		} else {
+			isValid = false;
+		}
+	});
+
 	// if (isValid) {
 	// 	supabase.auth.verifyOtp({
 	// 		token_hash: $page.url.searchParams.get('token') || '',
