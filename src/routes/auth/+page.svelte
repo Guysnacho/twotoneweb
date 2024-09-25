@@ -4,14 +4,15 @@
 	import { onMount } from 'svelte';
 
 	$: isValid = false;
-	let access_token = $page.url.searchParams.get('access_token');
-	let refresh_token = $page.url.searchParams.get('refresh_token');
-	let type = $page.url.searchParams.get('type');
-	let token = $page.url.searchParams.get('token');
-	let email = $page.url.searchParams.get('email');
-	let tokenHash = $page.url.searchParams.get('tokenHash');
 
 	onMount(() => {
+		let access_token = $page.url.href.includes('access_token');
+		let refresh_token = $page.url.href.includes('refresh_token');
+		let type = $page.url.href.includes('type');
+		let token = $page.url.href.includes('token');
+		let email = $page.url.href.includes('email');
+		let tokenHash = $page.url.href.includes('tokenHash');
+
 		if (access_token && refresh_token && type) {
 			// Signup Flow
 			isValid = true;
@@ -25,7 +26,7 @@
 
 	// if (isValid) {
 	// 	supabase.auth.verifyOtp({
-	// 		token_hash: $page.url.searchParams.get('token') || '',
+	// 		token_hash: $page.url.href.includes('token') || '',
 	// 		type: 'email'
 	// 	});
 	// }
