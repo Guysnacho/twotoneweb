@@ -483,5 +483,11 @@ const BATCHEMAIL = `<!DOCTYPE html>
             <td>&nbsp;</td>
          </tr>
       </table>
+       <br />
+       <br />
+       <br />
+       <br />
+       <br />
+       <br />
    </body>
 </html>`;
