@@ -6,6 +6,7 @@ import { Resend } from 'resend';
 const resend = new Resend(RESEND_API_KEY);
 
 type BatchEmailRequest = {
+	subject: string;
 	to: string[];
 	secret: string;
 };
@@ -19,7 +20,13 @@ export const POST = (async ({ request }) => {
 
 	try {
 		input = await request.json();
-		if (!input.to || input.to.length < 1 || input.secret !== SECRET) {
+		if (
+			!input.to ||
+			input.to.length < 1 ||
+			input.secret !== SECRET ||
+			!input.subject ||
+			input.subject == ''
+		) {
 			throw error(HttpCodes.BADREQUEST, {
 				code: HttpCodes.BADREQUEST,
 				message: 'Invalid batch email request'
@@ -34,24 +41,10 @@ export const POST = (async ({ request }) => {
 
 	const { data, error: err } = await resend.emails.send({
 		from: 'TwoTone <team@messages.twotone.app>',
-		to: input.to,
-		subject: 'TwoTone Support',
-		html: BATCHEMAIL
-	});
-
-	if (err) {
-		throw error(HttpCodes.INTERNALERROR, {
-			code: HttpCodes.INTERNALERROR,
-			message: err.message
-		});
-	}
-
-	return json({
-		email: data?.id
-	});
-}) satisfies RequestHandler;
-
-const BATCHEMAIL = `<!DOCTYPE html>
+		to: 'team@messages.twotone.app',
+		bcc: input.to,
+		subject: input.subject,
+		html: `<!DOCTYPE html>
 <html lang="en">
    <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -372,7 +365,7 @@ const BATCHEMAIL = `<!DOCTYPE html>
                <div class="content">
                   <!-- START CENTERED WHITE CONTAINER -->
                   <span class="preheader"
-                     >TwoTone SignUp Issues</span
+   >${input.subject}</span
                      >
                   <table
                      role="presentation"
@@ -491,4 +484,18 @@ const BATCHEMAIL = `<!DOCTYPE html>
        <br />
        <br />
    </body>
-</html>`;
+</html>
+`
+	});
+
+	if (err) {
+		throw error(HttpCodes.INTERNALERROR, {
+			code: HttpCodes.INTERNALERROR,
+			message: err.message
+		});
+	}
+
+	return json({
+		email: data?.id
+	});
+}) satisfies RequestHandler;
