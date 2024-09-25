@@ -423,8 +423,9 @@ const BATCHEMAIL = `<!DOCTYPE html>
                            <p>Hey Community</p>
                            <p>
                               I've had an ongoing quality issue with sending confirmation emails to people after signup. If you've been able to login, you can ignore this but I hope you're chilling and having a nice day. Maaaayyybe share what you're listening to :) <br/ ><br/ >
-                              If you haven't and do still wanna test out the app or share your Songs of the Day, you should be good to go after attempting a sign up one more time. If it doesn't work, send the app to the depths of your garbage can. I'll understand.
+                              If you haven't and do still wanna test out the app or share your Songs of the Day, you should be good to go after attempting a sign up one more time.<br /><br />If it doesn't work, and your account isn't already active, AND its not a "Oops, I set that password an eternity ago bestie" type of situation... send the app to the depths of your garbage can. I'll understand.
                            </p>
+                           <p><a href="https://twotone.app/support" target="_blank">But let me know what's broken first</a></p>
                            <p>
                               Thanks for the time!
                            </p>
