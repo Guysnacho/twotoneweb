@@ -83,7 +83,7 @@ export const sotdRouter = router({
 		)
 		.query(async ({ input: { page }, ctx: { supabase, session: { user } } }) => {
 			const { data, error } = await supabase
-				.rpc('get_sotd_w_following_user_id', { persona: user.id }, { count: 'exact' })
+				.rpc('get_sotd_w_likes_following_by_user_id', { persona: user.id }, { count: 'exact' })
 				.range(page * 15, page * 15 + 15)
 				.limit(15)
 				.returns<SotdWFollowStatus[]>();
