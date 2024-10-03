@@ -36,13 +36,6 @@ export type Database = {
 				};
 				Relationships: [
 					{
-						foreignKeyName: 'comment_review_id_fkey';
-						columns: ['review_id'];
-						isOneToOne: false;
-						referencedRelation: 'review';
-						referencedColumns: ['id'];
-					},
-					{
 						foreignKeyName: 'comment_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
@@ -107,6 +100,42 @@ export type Database = {
 					}
 				];
 			};
+			like: {
+				Row: {
+					content_id: string;
+					content_type: number;
+					created_at: string;
+					user_id: string;
+				};
+				Insert: {
+					content_id: string;
+					content_type?: number;
+					created_at?: string;
+					user_id: string;
+				};
+				Update: {
+					content_id?: string;
+					content_type?: number;
+					created_at?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'content_type';
+						columns: ['content_type'];
+						isOneToOne: false;
+						referencedRelation: 'type_lookup';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'like_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			noti_token: {
 				Row: {
 					token: string;
@@ -125,54 +154,6 @@ export type Database = {
 						foreignKeyName: 'noti_token_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: true;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
-			};
-			review: {
-				Row: {
-					content: string;
-					created_at: string;
-					dislikes: number;
-					id: string;
-					likes: number;
-					song_id: string;
-					updated_at: string;
-					user_id: string | null;
-				};
-				Insert: {
-					content: string;
-					created_at?: string;
-					dislikes?: number;
-					id?: string;
-					likes?: number;
-					song_id: string;
-					updated_at?: string;
-					user_id?: string | null;
-				};
-				Update: {
-					content?: string;
-					created_at?: string;
-					dislikes?: number;
-					id?: string;
-					likes?: number;
-					song_id?: string;
-					updated_at?: string;
-					user_id?: string | null;
-				};
-				Relationships: [
-					{
-						foreignKeyName: 'review_song_id_fkey';
-						columns: ['song_id'];
-						isOneToOne: false;
-						referencedRelation: 'song';
-						referencedColumns: ['id'];
-					},
-					{
-						foreignKeyName: 'review_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
 					}
@@ -205,10 +186,8 @@ export type Database = {
 					album_art: string;
 					artists: string;
 					created_at: string;
-					dislikes: number;
 					explicit: boolean;
 					id: string;
-					likes: number;
 					preview_url: string | null;
 					service_id: string;
 					service_name: Database['public']['Enums']['service_name'];
@@ -221,10 +200,8 @@ export type Database = {
 					album_art: string;
 					artists: string;
 					created_at?: string;
-					dislikes?: number;
 					explicit?: boolean;
 					id?: string;
-					likes?: number;
 					preview_url?: string | null;
 					service_id: string;
 					service_name?: Database['public']['Enums']['service_name'];
@@ -237,10 +214,8 @@ export type Database = {
 					album_art?: string;
 					artists?: string;
 					created_at?: string;
-					dislikes?: number;
 					explicit?: boolean;
 					id?: string;
-					likes?: number;
 					preview_url?: string | null;
 					service_id?: string;
 					service_name?: Database['public']['Enums']['service_name'];
@@ -254,9 +229,7 @@ export type Database = {
 				Row: {
 					content: string;
 					created_at: string;
-					dislikes: number;
 					id: string;
-					likes: number;
 					service_name: Database['public']['Enums']['service_name'] | null;
 					song_id: string;
 					updated_at: string;
@@ -265,9 +238,7 @@ export type Database = {
 				Insert: {
 					content: string;
 					created_at?: string;
-					dislikes?: number;
 					id?: string;
-					likes?: number;
 					service_name?: Database['public']['Enums']['service_name'] | null;
 					song_id: string;
 					updated_at?: string;
@@ -276,9 +247,7 @@ export type Database = {
 				Update: {
 					content?: string;
 					created_at?: string;
-					dislikes?: number;
 					id?: string;
-					likes?: number;
 					service_name?: Database['public']['Enums']['service_name'] | null;
 					song_id?: string;
 					updated_at?: string;
@@ -301,32 +270,6 @@ export type Database = {
 					},
 					{
 						foreignKeyName: 'sotd_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
-			};
-			sotd_likes: {
-				Row: {
-					created_at: string;
-					sotd_id: string;
-					user_id: string;
-				};
-				Insert: {
-					created_at?: string;
-					sotd_id: string;
-					user_id?: string;
-				};
-				Update: {
-					created_at?: string;
-					sotd_id?: string;
-					user_id?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: 'like_dislike_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
 						referencedRelation: 'users';
@@ -369,38 +312,18 @@ export type Database = {
 			};
 			type_lookup: {
 				Row: {
-					content_type: number;
-					created_at: string;
 					id: number;
 					type_description: string;
-					updated_at: string;
-					user_id: string | null;
 				};
 				Insert: {
-					content_type: number;
-					created_at?: string;
 					id?: number;
 					type_description: string;
-					updated_at?: string;
-					user_id?: string | null;
 				};
 				Update: {
-					content_type?: number;
-					created_at?: string;
 					id?: number;
 					type_description?: string;
-					updated_at?: string;
-					user_id?: string | null;
 				};
-				Relationships: [
-					{
-						foreignKeyName: 'type_lookup_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
+				Relationships: [];
 			};
 			users: {
 				Row: {
@@ -436,7 +359,13 @@ export type Database = {
 			};
 		};
 		Views: {
-			[_ in never]: never;
+			content_likes: {
+				Row: {
+					id: string | null;
+					likes: number | null;
+				};
+				Relationships: [];
+			};
 		};
 		Functions: {
 			get_sotd_w_following_user_id: {
@@ -450,6 +379,21 @@ export type Database = {
 					song: Json;
 					user: Json;
 					following: boolean;
+				}[];
+			};
+			get_sotd_w_likes_following_by_user_id: {
+				Args: {
+					persona: string;
+				};
+				Returns: {
+					id: string;
+					content: string;
+					created_at: string;
+					song: Json;
+					user: Json;
+					following: boolean;
+					likes: number;
+					user_liked: boolean;
 				}[];
 			};
 			search_songs: {
