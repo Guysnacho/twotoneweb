@@ -381,6 +381,18 @@ export type Database = {
 					following: boolean;
 				}[];
 			};
+			get_sotd_w_likes_by_user_id: {
+				Args: {
+					persona: string;
+				};
+				Returns: {
+					id: string;
+					content: string;
+					created_at: string;
+					song: Json;
+					user: Json;
+				}[];
+			};
 			get_sotd_w_likes_following_by_user_id: {
 				Args: {
 					persona: string;
