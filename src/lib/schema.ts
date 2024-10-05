@@ -391,6 +391,8 @@ export type Database = {
 					created_at: string;
 					song: Json;
 					user: Json;
+					likes: number;
+					liked: boolean;
 				}[];
 			};
 			get_sotd_w_likes_following_by_user_id: {
@@ -405,7 +407,7 @@ export type Database = {
 					user: Json;
 					following: boolean;
 					likes: number;
-					user_liked: boolean;
+					liked: boolean;
 				}[];
 			};
 			search_songs: {
