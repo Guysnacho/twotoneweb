@@ -439,8 +439,6 @@ export type Database = {
 					title: string;
 					album: string;
 					artists: string;
-					likes: number;
-					dislikes: number;
 					created_at: string;
 					updated_at: string;
 					album_art: string;
