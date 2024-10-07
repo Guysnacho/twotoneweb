@@ -146,7 +146,7 @@ export const searchRouter = router({
 				throw new TRPCError({ code: 'BAD_REQUEST', message: 'Title not long enough...' });
 			}
 
-			console.debug('Song search for ' + query);
+			console.debug('Song search for ' + query.replaceAll(' ', '+'));
 
 			const supabaseQuery = supabase
 				.rpc('search_songs_by_service', {

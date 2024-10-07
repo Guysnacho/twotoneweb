@@ -381,6 +381,20 @@ export type Database = {
 					following: boolean;
 				}[];
 			};
+			get_sotd_w_likes_by_user_id: {
+				Args: {
+					persona: string;
+				};
+				Returns: {
+					id: string;
+					content: string;
+					created_at: string;
+					song: Json;
+					user: Json;
+					likes: number;
+					liked: boolean;
+				}[];
+			};
 			get_sotd_w_likes_following_by_user_id: {
 				Args: {
 					persona: string;
@@ -393,7 +407,7 @@ export type Database = {
 					user: Json;
 					following: boolean;
 					likes: number;
-					user_liked: boolean;
+					liked: boolean;
 				}[];
 			};
 			search_songs: {
@@ -427,8 +441,6 @@ export type Database = {
 					title: string;
 					album: string;
 					artists: string;
-					likes: number;
-					dislikes: number;
 					created_at: string;
 					updated_at: string;
 					album_art: string;
