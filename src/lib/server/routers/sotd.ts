@@ -115,5 +115,76 @@ export const sotdRouter = router({
 				console.debug(`Fetched page ${page} of Feed for user ${user.id}`);
 				return data;
 			}
+		),
+	getInfiniteFeed: superSecretProc
+		.input(
+			z.object({
+				cursor: z.number().nullish().describe('Page number of feed // Must be at least page 1'),
+				direction: z.enum(['forward', 'backward']) // optional, useful for bi-directional query
+			})
+		)
+		.query(
+			async ({
+				input: { cursor, direction },
+				ctx: {
+					supabase,
+					session: { user }
+				}
+			}) => {
+				let page = cursor ?? 0;
+				// If we're rewinding, I don't want an index outta bound type of situation
+				if (direction === 'backward') {
+					page = Math.max(page - 1, 0);
+				}
+
+				const { data, error } = await supabase
+					.rpc('get_sotd_w_likes_following_by_user_id', { persona: user.id }, { count: 'exact' })
+					.range(page * 15, page * 15 + 15)
+					.limit(15)
+					.returns<SotdWLikes[]>();
+
+				if (error) {
+					throw error;
+				}
+
+				console.debug(`Fetched page ${page} of Feed for user ${user.id}`);
+				return data;
+			}
+		),
+	getInfiniteFeedbyID: superSecretProc
+		.input(
+			z.object({
+				cursor: z.number().nullish().describe('Page number of feed // Must be at least page 1'),
+				direction: z.enum(['forward', 'backward']) // optional, useful for bi-directional query
+			})
+		)
+		.query(
+			async ({
+				input: { cursor, direction },
+				ctx: {
+					supabase,
+					session: { user }
+				}
+			}) => {
+				let page = cursor ?? 0;
+				// If we're rewinding, I don't want an index outta bound type of situation
+				if (direction === 'backward') {
+					page = Math.max(page - 1, 0);
+				}
+
+				const { data, error } = await supabase
+					.rpc('get_sotd_w_likes_by_user_id', { persona: user.id })
+					.order('created_at', { ascending: false })
+					.range(page * 10, page * 10 + 10)
+					.limit(10)
+					.returns<SotdWLikesById[]>();
+
+				if (error) {
+					throw error;
+				}
+
+				console.debug(`Fetched page ${page} of Feed for user ${user.id}`);
+				return data;
+			}
 		)
 });
