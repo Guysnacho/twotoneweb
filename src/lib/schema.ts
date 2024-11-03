@@ -34,15 +34,7 @@ export type Database = {
 					updated_at?: string;
 					user_id?: string | null;
 				};
-				Relationships: [
-					{
-						foreignKeyName: 'comment_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
+				Relationships: [];
 			};
 			followers: {
 				Row: {
@@ -90,15 +82,7 @@ export type Database = {
 					expo_tokens?: string[] | null;
 					user_id?: string;
 				};
-				Relationships: [
-					{
-						foreignKeyName: 'installs_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: true;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
+				Relationships: [];
 			};
 			like: {
 				Row: {
@@ -149,15 +133,7 @@ export type Database = {
 					token?: string;
 					user_id?: string;
 				};
-				Relationships: [
-					{
-						foreignKeyName: 'noti_token_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: true;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
+				Relationships: [];
 			};
 			service_tokens: {
 				Row: {
@@ -267,13 +243,6 @@ export type Database = {
 						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
-					},
-					{
-						foreignKeyName: 'sotd_user_id_fkey';
-						columns: ['user_id'];
-						isOneToOne: false;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
 					}
 				];
 			};
@@ -347,15 +316,7 @@ export type Database = {
 					role?: 'STOCK' | 'CURATOR' | 'ADMIN';
 					username?: string | null;
 				};
-				Relationships: [
-					{
-						foreignKeyName: 'users_user_id_fkey';
-						columns: ['id'];
-						isOneToOne: true;
-						referencedRelation: 'users';
-						referencedColumns: ['id'];
-					}
-				];
+				Relationships: [];
 			};
 		};
 		Views: {
@@ -553,4 +514,19 @@ export type Enums<
 	? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
 	: PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
 	? PublicSchema['Enums'][PublicEnumNameOrOptions]
+	: never;
+
+export type CompositeTypes<
+	PublicCompositeTypeNameOrOptions extends
+		| keyof PublicSchema['CompositeTypes']
+		| { schema: keyof Database },
+	CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+		schema: keyof Database;
+	}
+		? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+		: never = never
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+	? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+	: PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
+	? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
 	: never;
