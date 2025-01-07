@@ -9,8 +9,6 @@ export const actions = {
 	default: async ({ request }) => {
 		const input = await request.formData();
 		const attachmentData = input.get('attachments');
-		console.log('attachmentData');
-		console.log(attachmentData);
 		const attachments = [];
 		if (attachmentData) {
 			const file = attachmentData as File;
