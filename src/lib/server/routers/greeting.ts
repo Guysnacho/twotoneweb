@@ -38,7 +38,7 @@ export const greetingRouter = router({
 			.eq('id', session?.user.id)
 			.single();
 		const name = data!.username;
-		return `Good ${getTimeOfDay()}${name ? ' ' + name : ''}!`;
+		return `Hey ${name ? ' ' + name : ''}!`;
 	}),
 	greetWTime: publicProc
 		.input(
@@ -46,14 +46,13 @@ export const greetingRouter = router({
 				date: z.date({}).describe('text used to search for song')
 			})
 		)
-		.query(async ({ ctx: { session, supabase }, input: { date } }) => {
+		.query(async ({ ctx: { session, supabase } }) => {
 			const { data, error } = await supabase
 				.from('users')
 				.select('*')
 				.eq('id', session?.user.id)
 				.single();
-			console.debug('Greeting event with date');
 			const name = data!.username;
-			return `Good ${getTimeOfWithDate(date)} ${name}!`;
+			return `Hey ${name ? ' ' + name : ''}!`;
 		})
 });
