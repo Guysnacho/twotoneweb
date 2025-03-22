@@ -27,6 +27,23 @@ export const announcementsRouter = router({
 			throw new TRPCError({ code: 'NOT_FOUND' });
 		}
 	}),
+	getNew: publicProc.query(async ({ ctx: { supabase } }) => {
+		const { data, error } = await supabase.storage
+			.from('static')
+			.download('notifications/announcements.json');
+		if (data) {
+			console.debug('Fetched announcements');
+			return JSON.parse(await data.text()).announcements;
+		}
+
+		if (error) {
+			console.debug('Issue while fetching announcements');
+			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message });
+		} else {
+			console.debug('No announcements');
+			throw new TRPCError({ code: 'NOT_FOUND' });
+		}
+	}),
 	announce: superSecretProc
 		.input(z.object({ announcements: z.array(z.string()) }))
 		.mutation(async ({ input, ctx: { supabase, session } }) => {
