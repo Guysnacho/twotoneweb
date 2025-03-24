@@ -1,7 +1,5 @@
 import { SECRET } from '$env/static/private';
-import { HttpCodes } from '$lib/constants';
-import { supabase } from '$lib/supabaseClient';
-import { error, json, type RequestHandler } from '@sveltejs/kit';
+import { json, type RequestHandler } from '@sveltejs/kit';
 
 /**
  * @alias Get api secret
@@ -14,64 +12,66 @@ export const GET = (() => {
 }) satisfies RequestHandler;
 
 /**
+ * @deprecated
  * Whoops, this actually wasn't depracated, gotta secure this though.
  * @description Handle supabase user deletion
  */
-export const DELETE = (async ({ request, url }) => {
-	console.debug('Delete request recieved');
+// export const DELETE = (async ({ request, url }) => {
+// 	console.debug('Delete request recieved');
 
-	const id = isValidDeleteRequest(request, url);
+// 	const id = isValidDeleteRequest(request, url);
 
-	if (!id) {
-		throw error(HttpCodes.BADREQUEST, {
-			code: HttpCodes.BADREQUEST,
-			message: 'Invalid delete request'
-		});
-	}
+// 	if (!id) {
+// 		throw error(HttpCodes.BADREQUEST, {
+// 			code: HttpCodes.BADREQUEST,
+// 			message: 'Invalid delete request'
+// 		});
+// 	}
 
-	return supabase.auth.admin
-		.deleteUser(id)
-		.then(async (res) => {
-			if (res.error?.status) {
-				throw error(res.error.status || HttpCodes.BADREQUEST, {
-					code: res.error.status || HttpCodes.BADREQUEST,
-					message: res.error.message
-				});
-			} else if (res.data.user) {
-				return json(
-					{
-						id,
-						deleted_at: new Date()
-					},
-					{ status: 200, statusText: 'Account Deleted' }
-				);
-			} else {
-				throw error(HttpCodes.INTERNALERROR, {
-					code: HttpCodes.INTERNALERROR,
-					message: 'Error during account deletion, try again later'
-				});
-			}
-		})
-		.catch((err) => {
-			console.debug(err);
+// 	return supabase.auth.admin
+// 		.deleteUser(id)
+// 		.then(async (res) => {
+// 			if (res.error?.status) {
+// 				throw error(res.error.status || HttpCodes.BADREQUEST, {
+// 					code: res.error.status || HttpCodes.BADREQUEST,
+// 					message: res.error.message
+// 				});
+// 			} else if (res.data.user) {
+// 				return json(
+// 					{
+// 						id,
+// 						deleted_at: new Date()
+// 					},
+// 					{ status: 200, statusText: 'Account Deleted' }
+// 				);
+// 			} else {
+// 				throw error(HttpCodes.INTERNALERROR, {
+// 					code: HttpCodes.INTERNALERROR,
+// 					message: 'Error during account deletion, try again later'
+// 				});
+// 			}
+// 		})
+// 		.catch((err) => {
+// 			console.debug(err);
 
-			throw error(HttpCodes.INTERNALERROR, {
-				code: HttpCodes.INTERNALERROR,
-				message: 'Error during account deletion, try again later'
-			});
-		});
-}) satisfies RequestHandler;
+// 			throw error(HttpCodes.INTERNALERROR, {
+// 				code: HttpCodes.INTERNALERROR,
+// 				message: 'Error during account deletion, try again later'
+// 			});
+// 		});
+// }) satisfies RequestHandler;
 
 /**
+ * @deprecated
  * Validates delete request
  * @param request
  * @returns result of auth validation
  */
-const isValidDeleteRequest = (request: Request, url: URL) => {
-	if (request.headers.get('x-trpc-source') !== 'expo-react' || !url.searchParams.has('id'))
-		return undefined;
-	return url.searchParams.get('id') as string;
-};
+// const isValidDeleteRequest = (request: Request, url: URL) => {
+// 	if (request.headers.get('x-trpc-source') !== 'expo-react' || !url.searchParams.has('id'))
+// 		return undefined;
+// 	return url.searchParams.get('id') as string;
+// };
 
 // /**
 //  * @deprecated
