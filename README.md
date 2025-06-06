@@ -1,3 +1,7 @@
+Deprecated for about 4 months now but can serve as a nice little jump off point. Most interesting spot from a technical perspective is in [lib](./src/lib).
+
+# DEPRECATED
+
 # MVP
 
 ## So boom
@@ -30,24 +34,7 @@ Auth routes `/api/auth`
   - Password
   - Phone
 
-### Notebook - "Your" home
-
-  [ ] - Profile info
-  [ ] - Songs of the day
-  [ ] - Wallpaper
-    - customization
-  [ ] - ~~Bubbles~~ Stickies
-  [ ] - Playlists
-
-### Anthology
-
-  [ ] - List of the week
-  [ ] - user's lists
-  [ ] - Bubbles of recently listened songs
-  [ ] - Currently listening song autoplays
-    - Car drives by w the speakers on 40
-
-Songs of the day can be edge functions although that's unnecessary.
+Song of the day fetch can be edge functions although that's unnecessary.
 
 ## Developing
 
