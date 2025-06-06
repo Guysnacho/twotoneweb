@@ -1,8 +1,10 @@
+# 🌱 DEPRECATED 🌱
+
 Deprecated for about 4 months now but can serve as a nice little jump off point. Most interesting spot from a technical perspective is in [lib](./src/lib).
 
-# DEPRECATED
+# TwoTone Web
 
-# MVP
+The landing page and "server" that handles the magic behind [TwoTone - Music](https://twotone.app).
 
 ## So boom
 
